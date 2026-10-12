@@ -1,0 +1,13 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Standard Contactless Smart Transmission Wave Arcs (ISO 14443) -->
+  <g stroke="#0f172a" stroke-width="3.2" stroke-linecap="round">
+    <!-- Arc 1 -->
+    <path d="M12 16C13.8 17.5 15 19.6 15 22C15 24.4 13.8 26.5 12 28"/>
+    <!-- Arc 2 -->
+    <path d="M18 12C20.8 14.5 22.5 18 22.5 22C22.5 26 20.8 29.5 18 32"/>
+    <!-- Arc 3 -->
+    <path d="M24 8C27.8 11.5 30 16.5 30 22C30 27.5 27.8 32.5 24 36"/>
+    <!-- Arc 4 -->
+    <path d="M30 4C35 8.5 37.5 14.8 37.5 22C37.5 29.2 35 35.5 30 40"/>
+  </g>
+</svg>

@@ -1,0 +1,141 @@
+<svg width="630" height="1000" viewBox="0 0 630 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Clip Path for CR80 Standard Rounded Corners -->
+    <clipPath id="portrait_bg_clip">
+      <rect x="0" y="0" width="630" height="1000" rx="36" ry="36"/>
+    </clipPath>
+
+    <!-- Fine Guilloche Lathe Grid Pattern -->
+    <pattern id="guilloche_lathe_pattern" x="0" y="0" width="630" height="80" patternUnits="userSpaceOnUse">
+      <g opacity="0.065" stroke="#047857" stroke-width="0.8" fill="none">
+        <path d="M0 20 Q 80 5, 160 20 T 320 20 T 480 20 T 630 20"/>
+        <path d="M0 40 Q 80 25, 160 40 T 320 40 T 480 40 T 630 40"/>
+        <path d="M0 60 Q 80 45, 160 60 T 320 60 T 480 60 T 630 60"/>
+        <path d="M0 20 Q 80 35, 160 20 T 320 20 T 480 20 T 630 20" stroke="#f97316" opacity="0.8"/>
+        <path d="M0 40 Q 80 55, 160 40 T 320 40 T 480 40 T 630 40" stroke="#0ea5e9" opacity="0.8"/>
+        <path d="M0 60 Q 80 75, 160 60 T 320 60 T 480 60 T 630 60" stroke="#047857" opacity="0.8"/>
+      </g>
+    </pattern>
+
+    <!-- Subtle Diagonal Anti-Counterfeit Microtext Pattern -->
+    <pattern id="microtext_security_pattern" x="0" y="0" width="300" height="60" patternTransform="rotate(-25)" patternUnits="userSpaceOnUse">
+      <text x="0" y="20" font-family="'Inter', sans-serif" font-size="4.2" font-weight="700" fill="#065f46" opacity="0.05" letter-spacing="1">
+        NATIONAL HEALTH AUTHORITY • GOVT OF INDIA • NHA • राष्ट्रीय स्वास्थ्य प्राधिकरण
+      </text>
+      <text x="0" y="48" font-family="'Inter', sans-serif" font-size="4.2" font-weight="700" fill="#f97316" opacity="0.04" letter-spacing="1">
+        MINISTRY OF HEALTH &amp; FAMILY WELFARE • MOHFW • स्वास्थ्य एवं परिवार कल्याण मंत्रालय
+      </text>
+    </pattern>
+  </defs>
+
+  <g clip-path="url(#portrait_bg_clip)">
+    <!-- Base Canvas -->
+    <rect width="630" height="1000" fill="#fcfdfd"/>
+    <rect width="630" height="1000" fill="url(#microtext_security_pattern)"/>
+    <rect width="630" height="1000" fill="url(#guilloche_lathe_pattern)"/>
+
+    <!-- Perimeter Anti-Copy Microprint Frame -->
+    <rect x="14" y="14" width="602" height="972" rx="24" stroke="#cbd5e1" stroke-width="0.8" fill="none"/>
+    <rect x="18" y="18" width="594" height="964" rx="20" stroke="#047857" stroke-width="0.5" stroke-dasharray="3 1.5" fill="none" opacity="0.5"/>
+
+    <!-- ================= AUTHENTIC 24-SPOKE ASHOKA CHAKRA WATERMARK ================= -->
+    <g transform="translate(315, 520)" opacity="0.10">
+      <!-- Outer Wheel Rim -->
+      <circle cx="0" cy="0" r="145" stroke="#000080" stroke-width="4.5" fill="none"/>
+      <circle cx="0" cy="0" r="126" stroke="#000080" stroke-width="1.5" fill="none" stroke-dasharray="2 2"/>
+      <!-- Hub & Inner Core -->
+      <circle cx="0" cy="0" r="32" stroke="#000080" stroke-width="2.5" fill="#ffffff"/>
+      <circle cx="0" cy="0" r="10" fill="#000080"/>
+
+      <!-- 24 Spokes at Exact 15° Intervals -->
+      <g stroke="#000080" stroke-width="2.2" stroke-linecap="round">
+        <line x1="0" y1="-145" x2="0" y2="145"/>
+        <line x1="-145" y1="0" x2="145" y2="0"/>
+        <line x1="-102.5" y1="-102.5" x2="102.5" y2="102.5"/>
+        <line x1="-102.5" y1="102.5" x2="102.5" y2="-102.5"/>
+        <line x1="-139.5" y1="-37.5" x2="139.5" y2="37.5"/>
+        <line x1="-139.5" y1="37.5" x2="139.5" y2="-37.5"/>
+        <line x1="-37.5" y1="-139.5" x2="37.5" y2="139.5"/>
+        <line x1="-37.5" y1="139.5" x2="37.5" y2="-139.5"/>
+        <line x1="-125.5" y1="-72.5" x2="125.5" y2="72.5"/>
+        <line x1="-125.5" y1="72.5" x2="125.5" y2="-72.5"/>
+        <line x1="-72.5" y1="-125.5" x2="72.5" y2="125.5"/>
+        <line x1="-72.5" y1="125.5" x2="72.5" y2="-125.5"/>
+      </g>
+      <!-- 24 Perimeter Chakra Nodes -->
+      <g fill="#000080">
+        <circle cx="0" cy="-136" r="3"/>
+        <circle cx="35" cy="-131" r="3"/>
+        <circle cx="68" cy="-118" r="3"/>
+        <circle cx="96" cy="-96" r="3"/>
+        <circle cx="118" cy="-68" r="3"/>
+        <circle cx="131" cy="-35" r="3"/>
+        <circle cx="136" cy="0" r="3"/>
+        <circle cx="131" cy="35" r="3"/>
+        <circle cx="118" cy="68" r="3"/>
+        <circle cx="96" cy="96" r="3"/>
+        <circle cx="68" cy="118" r="3"/>
+        <circle cx="35" cy="131" r="3"/>
+        <circle cx="0" cy="136" r="3"/>
+        <circle cx="-35" cy="131" r="3"/>
+        <circle cx="-68" cy="118" r="3"/>
+        <circle cx="-96" cy="96" r="3"/>
+        <circle cx="-118" cy="68" r="3"/>
+        <circle cx="-131" cy="35" r="3"/>
+        <circle cx="-136" cy="0" r="3"/>
+        <circle cx="-131" cy="-35" r="3"/>
+        <circle cx="-118" cy="-68" r="3"/>
+        <circle cx="-96" cy="-96" r="3"/>
+        <circle cx="-68" cy="-118" r="3"/>
+        <circle cx="-35" cy="-131" r="3"/>
+      </g>
+    </g>
+
+    <!-- ================= GUILLOCHE ROSETTE WATERMARK (MATCHING USER IMAGE 2) ================= -->
+    <g transform="translate(315, 640)" opacity="0.14">
+      <!-- Outer Multi-Lobed Cyan Spirograph Waves -->
+      <g stroke="#0ea5e9" stroke-width="0.8" fill="none">
+        <path d="M 0,-150 C 35,-150 70,-130 90,-100 C 110,-70 150,-50 150,-15 C 150,20 130,55 100,85 C 70,115 35,150 0,150 C -35,150 -70,125 -95,95 C -120,65 -150,35 -150,0 C -150,-35 -130,-70 -100,-100 C -70,-130 -35,-150 0,-150 Z" transform="rotate(0)"/>
+        <path d="M 0,-150 C 35,-150 70,-130 90,-100 C 110,-70 150,-50 150,-15 C 150,20 130,55 100,85 C 70,115 35,150 0,150 C -35,150 -70,125 -95,95 C -120,65 -150,35 -150,0 C -150,-35 -130,-70 -100,-100 C -70,-130 -35,-150 0,-150 Z" transform="rotate(15)"/>
+        <path d="M 0,-150 C 35,-150 70,-130 90,-100 C 110,-70 150,-50 150,-15 C 150,20 130,55 100,85 C 70,115 35,150 0,150 C -35,150 -70,125 -95,95 C -120,65 -150,35 -150,0 C -150,-35 -130,-70 -100,-100 C -70,-130 -35,-150 0,-150 Z" transform="rotate(30)"/>
+        <path d="M 0,-150 C 35,-150 70,-130 90,-100 C 110,-70 150,-50 150,-15 C 150,20 130,55 100,85 C 70,115 35,150 0,150 C -35,150 -70,125 -95,95 C -120,65 -150,35 -150,0 C -150,-35 -130,-70 -100,-100 C -70,-130 -35,-150 0,-150 Z" transform="rotate(45)"/>
+        <path d="M 0,-150 C 35,-150 70,-130 90,-100 C 110,-70 150,-50 150,-15 C 150,20 130,55 100,85 C 70,115 35,150 0,150 C -35,150 -70,125 -95,95 C -120,65 -150,35 -150,0 C -150,-35 -130,-70 -100,-100 C -70,-130 -35,-150 0,-150 Z" transform="rotate(60)"/>
+        <path d="M 0,-150 C 35,-150 70,-130 90,-100 C 110,-70 150,-50 150,-15 C 150,20 130,55 100,85 C 70,115 35,150 0,150 C -35,150 -70,125 -95,95 C -120,65 -150,35 -150,0 C -150,-35 -130,-70 -100,-100 C -70,-130 -35,-150 0,-150 Z" transform="rotate(75)"/>
+      </g>
+
+      <!-- Middle Interlaced Violet/Purple Waves -->
+      <g stroke="#8b5cf6" stroke-width="0.75" fill="none" opacity="0.85">
+        <ellipse rx="130" ry="75" transform="rotate(0)"/>
+        <ellipse rx="130" ry="75" transform="rotate(20)"/>
+        <ellipse rx="130" ry="75" transform="rotate(40)"/>
+        <ellipse rx="130" ry="75" transform="rotate(60)"/>
+        <ellipse rx="130" ry="75" transform="rotate(80)"/>
+        <ellipse rx="130" ry="75" transform="rotate(100)"/>
+        <ellipse rx="130" ry="75" transform="rotate(120)"/>
+        <ellipse rx="130" ry="75" transform="rotate(140)"/>
+        <ellipse rx="130" ry="75" transform="rotate(160)"/>
+      </g>
+
+      <!-- Inner Pink/Magenta Core Spirograph -->
+      <g stroke="#ec4899" stroke-width="0.7" fill="none" opacity="0.8">
+        <ellipse rx="85" ry="48" transform="rotate(10)"/>
+        <ellipse rx="85" ry="48" transform="rotate(35)"/>
+        <ellipse rx="85" ry="48" transform="rotate(60)"/>
+        <ellipse rx="85" ry="48" transform="rotate(85)"/>
+        <ellipse rx="85" ry="48" transform="rotate(110)"/>
+        <ellipse rx="85" ry="48" transform="rotate(135)"/>
+        <ellipse rx="85" ry="48" transform="rotate(160)"/>
+      </g>
+
+      <!-- Central Center Ring -->
+      <circle cx="0" cy="0" r="32" stroke="#0ea5e9" stroke-width="1" opacity="0.7" fill="none"/>
+    </g>
+
+    <!-- Bottom Tricolor Security Ribbon Layer -->
+    <g transform="translate(0, 992)">
+      <rect x="0" y="0" width="630" height="3" fill="#f97316"/>
+      <rect x="0" y="3" width="630" height="2" fill="#ffffff"/>
+      <rect x="0" y="5" width="630" height="3" fill="#138808"/>
+    </g>
+  </g>
+</svg>

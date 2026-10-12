@@ -1,54 +1,159 @@
-<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Outer Wheel Rim with 24 Perimeter Rivet Nodes -->
-  <circle cx="100" cy="100" r="92" stroke="#000080" stroke-width="4.5" opacity="0.3"/>
-  <circle cx="100" cy="100" r="84" stroke="#000080" stroke-width="2" opacity="0.25"/>
-  
-  <!-- Central Hub with Dual Rings -->
-  <circle cx="100" cy="100" r="22" fill="#ffffff" stroke="#000080" stroke-width="3" opacity="0.4"/>
-  <circle cx="100" cy="100" r="8" fill="#000080" opacity="0.4"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" width="602" height="602" viewBox="0 0 602 602">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #07038d;
+      }
 
-  <!-- 24 Spokes generated at 15-degree increments -->
-  <g stroke="#000080" stroke-width="1.8" stroke-linecap="round" opacity="0.35">
-    <!-- 0 deg -->
-    <line x1="100" y1="22" x2="100" y2="78"/>
-    <!-- 180 deg -->
-    <line x1="100" y1="122" x2="100" y2="178"/>
-    <!-- 90 deg -->
-    <line x1="22" y1="100" x2="78" y2="100"/>
-    <!-- 270 deg -->
-    <line x1="122" y1="100" x2="178" y2="100"/>
-    <!-- 45 deg -->
-    <line x1="44.8" y1="44.8" x2="84.4" y2="84.4"/>
-    <!-- 225 deg -->
-    <line x1="115.6" y1="115.6" x2="155.2" y2="155.2"/>
-    <!-- 135 deg -->
-    <line x1="44.8" y1="155.2" x2="84.4" y2="115.6"/>
-    <!-- 315 deg -->
-    <line x1="115.6" y1="84.4" x2="155.2" y2="44.8"/>
-    
-    <!-- 15 deg & opposite -->
-    <line x1="120.2" y1="24.7" x2="105.7" y2="78.7"/>
-    <line x1="79.8" y1="175.3" x2="94.3" y2="121.3"/>
-    <!-- 30 deg & opposite -->
-    <line x1="139.5" y1="31.8" x2="111" y2="81"/>
-    <line x1="60.5" y1="168.2" x2="89" y2="119"/>
-    <!-- 60 deg & opposite -->
-    <line x1="168.2" y1="60.5" x2="119" y2="89"/>
-    <line x1="31.8" y1="139.5" x2="81" y2="111"/>
-    <!-- 75 deg & opposite -->
-    <line x1="175.3" y1="79.8" x2="121.3" y2="94.3"/>
-    <line x1="24.7" y1="120.2" x2="78.7" y2="105.7"/>
-    <!-- 105 deg & opposite -->
-    <line x1="175.3" y1="120.2" x2="121.3" y2="105.7"/>
-    <line x1="24.7" y1="79.8" x2="78.7" y2="94.3"/>
-    <!-- 120 deg & opposite -->
-    <line x1="168.2" y1="139.5" x2="119" y2="111"/>
-    <line x1="31.8" y1="60.5" x2="81" y2="89"/>
-    <!-- 150 deg & opposite -->
-    <line x1="139.5" y1="168.2" x2="111" y2="119"/>
-    <line x1="60.5" y1="31.8" x2="89" y2="81"/>
-    <!-- 165 deg & opposite -->
-    <line x1="120.2" y1="175.3" x2="105.7" y2="121.3"/>
-    <line x1="79.8" y1="24.7" x2="94.3" y2="78.7"/>
+      .cls-1, .cls-2 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <circle class="cls-1" cx="301.5" cy="301.5" r="301"/>
+  <circle class="cls-2" cx="301.5" cy="301.5" r="260.32"/>
+  <circle class="cls-1" cx="301.5" cy="301.5" r="52.06"/>
+  <g id="d">
+    <g id="c">
+      <g id="b">
+        <g id="a">
+          <path class="cls-1" d="m301.5,41.18l9.76,156.65-9.76,77.56-9.76-77.56,9.76-156.65Z"/>
+          <circle class="cls-1" cx="335.48" cy="43.4" r="11.39"/>
+        </g>
+        <g id="a-2" data-name="a">
+          <path class="cls-1" d="m301.5,561.82l-9.76-156.65,9.76-77.56,9.76,77.56-9.76,156.65Z"/>
+          <circle class="cls-1" cx="267.52" cy="559.6" r="11.39"/>
+        </g>
+      </g>
+      <g id="b-2" data-name="b">
+        <g id="a-3" data-name="a">
+          <path class="cls-1" d="m368.88,50.05l-31.12,153.84-29.5,72.39,10.65-77.45,49.97-148.79Z"/>
+          <circle class="cls-1" cx="401.12" cy="60.99" r="11.39"/>
+        </g>
+        <g id="a-4" data-name="a">
+          <path class="cls-1" d="m234.12,552.95l31.12-153.84,29.5-72.39-10.65,77.45-49.97,148.79Z"/>
+          <circle class="cls-1" cx="201.88" cy="542.01" r="11.39"/>
+        </g>
+      </g>
+    </g>
+    <g id="c-2" data-name="c">
+      <g id="b-3" data-name="b">
+        <g id="a-5" data-name="a">
+          <path class="cls-1" d="m431.66,76.05l-69.87,140.55-47.24,62.29,30.33-72.05,86.78-130.78Z"/>
+          <circle class="cls-1" cx="459.98" cy="94.97" r="11.39"/>
+        </g>
+        <g id="a-6" data-name="a">
+          <path class="cls-1" d="m171.34,526.95l69.87-140.55,47.24-62.29-30.33,72.05-86.78,130.78Z"/>
+          <circle class="cls-1" cx="143.02" cy="508.03" r="11.39"/>
+        </g>
+      </g>
+      <g id="b-4" data-name="b">
+        <g id="a-7" data-name="a">
+          <path class="cls-1" d="m485.58,117.42l-103.87,117.67-61.75,47.94,47.94-61.75,117.67-103.87Z"/>
+          <circle class="cls-1" cx="508.03" cy="143.02" r="11.39"/>
+        </g>
+        <g id="a-8" data-name="a">
+          <path class="cls-1" d="m117.42,485.58l103.87-117.67,61.75-47.94-47.94,61.75-117.67,103.87Z"/>
+          <circle class="cls-1" cx="94.97" cy="459.98" r="11.39"/>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g id="d-2" data-name="d">
+    <g id="c-3" data-name="c">
+      <g id="b-5" data-name="b">
+        <g id="a-9" data-name="a">
+          <path class="cls-1" d="m526.95,171.34l-130.78,86.78-72.05,30.33,62.29-47.24,140.55-69.87Z"/>
+          <circle class="cls-1" cx="542.01" cy="201.88" r="11.39"/>
+        </g>
+        <g id="a-10" data-name="a">
+          <path class="cls-1" d="m76.05,431.66l130.78-86.78,72.05-30.33-62.29,47.24-140.55,69.87Z"/>
+          <circle class="cls-1" cx="60.99" cy="401.12" r="11.39"/>
+        </g>
+      </g>
+      <g id="b-6" data-name="b">
+        <g id="a-11" data-name="a">
+          <path class="cls-1" d="m552.95,234.12l-148.79,49.97-77.45,10.65,72.39-29.5,153.84-31.12Z"/>
+          <circle class="cls-1" cx="559.6" cy="267.52" r="11.39"/>
+        </g>
+        <g id="a-12" data-name="a">
+          <path class="cls-1" d="m50.05,368.88l148.79-49.97,77.45-10.65-72.39,29.5-153.84,31.12Z"/>
+          <circle class="cls-1" cx="43.4" cy="335.48" r="11.39"/>
+        </g>
+      </g>
+    </g>
+    <g id="c-4" data-name="c">
+      <g id="b-7" data-name="b">
+        <g id="a-13" data-name="a">
+          <path class="cls-1" d="m561.82,301.5l-156.65,9.76-77.56-9.76,77.56-9.76,156.65,9.76Z"/>
+          <circle class="cls-1" cx="559.6" cy="335.48" r="11.39"/>
+        </g>
+        <g id="a-14" data-name="a">
+          <path class="cls-1" d="m41.18,301.5l156.65-9.76,77.56,9.76-77.56,9.76-156.65-9.76Z"/>
+          <circle class="cls-1" cx="43.4" cy="267.52" r="11.39"/>
+        </g>
+      </g>
+      <g id="b-8" data-name="b">
+        <g id="a-15" data-name="a">
+          <path class="cls-1" d="m552.95,368.88l-153.84-31.12-72.39-29.5,77.45,10.65,148.79,49.97Z"/>
+          <circle class="cls-1" cx="542.01" cy="401.12" r="11.39"/>
+        </g>
+        <g id="a-16" data-name="a">
+          <path class="cls-1" d="m50.05,234.12l153.84,31.12,72.39,29.5-77.45-10.65-148.79-49.97Z"/>
+          <circle class="cls-1" cx="60.99" cy="201.88" r="11.39"/>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g id="d-3" data-name="d">
+    <g id="c-5" data-name="c">
+      <g id="b-9" data-name="b">
+        <g id="a-17" data-name="a">
+          <path class="cls-1" d="m526.95,431.66l-140.55-69.87-62.29-47.24,72.05,30.33,130.78,86.78Z"/>
+          <circle class="cls-1" cx="508.03" cy="459.98" r="11.39"/>
+        </g>
+        <g id="a-18" data-name="a">
+          <path class="cls-1" d="m76.05,171.34l140.55,69.87,62.29,47.24-72.05-30.33-130.78-86.78Z"/>
+          <circle class="cls-1" cx="94.97" cy="143.02" r="11.39"/>
+        </g>
+      </g>
+      <g id="b-10" data-name="b">
+        <g id="a-19" data-name="a">
+          <path class="cls-1" d="m485.58,485.58l-117.67-103.87-47.94-61.75,61.75,47.94,103.87,117.67Z"/>
+          <circle class="cls-1" cx="459.98" cy="508.03" r="11.39"/>
+        </g>
+        <g id="a-20" data-name="a">
+          <path class="cls-1" d="m117.42,117.42l117.67,103.87,47.94,61.75-61.75-47.94-103.87-117.67Z"/>
+          <circle class="cls-1" cx="143.02" cy="94.97" r="11.39"/>
+        </g>
+      </g>
+    </g>
+    <g id="c-6" data-name="c">
+      <g id="b-11" data-name="b">
+        <g id="a-21" data-name="a">
+          <path class="cls-1" d="m431.66,526.95l-86.78-130.78-30.33-72.05,47.24,62.29,69.87,140.55Z"/>
+          <circle class="cls-1" cx="401.12" cy="542.01" r="11.39"/>
+        </g>
+        <g id="a-22" data-name="a">
+          <path class="cls-1" d="m171.34,76.05l86.78,130.78,30.33,72.05-47.24-62.29-69.87-140.55Z"/>
+          <circle class="cls-1" cx="201.88" cy="60.99" r="11.39"/>
+        </g>
+      </g>
+      <g id="b-12" data-name="b">
+        <g id="a-23" data-name="a">
+          <path class="cls-1" d="m368.88,552.95l-49.97-148.79-10.65-77.45,29.5,72.39,31.12,153.84Z"/>
+          <circle class="cls-1" cx="335.48" cy="559.6" r="11.39"/>
+        </g>
+        <g id="a-24" data-name="a">
+          <path class="cls-1" d="m234.12,50.05l49.97,148.79,10.65,77.45-29.5-72.39-31.12-153.84Z"/>
+          <circle class="cls-1" cx="267.52" cy="43.4" r="11.39"/>
+        </g>
+      </g>
+    </g>
   </g>
 </svg>

@@ -1,458 +1,332 @@
-<svg width="1000" height="630" viewBox="0 0 1000 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="630" height="1000" viewBox="0 0 630 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- PVC Card Outer Shadow & Texture Filter -->
-    <filter id="pvc_shadow" x="-10" y="-10" width="1020" height="650" filterUnits="userSpaceOnUse">
-      <feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#0f172a" flood-opacity="0.14"/>
-    </filter>
+    <!-- Clip Path for CR80 Standard Rounded Corners (3.18mm / 36px) -->
+    <clipPath id="portrait_card_clip">
+      <rect x="0" y="0" width="630" height="1000" rx="36" ry="36"/>
+    </clipPath>
 
-    <!-- Guilloche Security Pattern Definition -->
-    <pattern id="card_guilloche" x="0" y="0" width="1000" height="630" patternUnits="userSpaceOnUse">
-      <!-- Sine & Cosine anti-copy waves -->
-      <g opacity="0.07" stroke="#047857" stroke-width="0.8" fill="none">
-        <path d="M0 60 Q 125 35, 250 60 T 500 60 T 750 60 T 1000 60"/>
-        <path d="M0 90 Q 125 65, 250 90 T 500 90 T 750 90 T 1000 90"/>
-        <path d="M0 120 Q 125 95, 250 120 T 500 120 T 750 120 T 1000 120"/>
-        <path d="M0 150 Q 125 125, 250 150 T 500 150 T 750 150 T 1000 150"/>
-        <path d="M0 180 Q 125 155, 250 180 T 500 180 T 750 180 T 1000 180"/>
-        <path d="M0 210 Q 125 185, 250 210 T 500 210 T 750 210 T 1000 210"/>
-        <path d="M0 240 Q 125 215, 250 240 T 500 240 T 750 240 T 1000 240"/>
-        <path d="M0 270 Q 125 245, 250 270 T 500 270 T 750 270 T 1000 270"/>
-        <path d="M0 300 Q 125 275, 250 300 T 500 300 T 750 300 T 1000 300"/>
-        <path d="M0 330 Q 125 305, 250 330 T 500 330 T 750 330 T 1000 330"/>
-        <path d="M0 360 Q 125 335, 250 360 T 500 360 T 750 360 T 1000 360"/>
-        <path d="M0 390 Q 125 365, 250 390 T 500 390 T 750 390 T 1000 390"/>
-        <path d="M0 420 Q 125 395, 250 420 T 500 420 T 750 420 T 1000 420"/>
-        <path d="M0 450 Q 125 425, 250 450 T 500 450 T 750 450 T 1000 450"/>
-        <path d="M0 480 Q 125 455, 250 480 T 500 480 T 750 480 T 1000 480"/>
-        <path d="M0 510 Q 125 485, 250 510 T 500 510 T 750 510 T 1000 510"/>
-        <path d="M0 540 Q 125 515, 250 540 T 500 540 T 750 540 T 1000 540"/>
-        <path d="M0 570 Q 125 545, 250 570 T 500 570 T 750 570 T 1000 570"/>
+    <!-- Multi-Layered Guilloche Security Lathe Pattern -->
+    <pattern id="sec_guilloche_pattern" x="0" y="0" width="630" height="1000" patternUnits="userSpaceOnUse">
+      <g opacity="0.08" stroke="#047857" stroke-width="0.8" fill="none">
+        <path d="M0 100 Q 80 70, 160 100 T 320 100 T 480 100 T 630 100"/>
+        <path d="M0 140 Q 80 110, 160 140 T 320 140 T 480 140 T 630 140"/>
+        <path d="M0 180 Q 80 150, 160 180 T 320 180 T 480 180 T 630 180"/>
+        <path d="M0 220 Q 80 190, 160 220 T 320 220 T 480 220 T 630 220"/>
+        <path d="M0 260 Q 80 230, 160 260 T 320 260 T 480 260 T 630 260"/>
+        <path d="M0 300 Q 80 270, 160 300 T 320 300 T 480 300 T 630 300"/>
+        <path d="M0 340 Q 80 310, 160 340 T 320 340 T 480 340 T 630 340"/>
+        <path d="M0 380 Q 80 350, 160 380 T 320 380 T 480 380 T 630 380"/>
+        <path d="M0 420 Q 80 390, 160 420 T 320 420 T 480 420 T 630 420"/>
+        <path d="M0 460 Q 80 430, 160 460 T 320 460 T 480 460 T 630 460"/>
+        <path d="M0 500 Q 80 470, 160 500 T 320 500 T 480 500 T 630 500"/>
+        <path d="M0 540 Q 80 510, 160 540 T 320 540 T 480 540 T 630 540"/>
+        <path d="M0 580 Q 80 550, 160 580 T 320 580 T 480 580 T 630 580"/>
+        <path d="M0 620 Q 80 590, 160 620 T 320 620 T 480 620 T 630 620"/>
+        <path d="M0 660 Q 80 630, 160 660 T 320 660 T 480 660 T 630 660"/>
+        <path d="M0 700 Q 80 670, 160 700 T 320 700 T 480 700 T 630 700"/>
+        <path d="M0 740 Q 80 710, 160 740 T 320 740 T 480 740 T 630 740"/>
+        <path d="M0 780 Q 80 750, 160 780 T 320 780 T 480 780 T 630 780"/>
+        <path d="M0 820 Q 80 790, 160 820 T 320 820 T 480 820 T 630 820"/>
+        <path d="M0 860 Q 80 830, 160 860 T 320 860 T 480 860 T 630 860"/>
+        <path d="M0 900 Q 80 870, 160 900 T 320 900 T 480 900 T 630 900"/>
+        <path d="M0 940 Q 80 910, 160 940 T 320 940 T 480 940 T 630 940"/>
 
-        <!-- Counter-Phased Intersecting Waves -->
-        <path d="M0 60 Q 125 85, 250 60 T 500 60 T 750 60 T 1000 60"/>
-        <path d="M0 90 Q 125 115, 250 90 T 500 90 T 750 90 T 1000 90"/>
-        <path d="M0 120 Q 125 145, 250 120 T 500 120 T 750 120 T 1000 120"/>
-        <path d="M0 150 Q 125 175, 250 150 T 500 150 T 750 150 T 1000 150"/>
-        <path d="M0 180 Q 125 205, 250 180 T 500 180 T 750 180 T 1000 180"/>
-        <path d="M0 210 Q 125 235, 250 210 T 500 210 T 750 210 T 1000 210"/>
-        <path d="M0 240 Q 125 265, 250 240 T 500 240 T 750 240 T 1000 240"/>
-        <path d="M0 270 Q 125 295, 250 270 T 500 270 T 750 270 T 1000 270"/>
-        <path d="M0 300 Q 125 325, 250 300 T 500 300 T 750 300 T 1000 300"/>
-        <path d="M0 330 Q 125 355, 250 330 T 500 330 T 750 330 T 1000 330"/>
-        <path d="M0 360 Q 125 385, 250 360 T 500 360 T 750 360 T 1000 360"/>
-        <path d="M0 390 Q 125 415, 250 390 T 500 390 T 750 390 T 1000 390"/>
-        <path d="M0 420 Q 125 445, 250 420 T 500 420 T 750 420 T 1000 420"/>
-        <path d="M0 450 Q 125 475, 250 450 T 500 450 T 750 450 T 1000 450"/>
-        <path d="M0 480 Q 125 505, 250 480 T 500 480 T 750 480 T 1000 480"/>
-        <path d="M0 510 Q 125 535, 250 510 T 500 510 T 750 510 T 1000 510"/>
-        <path d="M0 540 Q 125 565, 250 540 T 500 540 T 750 540 T 1000 540"/>
-        <path d="M0 570 Q 125 595, 250 570 T 500 570 T 750 570 T 1000 570"/>
+        <!-- Counter waves -->
+        <path d="M0 100 Q 80 130, 160 100 T 320 100 T 480 100 T 630 100"/>
+        <path d="M0 140 Q 80 170, 160 140 T 320 140 T 480 140 T 630 140"/>
+        <path d="M0 180 Q 80 210, 160 180 T 320 180 T 480 180 T 630 180"/>
+        <path d="M0 220 Q 80 250, 160 220 T 320 220 T 480 220 T 630 220"/>
+        <path d="M0 260 Q 80 290, 160 260 T 320 260 T 480 260 T 630 260"/>
+        <path d="M0 300 Q 80 330, 160 300 T 320 300 T 480 300 T 630 300"/>
+        <path d="M0 340 Q 80 370, 160 340 T 320 340 T 480 340 T 630 340"/>
+        <path d="M0 380 Q 80 410, 160 380 T 320 380 T 480 380 T 630 380"/>
+        <path d="M0 420 Q 80 450, 160 420 T 320 420 T 480 420 T 630 420"/>
+        <path d="M0 460 Q 80 490, 160 460 T 320 460 T 480 460 T 630 460"/>
+        <path d="M0 500 Q 80 530, 160 500 T 320 500 T 480 500 T 630 500"/>
+        <path d="M0 540 Q 80 570, 160 540 T 320 540 T 480 540 T 630 540"/>
+        <path d="M0 580 Q 80 610, 160 580 T 320 580 T 480 580 T 630 580"/>
+        <path d="M0 620 Q 80 650, 160 620 T 320 620 T 480 620 T 630 620"/>
+        <path d="M0 660 Q 80 690, 160 660 T 320 660 T 480 660 T 630 660"/>
+        <path d="M0 700 Q 80 730, 160 700 T 320 700 T 480 700 T 630 700"/>
+        <path d="M0 740 Q 80 770, 160 740 T 320 740 T 480 740 T 630 740"/>
+        <path d="M0 780 Q 80 810, 160 780 T 320 780 T 480 780 T 630 780"/>
+        <path d="M0 820 Q 80 850, 160 820 T 320 820 T 480 820 T 630 820"/>
+        <path d="M0 860 Q 80 890, 160 860 T 320 860 T 480 860 T 630 860"/>
+        <path d="M0 900 Q 80 930, 160 900 T 320 900 T 480 900 T 630 900"/>
+        <path d="M0 940 Q 80 970, 160 940 T 320 940 T 480 940 T 630 940"/>
       </g>
     </pattern>
-
-    <!-- Holographic Rainbow Foil Gradient -->
-    <linearGradient id="card_holo" x1="0" y1="0" x2="60" y2="60" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#ffd166"/>
-      <stop offset="30%" stop-color="#06d6a0"/>
-      <stop offset="60%" stop-color="#118ab2"/>
-      <stop offset="85%" stop-color="#ef476f"/>
-      <stop offset="100%" stop-color="#facc15"/>
-    </linearGradient>
-
-    <!-- Metallic Smart Chip Gradient -->
-    <linearGradient id="chip_gold" x1="0" y1="0" x2="64" y2="48" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#fef08a"/>
-      <stop offset="50%" stop-color="#eab308"/>
-      <stop offset="100%" stop-color="#ca8a04"/>
-    </linearGradient>
-
-    <!-- Clip Path for CR80 Standard 3.18mm Rounded Corners -->
-    <clipPath id="card_clip">
-      <rect x="0" y="0" width="1000" height="630" rx="36" ry="36"/>
-    </clipPath>
   </defs>
 
-  <!-- ================= MASTER CARD CONTAINER (CR80 RATIO 1.586) ================= -->
-  <g clip-path="url(#card_clip)">
+  <!-- ================= MASTER PORTRAIT CARD SURFACE (CR80 RATIO 1 : 1.586) ================= -->
+  <g clip-path="url(#portrait_card_clip)">
     
-    <!-- Base Authentic Off-White PVC Surface -->
-    <rect width="1000" height="630" fill="#fcfdfd"/>
-    <!-- Pale Mint Security Tint Overlay -->
-    <rect width="1000" height="630" fill="#047857" fill-opacity="0.02"/>
+    <!-- Base Authentic Off-White Surface -->
+    <rect width="630" height="1000" fill="#fcfdfd"/>
+    <rect width="630" height="1000" fill="#047857" fill-opacity="0.015"/>
 
-    <!-- Fine Guilloche Anti-Counterfeit Background Mesh -->
-    <rect width="1000" height="630" fill="url(#card_guilloche)"/>
+    <!-- Guilloche Lathe Grid -->
+    <rect width="630" height="1000" fill="url(#sec_guilloche_pattern)"/>
 
-    <!-- Central 24-Spoke Ashoka Dharma Chakra Watermark -->
-    <g transform="translate(560, 315)" opacity="0.06">
-      <circle cx="0" cy="0" r="160" stroke="#000080" stroke-width="4.5" fill="none"/>
-      <circle cx="0" cy="0" r="38" stroke="#000080" stroke-width="3" fill="#ffffff"/>
-      <circle cx="0" cy="0" r="14" fill="#000080"/>
-      <!-- Spokes -->
-      <g stroke="#000080" stroke-width="2.5">
-        <line x1="0" y1="-160" x2="0" y2="160"/>
-        <line x1="-160" y1="0" x2="160" y2="0"/>
-        <line x1="-113" y1="-113" x2="113" y2="113"/>
-        <line x1="-113" y1="113" x2="113" y2="-113"/>
-        <line x1="-154" y1="-41" x2="154" y2="41"/>
-        <line x1="-154" y1="41" x2="154" y2="-41"/>
-        <line x1="-41" y1="-154" x2="41" y2="154"/>
-        <line x1="-41" y1="154" x2="41" y2="-154"/>
-        <line x1="-138" y1="-80" x2="138" y2="80"/>
-        <line x1="-138" y1="80" x2="138" y2="-80"/>
-        <line x1="-80" y1="-138" x2="80" y2="138"/>
-        <line x1="-80" y1="138" x2="80" y2="-138"/>
+    <!-- Perimeter Anti-Copy Microtext Border -->
+    <rect x="14" y="14" width="602" height="972" rx="24" stroke="#cbd5e1" stroke-width="0.8" fill="none"/>
+    <rect x="18" y="18" width="594" height="964" rx="20" stroke="#047857" stroke-width="0.5" stroke-dasharray="3 1.5" fill="none" opacity="0.6"/>
+
+    <!-- Subtle Central 24-Spoke Ashoka Chakra Watermark -->
+    <g transform="translate(315, 520)" opacity="0.09">
+      <circle cx="0" cy="0" r="140" stroke="#000080" stroke-width="4" fill="none"/>
+      <circle cx="0" cy="0" r="32" stroke="#000080" stroke-width="2.5" fill="#ffffff"/>
+      <circle cx="0" cy="0" r="10" fill="#000080"/>
+      <!-- Spokes at 15 degree increments -->
+      <g stroke="#000080" stroke-width="2.2" stroke-linecap="round">
+        <line x1="0" y1="-140" x2="0" y2="140"/>
+        <line x1="-140" y1="0" x2="140" y2="0"/>
+        <line x1="-99" y1="-99" x2="99" y2="99"/>
+        <line x1="-99" y1="99" x2="99" y2="-99"/>
+        <line x1="-135" y1="-36" x2="135" y2="36"/>
+        <line x1="-135" y1="36" x2="135" y2="-36"/>
+        <line x1="-36" y1="-135" x2="36" y2="135"/>
+        <line x1="-36" y1="135" x2="36" y2="-135"/>
+        <line x1="-121" y1="-70" x2="121" y2="70"/>
+        <line x1="-121" y1="70" x2="121" y2="-70"/>
+        <line x1="-70" y1="-121" x2="70" y2="121"/>
+        <line x1="-70" y1="121" x2="70" y2="-121"/>
       </g>
     </g>
 
-    <!-- Micro-Security Lathe Rosette Watermark (Under Patient Info) -->
-    <g transform="translate(420, 260)" opacity="0.04" stroke="#047857" stroke-width="1.2" fill="none">
-      <ellipse rx="150" ry="90" transform="rotate(0)"/>
-      <ellipse rx="150" ry="90" transform="rotate(30)"/>
-      <ellipse rx="150" ry="90" transform="rotate(60)"/>
-      <ellipse rx="150" ry="90" transform="rotate(90)"/>
-      <ellipse rx="150" ry="90" transform="rotate(120)"/>
-      <ellipse rx="150" ry="90" transform="rotate(150)"/>
+    <!-- Subtle Guilloche Rosette Micro-Pattern (Matching Image 2) -->
+    <g transform="translate(315, 620)" opacity="0.06" stroke="#0ea5e9" stroke-width="0.75" fill="none">
+      <ellipse rx="130" ry="75" transform="rotate(0)"/>
+      <ellipse rx="130" ry="75" transform="rotate(20)"/>
+      <ellipse rx="130" ry="75" transform="rotate(40)"/>
+      <ellipse rx="130" ry="75" transform="rotate(60)"/>
+      <ellipse rx="130" ry="75" transform="rotate(80)"/>
+      <ellipse rx="130" ry="75" transform="rotate(100)"/>
+      <ellipse rx="130" ry="75" transform="rotate(120)"/>
+      <ellipse rx="130" ry="75" transform="rotate(140)"/>
+      <ellipse rx="130" ry="75" transform="rotate(160)"/>
     </g>
 
-    <!-- ================= TOP HEADER: INDIAN GOVT / NATIONAL IDENTITY BAND ================= -->
-    <!-- Subtle Top Saffron Accent Ribbon -->
-    <rect x="0" y="0" width="1000" height="7" fill="#f97316"/>
-    <!-- White Gap Line with Navy Dots -->
-    <rect x="0" y="7" width="1000" height="4" fill="#ffffff"/>
-    <line x1="0" y1="9" x2="1000" y2="9" stroke="#000080" stroke-width="0.75" stroke-dasharray="6 3"/>
-    <!-- India Green Accent Ribbon -->
-    <rect x="0" y="11" width="1000" height="7" fill="#047857"/>
+    <!-- ================= TOP HEADER: DEEP TEAL OFFICIAL GOVERNMENT BAR ================= -->
+    <rect x="0" y="0" width="630" height="152" fill="#0d4d42"/>
 
-    <!-- Main Header Bar -->
-    <g transform="translate(44, 28)">
-      <!-- Official HealthCard Emblem -->
-      <g transform="translate(0, 0)">
-        <circle cx="28" cy="28" r="26" fill="#047857"/>
-        <circle cx="28" cy="28" r="23" stroke="#6ee7b7" stroke-width="1.2" fill="#064e3b"/>
-        <!-- Cross & Caduceus Pulse -->
-        <path d="M25 15H31V25H41V31H31V41H25V31H15V25H25V15Z" fill="#ffffff"/>
-        <circle cx="28" cy="28" r="3.2" fill="#10b981"/>
-        <path d="M19 28H24L26 24L30 32L32 28H37" stroke="#047857" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Left: Ministry of Health & Family Welfare Emblem -->
+    <g transform="translate(24, 20)">
+      <!-- Outer circular seal with laurel text ring -->
+      <circle cx="56" cy="56" r="46" fill="#063830" stroke="#a7f3d0" stroke-width="1.2"/>
+      <circle cx="56" cy="56" r="42" fill="#0a473b" stroke="#ffffff" stroke-width="0.75" stroke-dasharray="2 1.5"/>
+      <!-- Inner Emblem: Ashoka Lion Capital Motif -->
+      <g transform="translate(36, 32) scale(0.18)" fill="#ffffff">
+        <path d="M54.5 14.5C48.2 14.5 43.1 19.6 43.1 25.9C43.1 27.6 43.5 29.2 44.2 30.6C39.4 33.1 36 38.2 36 44.1C36 50.8 40.4 56.5 46.5 58.5C46.2 59.8 46 61.2 46 62.6C46 68.9 51.1 74 57.4 74C63.7 74 68.8 68.9 68.8 62.6C68.8 61.2 68.6 59.8 68.3 58.5C74.4 56.5 78.8 50.8 78.8 44.1C78.8 38.2 75.4 33.1 70.6 30.6C71.3 29.2 71.7 27.6 71.7 25.9C71.7 19.6 66.6 14.5 60.3 14.5H54.5Z"/>
       </g>
-
-      <!-- Institutional Dual-Language Title -->
-      <g transform="translate(70, 6)">
-        <text font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="13" font-weight="700" fill="#065f46" letter-spacing="0.4">
-          राष्ट्रीय स्वास्थ्य प्राधिकरण • भारत सरकार
-        </text>
-        <text y="19" font-family="'Inter', sans-serif" font-size="12" font-weight="700" fill="#0f172a" letter-spacing="0.8">
-          NATIONAL HEALTH AUTHORITY • GOVERNMENT OF INDIA
-        </text>
-        <text y="34" font-family="'Inter', sans-serif" font-size="11" font-weight="800" fill="#047857" letter-spacing="1.2">
-          HEALTHCARD DIGITAL IDENTITY SYSTEM
-        </text>
-      </g>
-
-      <!-- Right Header Controls: Holographic Seal & Contactless Wave -->
-      <!-- Metallic Holographic Seal -->
-      <g transform="translate(770, 0)">
-        <circle cx="28" cy="26" r="25" fill="url(#card_holo)"/>
-        <circle cx="28" cy="26" r="25" stroke="#b45309" stroke-width="1" stroke-opacity="0.6"/>
-        <circle cx="28" cy="26" r="22" stroke="#ffffff" stroke-width="0.8" stroke-dasharray="2 2"/>
-        <path d="M28 12L37 16.5V25C37 31.5 33 35.5 28 38C23 35.5 19 31.5 19 25V16.5L28 12Z" fill="#ffffff" fill-opacity="0.85"/>
-        <path d="M28 18V32M21 25H35" stroke="#047857" stroke-width="2" stroke-linecap="round"/>
-        <text x="28" y="44" text-anchor="middle" font-family="'Inter', sans-serif" font-size="4.8" font-weight="800" fill="#0f172a">
-          SECURE • NHA
-        </text>
-      </g>
-
-      <!-- ISO 14443 Contactless NFC Symbol -->
-      <g transform="translate(860, 6)">
-        <g stroke="#047857" stroke-width="2.5" stroke-linecap="round">
-          <path d="M12 12C15 14 17 17 17 20C17 23 15 26 12 28"/>
-          <path d="M18 7C23 10 26 15 26 20C26 25 23 30 18 33"/>
-          <path d="M24 2C31 6 35 12.5 35 20C35 27.5 31 34 24 38"/>
-          <circle cx="7" cy="20" r="2" fill="#047857"/>
-        </g>
-        <text x="20" y="46" text-anchor="middle" font-family="'Inter', sans-serif" font-size="7" font-weight="800" fill="#047857" letter-spacing="0.5">
-          NFC
-        </text>
-      </g>
-    </g>
-
-    <!-- Microtext Security Hairline Divider -->
-    <g transform="translate(44, 98)">
-      <line x1="0" y1="0" x2="912" y2="0" stroke="#cbd5e1" stroke-width="0.75"/>
-      <text x="4" y="-3" font-family="'Inter', sans-serif" font-size="4.2" font-weight="700" fill="#94a3b8" letter-spacing="1">
-        • भारत सरकार • GOVERNMENT OF INDIA • NATIONAL HEALTH AUTHORITY • HEALTHCARD SECURE CITIZEN ID • AYUSHMAN BHARAT DIGITAL MISSION •
+      <!-- Circular Devanagari & English Ring Text -->
+      <text x="56" y="104" text-anchor="middle" font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="5" font-weight="700" fill="#a7f3d0" letter-spacing="0.2">
+        स्वास्थ्य एवं परिवार कल्याण मंत्रालय
+      </text>
+      <text x="56" y="111" text-anchor="middle" font-family="'Inter', sans-serif" font-size="4.2" font-weight="700" fill="#ffffff" letter-spacing="0.3">
+        MINISTRY OF HEALTH &amp; FAMILY WELFARE
       </text>
     </g>
 
-    <!-- ================= BODY CONTENT: 3-COLUMN STRUCTURED LAYOUT ================= -->
+    <!-- Center: National Health Card Title -->
+    <g transform="translate(305, 54)" text-anchor="middle">
+      <text font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="25" font-weight="800" fill="#ffffff" letter-spacing="0.4">
+        राष्ट्रीय स्वास्थ्य कार्ड
+      </text>
+      <text y="32" font-family="'Inter', sans-serif" font-size="19" font-weight="800" fill="#ffffff" letter-spacing="1">
+        NATIONAL HEALTH CARD
+      </text>
+    </g>
 
-    <!-- COLUMN 1: CITIZEN PASSPORT PORTRAIT PHOTO + GHOST PHOTO -->
-    <g transform="translate(44, 116)">
-      <!-- Main Photo Frame (CR80 Standard 3:4 Aspect Ratio) -->
-      <rect x="0" y="0" width="148" height="192" rx="8" fill="#e2e8f0" stroke="#047857" stroke-width="2"/>
-      <rect x="2" y="2" width="144" height="188" rx="6" fill="#f8fafc"/>
+    <!-- Right: Real State Emblem of India (Ashoka Lion Capital with सत्यमेव जयते) -->
+    <g transform="translate(516, 18)">
+      <!-- Real Ashoka Lion Capital Vector Silhouette -->
+      <g transform="scale(0.18)" fill="#ffffff">
+        <path d="M120 20C110 20 102 28 102 38C102 43 104 47 107 50C98 54 92 63 92 73C92 84 99 93 109 97C108 99 108 102 108 104C108 114 116 122 126 122C136 122 144 114 144 104C144 102 144 99 143 97C153 93 160 84 160 73C160 63 154 54 145 50C148 47 150 43 150 38C150 28 142 20 132 20H120Z"/>
+        <!-- Central Lion Head -->
+        <path d="M180 30C168 30 158 40 158 52C158 58 160 63 164 67C153 72 145 83 145 96C145 110 154 122 166 127C165 130 164 133 164 136C164 148 174 158 186 158C198 158 208 148 208 136C208 133 207 130 206 127C218 122 227 110 227 96C227 83 219 72 208 67C212 63 214 58 214 52C214 40 204 30 192 30H180Z"/>
+        <!-- Abacus with Bull & Horse & Dharma Chakra -->
+        <rect x="80" y="166" width="160" height="24" rx="4"/>
+        <circle cx="160" cy="178" r="8" fill="#0d4d42"/>
+        <!-- Lotus Base -->
+        <path d="M90 192C90 208 110 220 160 220C210 220 230 208 230 192H90Z"/>
+      </g>
+      <!-- Motto: सत्यमेव जयते -->
+      <text x="28" y="102" text-anchor="middle" font-family="'Noto Sans Devanagari', sans-serif" font-size="7.5" font-weight="700" fill="#ffffff" letter-spacing="0.5">
+        सत्यमेव जयते
+      </text>
+    </g>
+
+    <!-- ================= AUTHENTIC TRICOLOR SECURITY ACCENT RIBBON ================= -->
+    <rect x="0" y="152" width="630" height="4" fill="#f97316"/>
+    <rect x="0" y="156" width="630" height="2.5" fill="#ffffff"/>
+    <rect x="0" y="158.5" width="630" height="4" fill="#138808"/>
+
+    <!-- ================= CARD BODY: EXACT LAYOUT MATCHING USER'S ATTACHED IMAGE ================= -->
+
+    <!-- ROW 1: HEALTH ID NO. BOX + NFC SYMBOL -->
+    <g transform="translate(32, 184)">
       
-      <!-- Photo Clip Container -->
-      <g clip-path="url(#photo_clip)">
-        <!-- Realistic Passport Photo Graphic -->
-        <rect x="2" y="2" width="144" height="188" fill="#e0f2fe"/>
-        <!-- Citizen Portrait Silhouette / Placeholder -->
-        <circle cx="74" cy="74" r="36" fill="#0284c7" opacity="0.85"/>
-        <path d="M22 174C22 132 46 118 74 118C102 118 126 132 126 174H22Z" fill="#0369a1"/>
-        <!-- Suit / Collar Detail -->
-        <path d="M60 134L74 154L88 134" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
-      </g>
-
-      <!-- Corner Security Watermark Stamps over photo edge -->
-      <circle cx="14" cy="180" r="12" stroke="#047857" stroke-width="0.75" fill="none" opacity="0.6"/>
-      <text x="14" y="182" text-anchor="middle" font-family="'Inter', sans-serif" font-size="4.5" font-weight="800" fill="#047857" opacity="0.8">
-        NHA
-      </text>
-
-      <!-- Biometric Verification Stamp Below Photo -->
-      <g transform="translate(0, 202)">
-        <rect x="0" y="0" width="148" height="26" rx="4" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1"/>
-        <text x="74" y="16" text-anchor="middle" font-family="'Inter', sans-serif" font-size="8" font-weight="700" fill="#065f46" letter-spacing="0.4">
-          BIO-VERIFIED • KYC
+      <!-- Left Pill/Card Box for Health ID -->
+      <rect x="0" y="0" width="370" height="96" rx="10" fill="#ffffff" stroke="#047857" stroke-width="2"/>
+      
+      <!-- Box Header Label -->
+      <g transform="translate(14, 28)">
+        <text font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="14.5" font-weight="800" fill="#0f172a">
+          स्वास्थ्य आईडी सं. / HEALTH ID NO.
         </text>
       </g>
 
-      <!-- Contactless EMV Smart Chip (Authentic Gold Microchip) -->
-      <g transform="translate(0, 238)">
-        <rect x="0" y="0" width="56" height="44" rx="6" fill="url(#chip_gold)" stroke="#a16207" stroke-width="1.2"/>
-        <!-- Chip Circuitry Micro-Lines -->
-        <g stroke="#713f12" stroke-width="0.9" fill="none">
-          <line x1="0" y1="14" x2="56" y2="14"/>
-          <line x1="0" y1="30" x2="56" y2="30"/>
-          <line x1="20" y1="0" x2="20" y2="44"/>
-          <line x1="36" y1="0" x2="36" y2="44"/>
-          <rect x="14" y="10" width="28" height="24" rx="2" fill="#ca8a04" fill-opacity="0.3"/>
+      <!-- 10-Digit Value (5 - 5 Partitioned Format) -->
+      <g transform="translate(14, 76)">
+        <text font-family="'JetBrains Mono', 'Courier New', monospace" font-size="34" font-weight="900" fill="#064e3b" letter-spacing="2">
+          12345 - 67890
+        </text>
+      </g>
+
+      <!-- Right Contactless NFC Payment / Smart Chip Symbol (Matching Image 1) -->
+      <g transform="translate(470, 20)">
+        <g stroke="#0f172a" stroke-width="4.2" stroke-linecap="round">
+          <path d="M12 16C15 19 16.5 22.5 16.5 26C16.5 29.5 15 33 12 36"/>
+          <path d="M22 10C27 15 29.5 20.2 29.5 26C29.5 31.8 27 37 22 42"/>
+          <path d="M32 4C39.5 10.5 43 18 43 26C43 34 39.5 41.5 32 48"/>
         </g>
       </g>
     </g>
 
-    <clipPath id="photo_clip">
-      <rect x="2" y="2" width="144" height="188" rx="6"/>
-    </clipPath>
-
-    <!-- COLUMN 2: CITIZEN DEMOGRAPHICS & EMERGENCY CLINICAL BADGES -->
-    <g transform="translate(224, 116)">
+    <!-- ROW 2: MAIN DATA SPLIT GRID -->
+    <!-- LEFT COLUMN: CITIZEN DEMOGRAPHICS -->
+    <g transform="translate(36, 330)">
       
-      <!-- Patient Name (Official Dual-Language Format) -->
-      <div>
-        <text font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="10" font-weight="700" fill="#64748b" letter-spacing="0.4">
-          नाम / FULL NAME
+      <!-- Field 1: NAME -->
+      <g>
+        <text font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="14.5" font-weight="700" fill="#334155" letter-spacing="0.4">
+          नाम / NAME
         </text>
-        <text y="28" font-family="'Inter', sans-serif" font-size="24" font-weight="800" fill="#0f172a" letter-spacing="0.2">
+        <text y="36" font-family="'Inter', sans-serif" font-size="26" font-weight="900" fill="#0f172a" letter-spacing="0.4">
           RAHUL SHARMA
         </text>
-        <text y="46" font-family="'Noto Sans Devanagari', sans-serif" font-size="13" font-weight="600" fill="#334155">
-          राहुल शर्मा
-        </text>
-      </div>
-
-      <!-- Small DOB / Gender Details -->
-      <g transform="translate(0, 68)">
-        <!-- DOB Block -->
-        <g>
-          <text font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="9.5" font-weight="700" fill="#64748b">
-            जन्म तिथि / DOB
-          </text>
-          <text y="18" font-family="'Inter', monospace" font-size="14.5" font-weight="700" fill="#0f172a">
-            14/08/1992
-          </text>
-        </g>
-
-        <!-- Gender Block -->
-        <g transform="translate(140, 0)">
-          <text font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="9.5" font-weight="700" fill="#64748b">
-            लिंग / GENDER
-          </text>
-          <text y="18" font-family="'Inter', sans-serif" font-size="14.5" font-weight="700" fill="#0f172a">
-            MALE / पुरूष
-          </text>
-        </g>
       </g>
 
-      <!-- ================= BIG AND CLEARLY VISIBLE BLOOD GROUP ================= -->
-      <!-- Prominently displayed for immediate trauma/emergency first-responder identification -->
-      <g transform="translate(0, 118)">
-        <!-- Red High-Visibility Emergency Badge Surface -->
-        <rect x="0" y="0" width="230" height="58" rx="10" fill="#b91c1c" stroke="#dc2626" stroke-width="2"/>
-        <!-- Inner Protective Clinical Frame -->
-        <rect x="3" y="3" width="224" height="52" rx="7" stroke="#fca5a5" stroke-width="0.8" fill="none" opacity="0.6"/>
-
-        <!-- Emergency Red Droplet Icon with White Cross -->
-        <g transform="translate(24, 28)">
-          <path d="M0 -14C0 -14 12 0 12 8C12 14.6 6.6 20 0 20C-6.6 20 -12 14.6 -12 8C-12 0 0 -14 0 -14Z" fill="#ffffff"/>
-          <path d="M-2 4H2V8H6V12H2V16H-2V12H-6V8H-2V4Z" fill="#b91c1c"/>
-        </g>
-
-        <!-- Blood Group Label & Huge Visible Type -->
-        <g transform="translate(52, 18)">
-          <text font-family="'Inter', 'Noto Sans Devanagari', sans-serif" font-size="10.5" font-weight="800" fill="#fecaca" letter-spacing="1">
-            BLOOD GROUP • रक्त समूह
-          </text>
-          <text y="28" font-family="'Inter', sans-serif" font-size="28" font-weight="900" fill="#ffffff" letter-spacing="1">
-            O+ POSITIVE
-          </text>
-        </g>
-      </g>
-
-      <!-- ================= 10-DIGIT NATIONAL HEALTH ID IN 5-5 FORMAT ================= -->
-      <g transform="translate(0, 196)">
-        <text font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="10" font-weight="800" fill="#047857" letter-spacing="0.8">
-          राष्ट्रीय स्वास्थ्य पहचान संख्या / NATIONAL HEALTH ID
+      <!-- Field 2: DOB -->
+      <g transform="translate(0, 94)">
+        <text font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="14.5" font-weight="700" fill="#334155" letter-spacing="0.4">
+          जन्मतिथि / DOB
         </text>
-
-        <!-- Prominent High-Contrast Monospace Digit Box -->
-        <g transform="translate(0, 10)">
-          <!-- Background Security Housing for Health ID -->
-          <rect x="0" y="0" width="460" height="56" rx="8" fill="#f0fdf4" stroke="#047857" stroke-width="1.8"/>
-          <!-- Subtle Inner Security Dot Grid -->
-          <line x1="230" y1="6" x2="230" y2="50" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="3 3"/>
-
-          <!-- 10 Digits strictly formatted as 5-5 with wide kerning and high legibility -->
-          <text x="24" y="38" font-family="'JetBrains Mono', 'Courier New', monospace" font-size="32" font-weight="800" fill="#064e3b" letter-spacing="8">
-            48291
-          </text>
-          <text x="254" y="38" font-family="'JetBrains Mono', 'Courier New', monospace" font-size="32" font-weight="800" fill="#064e3b" letter-spacing="8">
-            73019
-          </text>
-        </g>
-      </g>
-
-      <!-- Secondary Clinical Markers (Allergies / Emergency Note) -->
-      <g transform="translate(0, 280)">
-        <text font-family="'Inter', sans-serif" font-size="9" font-weight="700" fill="#64748b">
-          CRITICAL CLINICAL ALERTS:
-        </text>
-        <text x="140" y="0" font-family="'Inter', sans-serif" font-size="9.5" font-weight="700" fill="#dc2626">
-          PENICILLIN ALLERGY • ASTHMA (MILD)
+        <text y="36" font-family="'Inter', sans-serif" font-size="26" font-weight="800" fill="#0f172a" letter-spacing="0.2">
+          15/08/1992
         </text>
       </g>
+
+      <!-- Field 3: GENDER -->
+      <g transform="translate(0, 188)">
+        <text font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="14.5" font-weight="700" fill="#334155" letter-spacing="0.4">
+          लिंग / GENDER
+        </text>
+        <text y="36" font-family="'Inter', 'Noto Sans Devanagari', sans-serif" font-size="26" font-weight="800" fill="#0f172a" letter-spacing="0.2">
+          MALE / पुरुष
+        </text>
+      </g>
+
+      <!-- Field 4: CARD NO. -->
+      <g transform="translate(0, 282)">
+        <text font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="14.5" font-weight="700" fill="#334155" letter-spacing="0.4">
+          कार्ड क्र. / CARD NO.
+        </text>
+        <text y="36" font-family="'JetBrains Mono', 'Courier New', monospace" font-size="25" font-weight="800" fill="#0f172a" letter-spacing="0.6">
+          HC9876543210
+        </text>
+      </g>
+
     </g>
 
-    <!-- COLUMN 3: DEDICATED HIGH-CONTRAST 2D QR CODE MATRIX -->
-    <g transform="translate(730, 116)">
-      <!-- Dedicated Crisp White QR Code Security Box -->
-      <rect x="0" y="0" width="226" height="250" rx="10" fill="#ffffff" stroke="#047857" stroke-width="1.5"/>
-
-      <!-- Optical Camera Alignment Corner Markers (Fast Triage Scanner Latching) -->
-      <path d="M12 28V12H28" stroke="#047857" stroke-width="3" stroke-linecap="round"/>
-      <path d="M198 12H214V28" stroke="#047857" stroke-width="3" stroke-linecap="round"/>
-      <path d="M12 188V204H28" stroke="#047857" stroke-width="3" stroke-linecap="round"/>
-      <path d="M198 204H214V188" stroke="#047857" stroke-width="3" stroke-linecap="round"/>
-
-      <!-- High-Precision 2D Emergency QR Matrix Graphic -->
-      <g transform="translate(25, 25)">
-        <!-- Corner Position Detection Patterns -->
-        <!-- Top-Left -->
-        <rect x="0" y="0" width="46" height="46" fill="#0f172a" rx="4"/>
-        <rect x="6" y="6" width="34" height="34" fill="#ffffff" rx="2"/>
-        <rect x="14" y="14" width="18" height="18" fill="#0f172a" rx="2"/>
-        <!-- Top-Right -->
-        <rect x="130" y="0" width="46" height="46" fill="#0f172a" rx="4"/>
-        <rect x="136" y="6" width="34" height="34" fill="#ffffff" rx="2"/>
-        <rect x="144" y="14" width="18" height="18" fill="#0f172a" rx="2"/>
-        <!-- Bottom-Left -->
-        <rect x="0" y="130" width="46" height="46" fill="#0f172a" rx="4"/>
-        <rect x="6" y="136" width="34" height="34" fill="#ffffff" rx="2"/>
-        <rect x="14" y="144" width="18" height="18" fill="#0f172a" rx="2"/>
-
-        <!-- Internal Data Modules Simulation (Exact Authentic Data Grid) -->
-        <g fill="#0f172a">
-          <!-- Alignment pattern -->
-          <rect x="138" y="138" width="24" height="24" rx="2"/>
-          <rect x="144" y="144" width="12" height="12" fill="#ffffff"/>
-          <rect x="147" y="147" width="6" height="6"/>
-
-          <!-- Timing lines -->
-          <rect x="54" y="20" width="6" height="6"/>
-          <rect x="68" y="20" width="6" height="6"/>
-          <rect x="82" y="20" width="6" height="6"/>
-          <rect x="96" y="20" width="6" height="6"/>
-          <rect x="110" y="20" width="6" height="6"/>
-
-          <rect x="20" y="54" width="6" height="6"/>
-          <rect x="20" y="68" width="6" height="6"/>
-          <rect x="20" y="82" width="6" height="6"/>
-          <rect x="20" y="96" width="6" height="6"/>
-          <rect x="20" y="110" width="6" height="6"/>
-
-          <!-- High-entropy payload modules -->
-          <rect x="54" y="54" width="14" height="14"/>
-          <rect x="76" y="54" width="14" height="7"/>
-          <rect x="98" y="54" width="20" height="14"/>
-          <rect x="126" y="54" width="14" height="14"/>
-          <rect x="54" y="76" width="14" height="20"/>
-          <rect x="76" y="82" width="20" height="14"/>
-          <rect x="104" y="76" width="14" height="14"/>
-          <rect x="126" y="76" width="20" height="20"/>
-          <rect x="54" y="104" width="20" height="14"/>
-          <rect x="82" y="104" width="14" height="20"/>
-          <rect x="104" y="98" width="14" height="14"/>
-          <rect x="126" y="104" width="14" height="14"/>
-
-          <rect x="54" y="132" width="14" height="14"/>
-          <rect x="76" y="132" width="20" height="14"/>
-          <rect x="104" y="132" width="14" height="20"/>
-          <rect x="54" y="154" width="20" height="14"/>
-          <rect x="82" y="154" width="14" height="14"/>
-          <rect x="104" y="160" width="20" height="14"/>
+    <!-- RIGHT COLUMN: PROMINENT BLOOD GROUP BOX & DEDICATED QR CODE -->
+    <g transform="translate(372, 330)">
+      
+      <!-- Big Framed Emergency Blood Group Box (Matching Image 1) -->
+      <g>
+        <rect x="0" y="0" width="224" height="136" rx="10" fill="#ffffff" stroke="#b91c1c" stroke-width="2.2"/>
+        
+        <!-- Label inside Box -->
+        <g transform="translate(112, 30)" text-anchor="middle">
+          <text font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="14.5" font-weight="800" fill="#b91c1c">
+            रक्त समूह /
+          </text>
+          <text y="20" font-family="'Inter', sans-serif" font-size="13" font-weight="800" fill="#b91c1c" letter-spacing="0.5">
+            BLOOD GROUP
+          </text>
         </g>
 
-        <!-- Central Secure Red Medical Cross Emblem in QR Center -->
-        <circle cx="88" cy="88" r="14" fill="#ffffff"/>
-        <circle cx="88" cy="88" r="12" fill="#047857"/>
-        <path d="M86 81H90V86H95V90H90V95H86V90H81V86H86V81Z" fill="#ffffff"/>
+        <!-- Huge Blood Group Type (Matching Image 1) -->
+        <g transform="translate(112, 108)" text-anchor="middle">
+          <text font-family="'Inter', sans-serif" font-size="48" font-weight="900" fill="#dc2626" letter-spacing="1">
+            O+
+          </text>
+        </g>
       </g>
 
-      <!-- Scanning Instructions -->
-      <g transform="translate(113, 222)">
-        <text text-anchor="middle" font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="8.5" font-weight="700" fill="#065f46">
-          आपातकालीन स्कैन / SCAN FOR EHR
-        </text>
-        <text y="14" text-anchor="middle" font-family="'Inter', sans-serif" font-size="7.5" font-weight="600" fill="#64748b">
-          Tokenized Instant Access
-        </text>
+      <!-- Dedicated High-Contrast Square QR Code (Matching Image 1) -->
+      <g transform="translate(0, 180)">
+        <!-- Dedicated White Housing Box -->
+        <rect x="0" y="0" width="224" height="224" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8"/>
+
+        <!-- Real 2D QR Code Matrix Pattern -->
+        <g transform="translate(18, 18)">
+          <!-- Top-Left Target -->
+          <rect x="0" y="0" width="52" height="52" fill="#0f172a" rx="4"/>
+          <rect x="8" y="8" width="36" height="36" fill="#ffffff" rx="2"/>
+          <rect x="16" y="16" width="20" height="20" fill="#0f172a" rx="2"/>
+          
+          <!-- Top-Right Target -->
+          <rect x="136" y="0" width="52" height="52" fill="#0f172a" rx="4"/>
+          <rect x="144" y="8" width="36" height="36" fill="#ffffff" rx="2"/>
+          <rect x="152" y="16" width="20" height="20" fill="#0f172a" rx="2"/>
+          
+          <!-- Bottom-Left Target -->
+          <rect x="0" y="136" width="52" height="52" fill="#0f172a" rx="4"/>
+          <rect x="8" y="144" width="36" height="36" fill="#ffffff" rx="2"/>
+          <rect x="16" y="152" width="20" height="20" fill="#0f172a" rx="2"/>
+
+          <!-- High-Density Data Matrix Dots -->
+          <g fill="#0f172a">
+            <rect x="62" y="12" width="10" height="10"/>
+            <rect x="82" y="12" width="10" height="10"/>
+            <rect x="102" y="12" width="10" height="10"/>
+            <rect x="12" y="62" width="10" height="10"/>
+            <rect x="12" y="82" width="10" height="10"/>
+            <rect x="12" y="102" width="10" height="10"/>
+
+            <rect x="62" y="62" width="16" height="16"/>
+            <rect x="88" y="62" width="24" height="16"/>
+            <rect x="122" y="62" width="16" height="16"/>
+            <rect x="148" y="62" width="16" height="16"/>
+
+            <rect x="62" y="88" width="24" height="16"/>
+            <rect x="96" y="88" width="16" height="24"/>
+            <rect x="122" y="96" width="16" height="16"/>
+            <rect x="148" y="88" width="24" height="16"/>
+
+            <rect x="62" y="122" width="16" height="24"/>
+            <rect x="88" y="132" width="24" height="16"/>
+            <rect x="122" y="122" width="24" height="16"/>
+            <rect x="156" y="122" width="16" height="24"/>
+
+            <rect x="62" y="156" width="24" height="16"/>
+            <rect x="96" y="156" width="16" height="16"/>
+            <rect x="122" y="156" width="24" height="16"/>
+            <rect x="156" y="156" width="16" height="16"/>
+          </g>
+
+          <!-- Central Red Cross Node in QR Center -->
+          <circle cx="94" cy="94" r="16" fill="#ffffff"/>
+          <circle cx="94" cy="94" r="14" fill="#047857"/>
+          <path d="M92 86H96V92H102V96H96V102H92V96H86V92H92V86Z" fill="#ffffff"/>
+        </g>
       </g>
+
     </g>
 
-    <!-- ================= BOTTOM CARD FOOTER: SECURITY SERIAL & COMPLIANCE ================= -->
-    <g transform="translate(44, 570)">
-      <!-- Microtext Security Thread Band -->
-      <line x1="0" y1="0" x2="912" y2="0" stroke="#cbd5e1" stroke-width="0.75"/>
-      <line x1="0" y1="2" x2="912" y2="2" stroke="#047857" stroke-width="0.5" stroke-dasharray="8 4"/>
-
-      <!-- Laser Engraved Unique Card Serial Number -->
-      <g transform="translate(0, 22)">
-        <text font-family="'JetBrains Mono', 'Courier New', monospace" font-size="11.5" font-weight="800" fill="#0f172a" letter-spacing="1">
-          № HC-IND-2026-9481028-IN
-        </text>
-      </g>
-
-      <!-- Security Specifications & Standard -->
-      <g transform="translate(450, 22)">
-        <text text-anchor="middle" font-family="'Inter', sans-serif" font-size="9" font-weight="700" fill="#475569" letter-spacing="0.5">
-          CR80 PVC • ISO/IEC 7810 ID-1 • NTAG 424 DNA CRYPTO
-        </text>
-      </g>
-
-      <!-- Issuance Authority & Helpline -->
-      <g transform="translate(912, 22)">
-        <text text-anchor="end" font-family="'Inter', sans-serif" font-size="9.5" font-weight="800" fill="#047857" letter-spacing="0.4">
-          GOVT OF INDIA • NHA
-        </text>
-      </g>
-    </g>
-
-    <!-- Bottom Tricolor Security Accent Ribbon -->
-    <rect x="0" y="612" width="1000" height="6" fill="#047857"/>
-    <rect x="0" y="618" width="1000" height="6" fill="#ffffff"/>
-    <rect x="0" y="624" width="1000" height="6" fill="#f97316"/>
-
-    <!-- Subtle Outer Border (Simulating Die-Cut CR80 Plastic Card Edge) -->
-    <rect x="1" y="1" width="998" height="628" rx="35" ry="35" stroke="#cbd5e1" stroke-width="2" fill="none"/>
+    <!-- Bottom Outer Die-Cut PVC Border -->
+    <rect x="1.5" y="1.5" width="627" height="997" rx="35" ry="35" stroke="#cbd5e1" stroke-width="2.5" fill="none"/>
   </g>
 </svg>

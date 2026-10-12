@@ -4,17 +4,19 @@
  */
 
 :root {
-  /* Dimensions — CR80 Standard ISO/IEC 7810 (85.60mm × 53.98mm, ratio 1.586) */
-  --card-width-mm: 85.6mm;
-  --card-height-mm: 53.98mm;
+  /* Dimensions — CR80 Standard ISO/IEC 7810 Portrait (53.98mm × 85.60mm, ratio 0.631) */
+  --card-width-mm: 53.98mm;
+  --card-height-mm: 85.60mm;
   --card-radius-mm: 3.18mm;
 
-  /* Screen Display Dimensions (Scale 1:1 or Scaled Presentation) */
-  --card-display-width: 520px;
-  --card-display-height: 328px;
-  --card-display-radius: 14px;
+  /* Portrait Display Dimensions */
+  --card-portrait-width: 350px;
+  --card-portrait-height: 554px;
+  --card-portrait-radius: 14px;
 
   /* Colors — Official Indian Healthcare Identity System */
+  --gov-teal-header: #0d4d42;
+  --gov-teal-dark: #063830;
   --gov-green: #047857;
   --gov-green-dark: #064e3b;
   --gov-green-light: #f0fdf4;
@@ -89,33 +91,34 @@
   z-index: 20;
 }
 
-/* Background Guilloche Security Linework Overlay */
+/* Background Guilloche Security Linework Overlay (Rich Multi-Color Rosette Lathe Pattern) */
 .card-guilloche-bg {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('../assets/guilloche-security-bg.svg');
+  background-image: url('../assets/guilloche-portrait-bg.svg');
   background-size: cover;
   background-position: center;
-  opacity: 0.85;
+  opacity: 0.95;
   pointer-events: none;
   z-index: 1;
 }
 
-/* Central Watermarked Ashoka Chakra */
+/* Central Watermarked Ashoka Chakra (24-Spoke Authentic Dharma Chakra) */
 .card-ashoka-watermark {
   position: absolute;
-  right: 18%;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 190px;
-  height: 190px;
-  background-image: url('../assets/ashoka-chakra-watermark.svg');
+  left: 50%;
+  top: 54%;
+  transform: translate(-50%, -50%);
+  width: 220px;
+  height: 220px;
+  background-image: url('../assets/ashoka-chakra.svg');
   background-size: contain;
   background-repeat: no-repeat;
-  opacity: 0.12;
+  background-position: center;
+  opacity: 0.11;
   pointer-events: none;
   z-index: 2;
 }
@@ -545,7 +548,487 @@
   color: var(--text-muted);
 }
 
-/* ================= PRINT STYLES (CR80 PVC EXACT 85.6mm × 53.98mm) ================= */
+/* ================= PORTRAIT CR80 PVC INDIAN HEALTHCARD (EXACT IMAGE 1 MATCH) ================= */
+.indian-healthcard-portrait {
+  position: relative;
+  width: var(--card-portrait-width);
+  height: var(--card-portrait-height);
+  border-radius: var(--card-portrait-radius);
+  background-color: var(--pvc-base);
+  box-sizing: border-box;
+  overflow: hidden;
+  user-select: none;
+  font-family: var(--font-sans);
+  color: var(--text-dark);
+  border: 1px solid var(--pvc-border);
+  box-shadow: 
+    0 2px 4px rgba(15, 23, 42, 0.08),
+    0 16px 36px -8px rgba(15, 23, 42, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.indian-healthcard-portrait:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 8px rgba(15, 23, 42, 0.1),
+    0 24px 44px -10px rgba(15, 23, 42, 0.22);
+}
+
+/* Perimeter Micro-Security Border */
+.card-perimeter-border {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  border-radius: 10px;
+  border: 0.75px solid #cbd5e1;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Portrait Top Official Header */
+.portrait-header {
+  position: relative;
+  z-index: 5;
+  background-color: var(--gov-teal-header);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 84px;
+}
+
+.header-seal-left {
+  width: 54px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.header-seal-left .seal-icon {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.seal-fallback-text {
+  font-size: 5.5px;
+  font-weight: 700;
+  color: #a7f3d0;
+  text-align: center;
+  line-height: 1.1;
+  margin-top: 2px;
+}
+
+.header-center-titles {
+  text-align: center;
+  color: #ffffff;
+  flex: 1;
+  padding: 0 6px;
+}
+
+.title-hindi {
+  font-family: var(--font-devanagari);
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+.title-english {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  line-height: 1.2;
+  margin-top: 2px;
+}
+
+.header-emblem-right {
+  width: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.header-emblem-right .lion-emblem {
+  width: 38px;
+  height: 44px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.emblem-motto {
+  font-family: var(--font-devanagari);
+  font-size: 6.5px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 2px;
+}
+
+/* Tricolor Ribbon */
+.tricolor-ribbon {
+  height: 5px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 6;
+}
+
+.tricolor-ribbon .stripe-saffron {
+  height: 2px;
+  background: var(--gov-saffron);
+}
+
+.tricolor-ribbon .stripe-white {
+  height: 1px;
+  background: #ffffff;
+}
+
+.tricolor-ribbon .stripe-green {
+  height: 2px;
+  background: #138808;
+}
+
+.ribbon-bottom {
+  margin-top: auto;
+}
+
+/* Portrait Card Body */
+.portrait-body {
+  position: relative;
+  z-index: 5;
+  padding: 14px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Health ID Box Row */
+.health-id-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.health-id-pill-box {
+  flex: 1;
+  background: #ffffff;
+  border: 1.5px solid var(--gov-green);
+  border-radius: 8px;
+  padding: 6px 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.id-label {
+  font-family: var(--font-devanagari);
+  font-size: 8px;
+  font-weight: 800;
+  color: var(--text-dark);
+  letter-spacing: 0.2px;
+  line-height: 1.1;
+}
+
+.id-value {
+  font-size: 19px;
+  font-weight: 900;
+  color: var(--gov-green-dark);
+  letter-spacing: 2px;
+  line-height: 1.2;
+  margin-top: 2px;
+}
+
+.nfc-wave-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 4px;
+}
+
+/* Data Split Section */
+.data-split-section {
+  display: grid;
+  grid-template-columns: 1.15fr 0.95fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.demographics-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.field-label {
+  font-family: var(--font-devanagari);
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.2px;
+}
+
+.field-val-name {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--text-dark);
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+.field-val {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-top: 1px;
+}
+
+/* Emergency Column (Blood Group Box & QR Code) */
+.emergency-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.blood-group-box {
+  background: #ffffff;
+  border: 1.8px solid var(--blood-red);
+  border-radius: 8px;
+  padding: 8px 6px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(185, 28, 28, 0.08);
+}
+
+.blood-lbl-hi {
+  font-family: var(--font-devanagari);
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--blood-red);
+  line-height: 1;
+}
+
+.blood-lbl-en {
+  font-size: 8px;
+  font-weight: 800;
+  color: var(--blood-red);
+  letter-spacing: 0.4px;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.blood-big-val {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--blood-red-bright);
+  letter-spacing: 0.5px;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.qr-code-enclosure {
+  background: #ffffff;
+  border: 1.2px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.qr-code-img {
+  width: 100%;
+  max-width: 110px;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.qr-placeholder-matrix {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ================= PORTRAIT BACK CARD ================= */
+.back-instructions-header {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  padding: 16px 12px 10px 12px;
+}
+
+.instr-title-hi {
+  font-family: var(--font-devanagari);
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--text-dark);
+}
+
+.instr-title-en {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--text-dark);
+  letter-spacing: 0.6px;
+  margin-top: 2px;
+}
+
+.instructions-list {
+  position: relative;
+  z-index: 5;
+  padding: 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.instr-item {
+  line-height: 1.25;
+}
+
+.instr-hi {
+  font-family: var(--font-devanagari);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.instr-en {
+  font-size: 8.5px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.back-authority-section {
+  position: relative;
+  z-index: 5;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.auth-header-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lion-emblem-small {
+  width: 20px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.auth-name-hi {
+  font-family: var(--font-devanagari);
+  font-size: 8px;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+.auth-name-en {
+  font-size: 7px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.signatory-text {
+  font-size: 8px;
+  color: var(--text-secondary);
+  font-weight: 700;
+  margin-top: 6px;
+  line-height: 1.2;
+}
+
+.sign-hi {
+  font-family: var(--font-devanagari);
+  font-size: 7.5px;
+}
+
+.auth-right {
+  text-align: right;
+  line-height: 1.2;
+}
+
+.help-hi {
+  font-family: var(--font-devanagari);
+  font-size: 8.5px;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+.help-number {
+  font-size: 13.5px;
+  font-weight: 900;
+  color: var(--text-dark);
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.help-url {
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--gov-green);
+  margin-top: 4px;
+}
+
+.barcode-container {
+  position: relative;
+  z-index: 5;
+  padding: 6px 18px 12px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.barcode-lines {
+  width: 220px;
+  height: 38px;
+  background: repeating-linear-gradient(
+    90deg,
+    #0f172a 0px,
+    #0f172a 2px,
+    transparent 2px,
+    transparent 4px,
+    #0f172a 4px,
+    #0f172a 7px,
+    transparent 7px,
+    transparent 10px,
+    #0f172a 10px,
+    #0f172a 11px,
+    transparent 11px,
+    transparent 14px
+  );
+}
+
+.barcode-serial {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-dark);
+  letter-spacing: 1.5px;
+  margin-top: 4px;
+}
+
+/* ================= PRINT STYLES (CR80 PVC EXACT 53.98mm × 85.60mm PORTRAIT) ================= */
 @media print {
   body {
     background: transparent !important;
@@ -553,7 +1036,7 @@
     margin: 0 !important;
   }
 
-  .indian-healthcard-pvc {
+  .indian-healthcard-portrait {
     width: var(--card-width-mm) !important;
     height: var(--card-height-mm) !important;
     border-radius: var(--card-radius-mm) !important;
