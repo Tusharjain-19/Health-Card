@@ -70,7 +70,7 @@ export class StaffView {
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
           <div>
             <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Registered Hospital Doctors & OPD Clinicians</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0 0;">Authorized to conduct OPD consultations, order diagnostics, and admit inpatients</p>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0 0;">Authorized for OPD consultations, e-prescriptions, Doctor App mobile access, and inpatient ward rounds</p>
           </div>
           <span class="badge badge-active">Central Medical Server Sync Active</span>
         </div>
@@ -78,11 +78,11 @@ export class StaffView {
         <table class="rx-table" style="font-size: 13px;">
           <thead>
             <tr>
-              <th style="width: 26%;">Doctor & Qualifications</th>
+              <th style="width: 28%;">Doctor & App Credentials</th>
               <th style="width: 18%;">Department & Specialization</th>
               <th style="width: 15%;">Medical Registration (NMC)</th>
-              <th style="width: 18%;">OPD Room & Schedule</th>
-              <th style="width: 8%;">Consult Fee</th>
+              <th style="width: 17%;">OPD Room & Schedule</th>
+              <th style="width: 7%;">Fee</th>
               <th style="width: 15%; text-align: right;">Management Actions</th>
             </tr>
           </thead>
@@ -96,12 +96,22 @@ export class StaffView {
             ` : doctors.map(doc => `
               <tr>
                 <td>
-                  <div style="display: flex; align-items: center; gap: 10px;">
-                    <img src="${doc.avatar || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80'}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color);" alt="${doc.fullName}" />
+                  <div style="display: flex; align-items: flex-start; gap: 12px;">
+                    <div style="position: relative; flex-shrink: 0;">
+                      <img src="${doc.avatar || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80'}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1);" alt="${doc.fullName}" />
+                      <span style="position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; background: #22c55e; border-radius: 50%; border: 2px solid #ffffff;" title="Active Clinician"></span>
+                    </div>
                     <div>
-                      <div style="font-weight: 700; color: var(--text-main); font-size: 13.5px;">${doc.fullName}</div>
+                      <div style="font-weight: 700; color: var(--text-main); font-size: 14px;">${doc.fullName}</div>
                       <div style="font-size: 11px; color: var(--color-primary); font-weight: 600;">${doc.qualification || 'MBBS'}</div>
-                      <div style="font-size: 11px; color: var(--text-muted);">${doc.email || doc.phone || ''}</div>
+                      
+                      <!-- Doctor App Credentials Chip -->
+                      <div style="margin-top: 4px; display: inline-flex; align-items: center; gap: 5px; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 2px 7px; border-radius: 4px; font-size: 10.5px;">
+                        <span style="color: #166534; font-weight: 700;">📱 App:</span>
+                        <span class="font-mono" style="font-weight: 700; color: #15803d;">${doc.appUsername || 'doc.' + doc.id}</span>
+                        <span style="color: #86efac;">|</span>
+                        <span style="color: #166534;">PIN: <strong>${doc.appPin || '••••'}</strong></span>
+                      </div>
                     </div>
                   </div>
                 </td>
@@ -110,9 +120,10 @@ export class StaffView {
                   <div style="font-size: 11.5px; color: var(--text-muted);">${doc.specialization || 'Clinical Specialist'}</div>
                 </td>
                 <td>
-                  <span style="font-family: monospace; font-weight: 700; font-size: 11.5px; color: #1d4ed8; background: #eff6ff; border: 1px solid #bfdbfe; padding: 2px 7px; border-radius: 4px;">
+                  <span style="font-family: monospace; font-weight: 700; font-size: 11.5px; color: #1d4ed8; background: #eff6ff; border: 1px solid #bfdbfe; padding: 2px 7px; border-radius: 4px; display: inline-block;">
                     ${doc.regNumber || 'NMC Verified'}
                   </span>
+                  <div style="font-size: 10.5px; color: #059669; margin-top: 3px; font-weight: 600;">✓ E-Signature Verified</div>
                 </td>
                 <td>
                   <div style="font-weight: 600; color: var(--text-main); font-size: 12px;">${doc.opdRoom || 'OPD Room 101'}</div>
@@ -123,7 +134,7 @@ export class StaffView {
                 </td>
                 <td style="text-align: right;">
                   <div style="display: inline-flex; gap: 6px;">
-                    <button type="button" class="btn btn-sm btn-secondary btn-edit-doctor" data-id="${doc.id}" title="Edit doctor details, schedule and room">
+                    <button type="button" class="btn btn-sm btn-secondary btn-edit-doctor" data-id="${doc.id}" title="Edit doctor profile, photo, and app credentials">
                       Edit
                     </button>
                     <button type="button" class="btn btn-sm ${doc.status === 'Active' ? 'btn-outline' : 'btn-primary'} btn-toggle-doctor" data-id="${doc.id}">
@@ -265,17 +276,19 @@ export class StaffView {
   }
 
   // ==========================================
-  // ADD NEW DOCTOR MODAL (Item 3 & 4)
+  // ADD NEW DOCTOR MODAL (With Image & Doctor App Credentials)
   // ==========================================
   openAddDoctorModal() {
+    let currentAvatarData = "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80";
+
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
     overlay.innerHTML = `
-      <div class="modal-dialog" style="max-width: 650px;">
+      <div class="modal-dialog" style="max-width: 680px;">
         <div class="modal-header">
           <div>
-            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Register Hospital Doctor</h3>
-            <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Add attending clinician for OPD prescriptions, diagnostics, and inpatient care</p>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Register Hospital Doctor & Doctor App Account</h3>
+            <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Add attending clinician, profile photo, OPD schedule, and Doctor App login credentials</p>
           </div>
           <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -284,6 +297,26 @@ export class StaffView {
 
         <form id="modal-add-doc-form">
           <div class="modal-body">
+            <!-- 1. Doctor Photo & Avatar Section -->
+            <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 14px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 16px;">
+              <div style="position: relative; flex-shrink: 0;">
+                <img id="add-doc-avatar-img" src="${currentAvatarData}" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-primary); box-shadow: var(--shadow-sm);" alt="Doctor Photo" />
+              </div>
+              <div style="flex: 1;">
+                <label class="form-label" style="font-weight: 700; margin-bottom: 4px;">Doctor Profile Photo / Image:</label>
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-sm btn-outline" id="btn-browse-doc-photo" style="display: inline-flex; align-items: center; gap: 6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Choose Photo File
+                  </button>
+                  <input type="file" id="add-doc-file-input" accept="image/*" style="display: none;" />
+                  <span style="font-size: 11.5px; color: var(--text-muted);">or paste image URL:</span>
+                  <input type="text" id="add-doc-avatar-url" class="form-input form-input-sm" style="flex: 1; min-width: 180px; font-size: 11px;" placeholder="https://images.unsplash.com/..." value="${currentAvatarData}" />
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Doctor Basic Info -->
             <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px;" class="form-group">
               <div>
                 <label class="form-label">Doctor Full Name with Title:</label>
@@ -346,6 +379,36 @@ export class StaffView {
                 <input type="text" id="doc-phone" class="form-input" placeholder="+91 98000 00000" />
               </div>
             </div>
+
+            <!-- 3. Doctor App Credentials Section (Prompt: doctor crediential for docters app will be used) -->
+            <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: var(--radius-lg); padding: 14px 16px; margin-top: 18px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <div style="font-weight: 700; color: #166534; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                  Doctor Mobile & Tablet App Credentials (चिकित्सक ऐप क्रेडेंशियल्स)
+                </div>
+                <span class="badge badge-active" style="font-size: 10px;">Doctor App Authorized</span>
+              </div>
+              <p style="font-size: 11.5px; color: #15803d; margin: 0 0 12px 0;">
+                These credentials allow the doctor to log in to the HealthCard Doctor App to view assigned patients, write digital prescriptions, and conduct ward rounds.
+              </p>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
+                <div>
+                  <label class="form-label" style="font-size: 11.5px; font-weight: 700; color: #14532d;">Doctor App Username / Login ID:</label>
+                  <input type="text" id="doc-app-username" class="form-input font-mono" placeholder="e.g. doc.priya" style="background: #ffffff;" required />
+                </div>
+                <div>
+                  <label class="form-label" style="font-size: 11.5px; font-weight: 700; color: #14532d;">Doctor App Access PIN / Password:</label>
+                  <input type="text" id="doc-app-pin" class="form-input font-mono" placeholder="e.g. 1234 (4-6 digit secure PIN)" value="1234" maxlength="16" style="background: #ffffff;" required />
+                </div>
+              </div>
+
+              <div>
+                <label class="form-label" style="font-size: 11.5px; font-weight: 700; color: #14532d;">Digital E-Signature Stamp (for E-Prescriptions):</label>
+                <input type="text" id="doc-digital-sig" class="form-input" placeholder="e.g. Digitally Signed by Dr. Priya Malhotra (NMC Verified)" style="background: #ffffff;" />
+              </div>
+            </div>
           </div>
 
           <div class="modal-footer">
@@ -357,6 +420,47 @@ export class StaffView {
     `;
 
     document.body.appendChild(overlay);
+
+    const avatarImg = overlay.querySelector('#add-doc-avatar-img');
+    const avatarUrlInput = overlay.querySelector('#add-doc-avatar-url');
+    const fileInput = overlay.querySelector('#add-doc-file-input');
+    const browseBtn = overlay.querySelector('#btn-browse-doc-photo');
+    const nameInput = overlay.querySelector('#doc-fullname');
+    const appUsernameInput = overlay.querySelector('#doc-app-username');
+    const digitalSigInput = overlay.querySelector('#doc-digital-sig');
+
+    // Auto-suggest app username and digital signature as name is typed
+    nameInput?.addEventListener('input', () => {
+      const clean = nameInput.value.toLowerCase().replace(/[^a-z]/g, '').slice(0, 10);
+      if (clean && !appUsernameInput.value) {
+        appUsernameInput.value = `doc.${clean}`;
+      }
+      if (nameInput.value && !digitalSigInput.value) {
+        digitalSigInput.value = `Digitally Signed by ${nameInput.value}`;
+      }
+    });
+
+    browseBtn?.addEventListener('click', () => fileInput?.click());
+
+    fileInput?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          currentAvatarData = re.target.result;
+          if (avatarImg) avatarImg.src = currentAvatarData;
+          if (avatarUrlInput) avatarUrlInput.value = 'Local photo file loaded';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    avatarUrlInput?.addEventListener('input', () => {
+      if (avatarUrlInput.value.startsWith('http')) {
+        currentAvatarData = avatarUrlInput.value;
+        if (avatarImg) avatarImg.src = currentAvatarData;
+      }
+    });
 
     overlay.querySelectorAll('.modal-close').forEach(btn => {
       btn.addEventListener('click', () => overlay.remove());
@@ -374,6 +478,9 @@ export class StaffView {
       const opdSchedule = overlay.querySelector('#doc-schedule').value;
       const email = overlay.querySelector('#doc-email').value;
       const phone = overlay.querySelector('#doc-phone').value;
+      const appUsername = overlay.querySelector('#doc-app-username').value;
+      const appPin = overlay.querySelector('#doc-app-pin').value;
+      const digitalSignature = overlay.querySelector('#doc-digital-sig').value;
 
       hospitalStore.addDoctor({
         fullName,
@@ -385,27 +492,33 @@ export class StaffView {
         opdRoom,
         opdSchedule,
         email,
-        phone
+        phone,
+        avatar: currentAvatarData,
+        appUsername,
+        appPin,
+        digitalSignature
       });
 
       overlay.remove();
-      showToast(`${fullName} registered successfully! OPD room and schedule assigned.`, 'success');
+      showToast(`${fullName} registered successfully! Doctor App ID "${appUsername}" configured.`, 'success');
       this.render();
     });
   }
 
   // ==========================================
-  // EDIT DOCTOR DETAILS MODAL (Item 4)
+  // EDIT DOCTOR DETAILS MODAL (With Image & Doctor App Credentials)
   // ==========================================
   openEditDoctorModal(doc) {
+    let currentAvatarData = doc.avatar || "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80";
+
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
     overlay.innerHTML = `
-      <div class="modal-dialog" style="max-width: 650px;">
+      <div class="modal-dialog" style="max-width: 680px;">
         <div class="modal-header">
           <div>
-            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Edit Doctor Details & Schedule</h3>
-            <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Update clinical assignments, OPD room, timings, and fees</p>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Edit Doctor Details & App Credentials</h3>
+            <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Update photo, clinical assignments, OPD room, timings, and Doctor App login credentials</p>
           </div>
           <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -414,6 +527,26 @@ export class StaffView {
 
         <form id="modal-edit-doc-form">
           <div class="modal-body">
+            <!-- 1. Doctor Photo & Avatar Section -->
+            <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 14px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 16px;">
+              <div style="position: relative; flex-shrink: 0;">
+                <img id="edit-doc-avatar-img" src="${currentAvatarData}" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-primary); box-shadow: var(--shadow-sm);" alt="${doc.fullName}" />
+              </div>
+              <div style="flex: 1;">
+                <label class="form-label" style="font-weight: 700; margin-bottom: 4px;">Update Doctor Photo:</label>
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-sm btn-outline" id="btn-edit-browse-photo" style="display: inline-flex; align-items: center; gap: 6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Upload New Photo
+                  </button>
+                  <input type="file" id="edit-doc-file-input" accept="image/*" style="display: none;" />
+                  <span style="font-size: 11.5px; color: var(--text-muted);">or URL:</span>
+                  <input type="text" id="edit-doc-avatar-url" class="form-input form-input-sm" style="flex: 1; min-width: 180px; font-size: 11px;" value="${currentAvatarData}" />
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Doctor Basic Info -->
             <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px;" class="form-group">
               <div>
                 <label class="form-label">Doctor Full Name:</label>
@@ -476,6 +609,36 @@ export class StaffView {
                 <input type="text" id="edit-doc-phone" class="form-input" value="${doc.phone || ''}" />
               </div>
             </div>
+
+            <!-- 3. Doctor App Credentials Section -->
+            <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: var(--radius-lg); padding: 14px 16px; margin-top: 18px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <div style="font-weight: 700; color: #166534; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                  Doctor Mobile & Tablet App Credentials (चिकित्सक ऐप क्रेडेंशियल्स)
+                </div>
+                <span class="badge badge-active" style="font-size: 10px;">Doctor App Authorized</span>
+              </div>
+              <p style="font-size: 11.5px; color: #15803d; margin: 0 0 12px 0;">
+                Doctor App credentials used for login on mobile tablets to conduct consultations and ward rounds.
+              </p>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
+                <div>
+                  <label class="form-label" style="font-size: 11.5px; font-weight: 700; color: #14532d;">Doctor App Username / Login ID:</label>
+                  <input type="text" id="edit-doc-app-username" class="form-input font-mono" value="${doc.appUsername || 'doc.' + doc.id}" style="background: #ffffff;" required />
+                </div>
+                <div>
+                  <label class="form-label" style="font-size: 11.5px; font-weight: 700; color: #14532d;">Doctor App Access PIN / Password:</label>
+                  <input type="text" id="edit-doc-app-pin" class="form-input font-mono" value="${doc.appPin || '1234'}" maxlength="16" style="background: #ffffff;" required />
+                </div>
+              </div>
+
+              <div>
+                <label class="form-label" style="font-size: 11.5px; font-weight: 700; color: #14532d;">Digital E-Signature Stamp (for E-Prescriptions):</label>
+                <input type="text" id="edit-doc-digital-sig" class="form-input" value="${doc.digitalSignature || `Digitally Signed by ${doc.fullName} (${doc.regNumber || 'NMC'})`}" style="background: #ffffff;" />
+              </div>
+            </div>
           </div>
 
           <div class="modal-footer">
@@ -487,6 +650,33 @@ export class StaffView {
     `;
 
     document.body.appendChild(overlay);
+
+    const avatarImg = overlay.querySelector('#edit-doc-avatar-img');
+    const avatarUrlInput = overlay.querySelector('#edit-doc-avatar-url');
+    const fileInput = overlay.querySelector('#edit-doc-file-input');
+    const browseBtn = overlay.querySelector('#btn-edit-browse-photo');
+
+    browseBtn?.addEventListener('click', () => fileInput?.click());
+
+    fileInput?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          currentAvatarData = re.target.result;
+          if (avatarImg) avatarImg.src = currentAvatarData;
+          if (avatarUrlInput) avatarUrlInput.value = 'Local photo file updated';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    avatarUrlInput?.addEventListener('input', () => {
+      if (avatarUrlInput.value.startsWith('http')) {
+        currentAvatarData = avatarUrlInput.value;
+        if (avatarImg) avatarImg.src = currentAvatarData;
+      }
+    });
 
     overlay.querySelectorAll('.modal-close').forEach(btn => {
       btn.addEventListener('click', () => overlay.remove());
@@ -504,12 +694,16 @@ export class StaffView {
         opdRoom: overlay.querySelector('#edit-doc-room').value,
         opdSchedule: overlay.querySelector('#edit-doc-schedule').value,
         email: overlay.querySelector('#edit-doc-email').value,
-        phone: overlay.querySelector('#edit-doc-phone').value
+        phone: overlay.querySelector('#edit-doc-phone').value,
+        avatar: currentAvatarData,
+        appUsername: overlay.querySelector('#edit-doc-app-username').value,
+        appPin: overlay.querySelector('#edit-doc-app-pin').value,
+        digitalSignature: overlay.querySelector('#edit-doc-digital-sig').value
       };
 
       hospitalStore.updateDoctor(doc.id, updated);
       overlay.remove();
-      showToast(`${updated.fullName} details updated successfully across network!`, 'success');
+      showToast(`${updated.fullName} details & Doctor App credentials updated!`, 'success');
       this.render();
     });
   }

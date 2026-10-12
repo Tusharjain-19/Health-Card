@@ -189,9 +189,18 @@ class HospitalStorageService {
   // ==========================================
   // HOSPITAL DOCTORS MANAGEMENT (Item 3 & 4)
   // ==========================================
+  // HOSPITAL DOCTORS MANAGEMENT (Item 3 & 4)
+  // ==========================================
   getDoctors(department = 'All') {
     this.refresh();
-    const list = this.clinicalData.doctors || DEFAULT_HOSPITAL_DOCTORS;
+    const list = (this.clinicalData.doctors || DEFAULT_HOSPITAL_DOCTORS).map(d => ({
+      avatar: d.avatar || "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80",
+      appUsername: d.appUsername || `doc.${(d.fullName || '').toLowerCase().replace(/[^a-z]/g, '').slice(0, 10)}`,
+      appPin: d.appPin || '1234',
+      digitalSignature: d.digitalSignature || `Digitally Signed by ${d.fullName}`,
+      appRole: d.appRole || 'Attending Clinician (Doctor App Access)',
+      ...d
+    }));
     if (department && department !== 'All') {
       return list.filter(d => d.department === department);
     }
@@ -200,16 +209,30 @@ class HospitalStorageService {
 
   getDoctorById(id) {
     this.refresh();
-    return (this.clinicalData.doctors || []).find(d => d.id === id);
+    const doc = (this.clinicalData.doctors || DEFAULT_HOSPITAL_DOCTORS).find(d => d.id === id);
+    if (!doc) return null;
+    return {
+      avatar: doc.avatar || "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80",
+      appUsername: doc.appUsername || `doc.${(doc.fullName || '').toLowerCase().replace(/[^a-z]/g, '').slice(0, 10)}`,
+      appPin: doc.appPin || '1234',
+      digitalSignature: doc.digitalSignature || `Digitally Signed by ${doc.fullName}`,
+      appRole: doc.appRole || 'Attending Clinician (Doctor App Access)',
+      ...doc
+    };
   }
 
   addDoctor(doctorData) {
     this.refresh();
+    const cleanUser = doctorData.appUsername || `doc.${(doctorData.fullName || '').toLowerCase().replace(/[^a-z]/g, '').slice(0, 10)}`;
     const newDoc = {
       id: `doc_${Date.now()}`,
       status: "Active",
       createdAt: new Date().toISOString(),
       avatar: doctorData.avatar || "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80",
+      appUsername: cleanUser,
+      appPin: doctorData.appPin || '1234',
+      digitalSignature: doctorData.digitalSignature || `Digitally Signed by ${doctorData.fullName} (${doctorData.regNumber || 'NMC Verified'})`,
+      appRole: doctorData.appRole || 'Attending Clinician (Doctor App Access)',
       ...doctorData
     };
     if (!this.clinicalData.doctors) this.clinicalData.doctors = [...DEFAULT_HOSPITAL_DOCTORS];
@@ -222,7 +245,7 @@ class HospitalStorageService {
     this.logAudit({
       action: "DOCTOR_REGISTERED",
       target: `${newDoc.fullName} (${newDoc.department})`,
-      details: `Registered with NMC ${newDoc.regNumber || 'N/A'}, OPD Room: ${newDoc.opdRoom || 'OPD Desk'}`
+      details: `Registered with NMC ${newDoc.regNumber || 'N/A'}, Doctor App ID: ${newDoc.appUsername}, OPD Room: ${newDoc.opdRoom || 'OPD Desk'}`
     });
     return newDoc;
   }
@@ -237,7 +260,7 @@ class HospitalStorageService {
       this.logAudit({
         action: "DOCTOR_UPDATED",
         target: `${doc.fullName} (${doc.id})`,
-        details: `Credentials/schedule updated for ${doc.department}`
+        details: `Credentials/schedule updated for ${doc.department}. Doctor App Login: ${doc.appUsername || 'Configured'}`
       });
     }
     return doc;
@@ -686,6 +709,128 @@ class HospitalStorageService {
     });
   }
 
+  // Update Patient Profile Details (Name, Age, Gender, Mobile, Blood Group)
+  updatePatientDetails(healthId, updatedDetails) {
+    this.refresh();
+    const clean = (healthId || '').replace(/\s+/g, '');
+    const patient = this.getPatientByHealthId(clean);
+    if (!patient) return null;
+
+    Object.assign(patient, updatedDetails, { updatedAt: new Date().toISOString() });
+    this.saveCentral();
+
+    this.logAudit({
+      action: "PATIENT_DETAILS_UPDATED",
+      target: `${patient.fullName} (${patient.healthId || patient.id})`,
+      details: `Profile updated by ${this.getCurrentStaff().fullName}: Name=${patient.fullName}, Mobile=${patient.mobile}, Blood=${patient.bloodGroup}`
+    });
+    return patient;
+  }
+
+  // Time-to-Time Vitals Tracking & Temperature Trend (समय अनुसार तापमान व वाइटल्स)
+  addPatientVitalLog(healthId, vitalEntry) {
+    this.refresh();
+    const clean = (healthId || '').replace(/\s+/g, '');
+    if (!this.clinicalData.vitalsHistory) this.clinicalData.vitalsHistory = {};
+    if (!this.clinicalData.vitalsHistory[clean]) {
+      this.clinicalData.vitalsHistory[clean] = [];
+    }
+
+    const staff = this.getCurrentStaff();
+    const newVital = {
+      id: `vit_${Date.now()}`,
+      recordedAt: new Date().toISOString(),
+      time: vitalEntry.time || new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }),
+      temp: parseFloat(vitalEntry.temp) || 98.4,
+      bpSys: parseInt(vitalEntry.bpSys, 10) || 120,
+      bpDia: parseInt(vitalEntry.bpDia, 10) || 80,
+      pulse: parseInt(vitalEntry.pulse, 10) || 72,
+      spo2: parseInt(vitalEntry.spo2, 10) || 98,
+      respRate: parseInt(vitalEntry.respRate, 10) || 16,
+      weight: parseFloat(vitalEntry.weight) || 70,
+      problem: vitalEntry.problem || 'Vitals observation',
+      dietNote: vitalEntry.dietNote || '',
+      recordedBy: staff.fullName
+    };
+
+    this.clinicalData.vitalsHistory[clean].unshift(newVital);
+
+    // Also update current latest snapshot
+    if (!this.clinicalData.vitals) this.clinicalData.vitals = {};
+    this.clinicalData.vitals[clean] = {
+      ...newVital,
+      recordedAt: newVital.recordedAt,
+      recordedBy: staff.fullName
+    };
+
+    this.logAudit({
+      action: "VITALS_LOGGED",
+      target: `Health ID ${formatHealthId(clean)}`,
+      details: `Logged at ${newVital.time}: Temp=${newVital.temp}°F, BP=${newVital.bpSys}/${newVital.bpDia}, SpO2=${newVital.spo2}%. Note: ${newVital.problem}`
+    });
+
+    this.saveClinical();
+    return newVital;
+  }
+
+  getPatientVitalsHistory(healthId) {
+    this.refresh();
+    const clean = (healthId || '').replace(/\s+/g, '');
+    let list = (this.clinicalData.vitalsHistory && this.clinicalData.vitalsHistory[clean]) || [];
+
+    if (list.length === 0) {
+      const curr = (this.clinicalData.vitals && this.clinicalData.vitals[clean]) || {
+        temp: 99.4, bpSys: 128, bpDia: 82, pulse: 78, spo2: 98, weight: 72
+      };
+      const defaults = [
+        {
+          id: 'vit_01',
+          recordedAt: new Date(Date.now() - 4 * 3600000).toISOString(),
+          time: '09:00 AM',
+          temp: 101.8,
+          bpSys: 136,
+          bpDia: 88,
+          pulse: 94,
+          spo2: 96,
+          problem: 'High temperature with shivering & severe headache. Tab Paracetamol given.',
+          dietNote: 'Warm water and light ORS solution advised.',
+          recordedBy: 'Sister Sunita (Triage Desk)'
+        },
+        {
+          id: 'vit_02',
+          recordedAt: new Date(Date.now() - 2 * 3600000).toISOString(),
+          time: '11:30 AM',
+          temp: 99.6,
+          bpSys: 126,
+          bpDia: 82,
+          pulse: 82,
+          spo2: 98,
+          problem: 'Temperature declining post antipyretic. Perspiration present.',
+          dietNote: 'Moong dal khichdi taken, well tolerated.',
+          recordedBy: 'Sister Sunita (Triage Desk)'
+        },
+        {
+          id: 'vit_03',
+          recordedAt: new Date().toISOString(),
+          time: '01:45 PM',
+          temp: parseFloat(curr.temp) || 98.6,
+          bpSys: parseInt(curr.bpSys, 10) || 122,
+          bpDia: parseInt(curr.bpDia, 10) || 80,
+          pulse: parseInt(curr.pulse, 10) || 74,
+          spo2: parseInt(curr.spo2, 10) || 99,
+          problem: 'Patient alert, fever settled. Routine review.',
+          dietNote: 'Clear liquids and light semi-solid diet.',
+          recordedBy: this.getCurrentStaff().fullName
+        }
+      ];
+      if (!this.clinicalData.vitalsHistory) this.clinicalData.vitalsHistory = {};
+      this.clinicalData.vitalsHistory[clean] = defaults;
+      this.saveClinical();
+      list = defaults;
+    }
+    return list;
+  }
+
   // Patient Clinical Chart
   getPatientClinicalSummary(healthId) {
     this.refresh();
@@ -697,6 +842,7 @@ class HospitalStorageService {
     const conditions = (this.clinicalData.conditions && this.clinicalData.conditions[clean]) || [];
     const medications = (this.clinicalData.medications && this.clinicalData.medications[clean]) || [];
     const vitals = (this.clinicalData.vitals && this.clinicalData.vitals[clean]) || null;
+    const vitalsHistory = this.getPatientVitalsHistory(clean);
     const consultations = (this.clinicalData.consultations || []).filter(c => (c.healthId || '').replace(/\s+/g, '') === clean);
     const admissions = (this.clinicalData.admissions || []).filter(a => (a.healthId || '').replace(/\s+/g, '') === clean);
     const labResults = (this.clinicalData.labResults || []).filter(l => (l.healthId || '').replace(/\s+/g, '') === clean);
@@ -708,6 +854,7 @@ class HospitalStorageService {
       conditions,
       medications,
       vitals,
+      vitalsHistory,
       consultations,
       admissions,
       labResults,

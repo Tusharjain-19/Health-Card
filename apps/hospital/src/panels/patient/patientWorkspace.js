@@ -15,6 +15,7 @@ import { formatHealthId } from '../../shared/utils/healthId.js';
 import { formatDate, calculateAge, maskMobile } from '../../shared/utils/formatters.js';
 import { showToast } from '../../shared/components/toast.js';
 import { DocumentScannerModal } from '../dashboard/scannerModal.js';
+import { QRScannerModal } from '../dashboard/qrScannerModal.js';
 
 export class PatientWorkspace {
   constructor(container, healthId) {
@@ -429,25 +430,72 @@ export class PatientWorkspace {
   // ==========================================================================
   // TAB 2: OPD Consultation Suite & E-Prescription Builder (PRD REC-02, REC-03)
   // ==========================================================================
+  // ==========================================================================
+  // TAB 2: OPD Consultation Suite & E-Prescription Builder (PRD REC-02, REC-03)
+  // ==========================================================================
   renderConsultationTab(container) {
     const summary = hospitalStore.getPatientClinicalSummary(this.healthId);
-    const { patient, vitals } = summary;
+    const { patient, vitals, vitalsHistory = [] } = summary;
     const staff = hospitalStore.getCurrentStaff();
     const doctors = hospitalStore.getDoctors();
     const services = hospitalStore.getServices();
 
     container.innerHTML = `
+      <!-- Fast Patient Switcher & Card ID / Mobile Entry Bar -->
+      <div style="background: #ffffff; border: 1.5px solid var(--border-color); border-radius: var(--radius-xl); padding: 14px 18px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 320px;">
+            <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              Enter Card ID, 10-Digit Mobile, or Patient Name:
+            </label>
+            <div style="display: flex; gap: 8px; margin-top: 6px;">
+              <input type="text" id="opd-search-patient-input" class="form-input" placeholder="e.g. 4022 9479 88 or 9876543210 or Name..." value="${patient.healthId || patient.mobile || ''}" style="font-weight: 600;" />
+              <button type="button" class="btn btn-primary" id="btn-opd-pull-patient" style="white-space: nowrap; font-weight: 700;">
+                Load Patient
+              </button>
+              <button type="button" class="btn btn-secondary" id="btn-opd-scan-modal" title="Scan HealthCard QR via Camera" style="white-space: nowrap;">
+                📷 Scan QR
+              </button>
+            </div>
+            <div id="opd-patient-search-results" style="display: none; margin-top: 8px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px; max-height: 200px; overflow-y: auto;"></div>
+          </div>
+
+          <!-- Active Patient Summary Card with 1-Click Quick Edit -->
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-lg); padding: 10px 16px; display: flex; align-items: center; gap: 12px; min-width: 290px;">
+            <img src="${patient.photoUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #22c55e;" />
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <strong style="font-size: 14.5px; color: var(--text-main);">${patient.fullName}</strong>
+                <span class="blood-group-tag" style="font-size: 10px; padding: 1px 5px;">${patient.bloodGroup || 'O+'}</span>
+              </div>
+              <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 1px;">
+                <span>${calculateAge(patient.dob)} • ${patient.gender || 'Male'}</span>
+                <span style="margin: 0 4px;">•</span>
+                <span>Mob: <strong>${patient.mobile}</strong></span>
+              </div>
+              <div style="font-size: 11px; font-family: monospace; color: #15803d; font-weight: 700;">
+                ${patient.healthId ? formatHealthId(patient.healthId) : (patient.regNumber || 'Walk-in UHID')}
+              </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline" id="btn-edit-patient-profile" title="Edit patient profile details" style="padding: 4px 8px; font-size: 11px; background: #ffffff; white-space: nowrap;">
+              ✏️ Edit
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="consultation-form-card">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
           <div>
-            <h3 style="font-size: 17px; font-weight: 700; color: var(--text-main); margin: 0;">Outpatient Consultation & E-Prescription Suite</h3>
-            <p style="font-size: 12.5px; color: var(--text-muted); margin: 2px 0 0 0;">AIIMS Outpatient Department • Regulated by National Medical Commission (NMC)</p>
+            <h3 style="font-size: 17px; font-weight: 700; color: var(--text-main); margin: 0;">Outpatient Consultation & E-Prescription Suite (ओपीडी परामर्श)</h3>
+            <p style="font-size: 12.5px; color: var(--text-muted); margin: 2px 0 0 0;">AIIMS Outpatient Department • National Medical Commission (NMC) Certified</p>
           </div>
-          <span class="badge badge-active">OPD Session Active</span>
+          <span class="badge badge-active">OPD Active Session</span>
         </div>
 
         <form id="consultation-form">
-          <!-- Doctor Assignment & Services Tariff Strip (Item 3) -->
+          <!-- Doctor Assignment & Services Tariff Strip -->
           <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 14px 16px; margin-bottom: 20px;">
             <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-bottom: 12px;">
               <div>
@@ -483,123 +531,212 @@ export class PatientWorkspace {
             </div>
           </div>
 
-          <!-- 1. Chief Complaints -->
-          <div class="form-group">
-            <label class="form-label">Chief Clinical Complaints & Duration:</label>
+          <!-- 1. Chief Complaints & Problem with duration -->
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label class="form-label" style="font-weight: 700; color: var(--text-main);">
+              Chief Problem / Clinical Complaints & Duration (मुख्य समस्या व लक्षण):
+            </label>
+            <!-- Quick Symptom Presets -->
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="तेज बुखार व कंपकंपी (High fever with chills)" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ तेज बुखार</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="खांसी व बलगम (Productive cough)" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ खांसी</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="गले में खराश व दर्द (Sore throat)" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ गले में खराश</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="सिरदर्द व बदन दर्द (Headache & bodyache)" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ बदन दर्द</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="पेट दर्द व मरोड़ (Abdominal pain)" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ पेट दर्द</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="उल्टी व जी मिचलाना (Vomiting & nausea)" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ उल्टी / मितली</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="कमजोरी व चक्कर (Weakness & dizziness)" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ कमजोरी</button>
+            </div>
             <div style="display: flex; gap: 10px;">
-              <input type="text" id="consult-complaints" class="form-input" placeholder="e.g. Occasional retrosternal heaviness, shortness of breath on climbing stairs..." value="Review of hypertension and glycemic control. Mild headache." required style="flex: 2;" />
-              <input type="text" id="consult-duration" class="form-input" placeholder="Duration (e.g. 5 days, 2 weeks)" value="1 week" style="flex: 1;" />
+              <input type="text" id="consult-complaints" class="form-input" placeholder="e.g. तेज बुखार, सिरदर्द और बदन दर्द (High fever, bodyache since 3 days)..." value="तेज बुखार व कंपकंपी (High fever with chills), सिरदर्द और अत्यधिक कमजोरी।" required style="flex: 2;" />
+              <input type="text" id="consult-duration" class="form-input" placeholder="Duration (e.g. 3 दिन, 1 हफ्ता)" value="3 दिन (3 days)" style="flex: 1;" />
             </div>
           </div>
 
           <!-- 2. Systemic Examination Notes -->
-          <div class="form-group">
-            <label class="form-label">Clinical Examination & Systemic Findings:</label>
-            <textarea id="consult-exam" class="form-textarea" placeholder="Physical observations, cardiovascular, respiratory, and abdominal examination...">Conscious, oriented. S1 S2 heard normal. Bilateral air entry clear. Per abdomen soft, non-tender. Bilateral pedal edema absent.</textarea>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label class="form-label" style="font-weight: 700;">Clinical Examination & Systemic Findings (शारीरिक परीक्षण):</label>
+            <textarea id="consult-exam" class="form-textarea" placeholder="Physical observations, cardiovascular, respiratory, and abdominal examination...">Conscious, oriented, febrile to touch. Throat congested with erythema. Bilateral chest air entry clear, no wheeze. S1 S2 heard normal. Per abdomen soft, non-tender.</textarea>
           </div>
 
-          <!-- 3. Current Vitals Capture -->
-          <div class="section-title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-            Encounter Vitals
-          </div>
-          <div class="vitals-inputs-grid">
-            <div>
-              <label class="form-label">BP (Systolic)</label>
-              <input type="number" id="vital-bp-sys" class="form-input" value="${vitals?.bpSys || 128}" />
+          <!-- 3. Time-to-Time Vitals Tracking Section (Prompt: vital as they releted with time to tiem temperature and problem) -->
+          <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-xl); padding: 18px 20px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 18px;">⏱️</span>
+                  <h4 style="font-size: 15px; font-weight: 700; color: var(--text-main); margin: 0;">Time-to-Time Temperature & Vitals Monitoring (समय अनुसार तापमान व वाइटल्स)</h4>
+                </div>
+                <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Track temperature curve, blood pressure, and symptom progress with timestamped logs</p>
+              </div>
+              <span class="badge badge-active" style="font-size: 10.5px;">Live Vitals Tracker</span>
             </div>
-            <div>
-              <label class="form-label">BP (Diastolic)</label>
-              <input type="number" id="vital-bp-dia" class="form-input" value="${vitals?.bpDia || 82}" />
+
+            <!-- New Time Vitals Entry Form -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); padding: 14px 16px; margin-bottom: 14px;">
+              <div style="font-size: 12px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">+ Log New Time-stamped Vital Reading:</div>
+              <div style="display: grid; grid-template-columns: 1.2fr 1fr 1.2fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                <div>
+                  <label class="form-label" style="font-size: 11px; margin-bottom: 2px;">Time of Reading:</label>
+                  <input type="text" id="log-vital-time" class="form-input form-input-sm" value="${new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })}" />
+                </div>
+                <div>
+                  <label class="form-label" style="font-size: 11px; margin-bottom: 2px;">Temp (°F):</label>
+                  <input type="number" step="0.1" id="log-vital-temp" class="form-input form-input-sm font-bold" value="${vitals?.temp || 98.6}" />
+                </div>
+                <div>
+                  <label class="form-label" style="font-size: 11px; margin-bottom: 2px;">BP (Sys / Dia):</label>
+                  <div style="display: flex; gap: 4px;">
+                    <input type="number" id="log-vital-bp-sys" class="form-input form-input-sm" value="${vitals?.bpSys || 120}" placeholder="Sys" style="width: 50%;" />
+                    <input type="number" id="log-vital-bp-dia" class="form-input form-input-sm" value="${vitals?.bpDia || 80}" placeholder="Dia" style="width: 50%;" />
+                  </div>
+                </div>
+                <div>
+                  <label class="form-label" style="font-size: 11px; margin-bottom: 2px;">Pulse (bpm):</label>
+                  <input type="number" id="log-vital-pulse" class="form-input form-input-sm" value="${vitals?.pulse || 74}" />
+                </div>
+                <div>
+                  <label class="form-label" style="font-size: 11px; margin-bottom: 2px;">SpO2 (%):</label>
+                  <input type="number" id="log-vital-spo2" class="form-input form-input-sm" value="${vitals?.spo2 || 98}" />
+                </div>
+                <div>
+                  <label class="form-label" style="font-size: 11px; margin-bottom: 2px;">Weight (kg):</label>
+                  <input type="number" step="0.5" id="log-vital-weight" class="form-input form-input-sm" value="${vitals?.weight || 70}" />
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 10px; align-items: flex-end;">
+                <div>
+                  <label class="form-label" style="font-size: 11px; margin-bottom: 2px;">Clinical Problem / Symptoms observed at this time:</label>
+                  <input type="text" id="log-vital-problem" class="form-input form-input-sm" placeholder="e.g. Shivering fever spike, administered Paracetamol 650mg" />
+                </div>
+                <div>
+                  <label class="form-label" style="font-size: 11px; margin-bottom: 2px;">Diet / Fluids Followed:</label>
+                  <input type="text" id="log-vital-diet" class="form-input form-input-sm" placeholder="e.g. ORS solution & warm water" />
+                </div>
+                <div>
+                  <button type="button" class="btn btn-sm btn-primary" id="btn-submit-vital-log" style="white-space: nowrap; font-weight: 700; height: 34px;">
+                    + Save Reading
+                  </button>
+                </div>
+              </div>
             </div>
-            <div>
-              <label class="form-label">Heart Rate (bpm)</label>
-              <input type="number" id="vital-pulse" class="form-input" value="${vitals?.pulse || 74}" />
-            </div>
-            <div>
-              <label class="form-label">SpO2 (%)</label>
-              <input type="number" id="vital-spo2" class="form-input" value="${vitals?.spo2 || 98}" />
-            </div>
-            <div>
-              <label class="form-label">Temp (°F)</label>
-              <input type="number" step="0.1" id="vital-temp" class="form-input" value="${vitals?.temp || 98.4}" />
-            </div>
-            <div>
-              <label class="form-label">Weight (kg)</label>
-              <input type="number" step="0.5" id="vital-weight" class="form-input" value="${vitals?.weight || 76.5}" />
-            </div>
+
+            <!-- Time-to-Time Table -->
+            <div style="font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">Recorded Vitals & Temperature Timeline:</div>
+            <table class="rx-table" style="font-size: 12px;">
+              <thead>
+                <tr>
+                  <th style="width: 12%;">Time</th>
+                  <th style="width: 14%;">Temperature</th>
+                  <th style="width: 16%;">BP & Pulse</th>
+                  <th style="width: 10%;">SpO2</th>
+                  <th style="width: 30%;">Problem / Symptoms Observed</th>
+                  <th style="width: 18%;">Diet / Recorded By</th>
+                </tr>
+              </thead>
+              <tbody id="vitals-history-table-body">
+                ${vitalsHistory.map(vh => {
+                  const tempNum = parseFloat(vh.temp) || 98.4;
+                  const isHigh = tempNum >= 100.4;
+                  const isMild = tempNum >= 99.0 && tempNum < 100.4;
+                  const badgeBg = isHigh ? '#fee2e2' : isMild ? '#fef3c7' : '#ecfdf5';
+                  const badgeColor = isHigh ? '#991b1b' : isMild ? '#92400e' : '#065f46';
+                  const badgeBorder = isHigh ? '#fca5a5' : isMild ? '#fde68a' : '#a7f3d0';
+
+                  return `
+                    <tr>
+                      <td style="font-weight: 700; color: var(--color-primary); font-family: monospace;">${vh.time}</td>
+                      <td>
+                        <span style="background: ${badgeBg}; color: ${badgeColor}; border: 1px solid ${badgeBorder}; padding: 2px 7px; border-radius: 4px; font-weight: 800; font-size: 12px;">
+                          ${tempNum}°F ${isHigh ? '🔥 High' : isMild ? '⚠️ Mild' : '✓ Normal'}
+                        </span>
+                      </td>
+                      <td>
+                        <strong>${vh.bpSys}/${vh.bpDia} mmHg</strong> • ${vh.pulse} bpm
+                      </td>
+                      <td>
+                        <span style="font-weight: 700; color: ${vh.spo2 < 95 ? '#dc2626' : '#15803d'};">${vh.spo2}%</span>
+                      </td>
+                      <td style="color: #334155;">
+                        ${vh.problem || 'Routine monitoring'}
+                      </td>
+                      <td style="font-size: 11px; color: var(--text-muted);">
+                        ${vh.dietNote ? `<div style="color: #15803d; font-weight: 600;">🥗 ${vh.dietNote}</div>` : ''}
+                        <div>${vh.recordedBy || 'Clinician'}</div>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
           </div>
 
           <!-- 4. ICD-10 Clinical Diagnosis Tagging -->
           <div class="section-title">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-            ICD-10 Clinical Diagnosis
+            ICD-10 Clinical Diagnosis (निदान)
           </div>
           <div style="display: flex; gap: 8px; margin-bottom: 12px;">
             <select class="form-select" id="consult-dx-select">
+              <option value="A90|Dengue Fever with acute viremia">A90: Dengue Fever / Acute Febrile Illness</option>
+              <option value="A01.0|Typhoid Fever (Enteric fever)">A01.0: Typhoid Fever (Enteric fever)</option>
+              <option value="J06.9|Acute Upper Respiratory Infection (URI)">J06.9: Acute Upper Respiratory Infection (URI)</option>
               <option value="I10|Essential (Primary) Hypertension">I10: Essential (Primary) Hypertension</option>
-              <option value="E11.9|Type 2 Diabetes Mellitus without complications">E11.9: Type 2 Diabetes Mellitus without complications</option>
-              <option value="E78.0|Pure Hypercholesterolemia">E78.0: Pure Hypercholesterolemia</option>
+              <option value="E11.9|Type 2 Diabetes Mellitus">E11.9: Type 2 Diabetes Mellitus</option>
               <option value="J20.9|Acute Bronchitis, unspecified">J20.9: Acute Bronchitis, unspecified</option>
-              <option value="J30.1|Allergic Rhinitis due to pollen">J30.1: Allergic Rhinitis due to pollen</option>
-              <option value="M17.0|Primary Bilateral Osteoarthritis of Knee">M17.0: Primary Bilateral Osteoarthritis of Knee</option>
               <option value="K21.9|Gastro-esophageal Reflux Disease (GERD)">K21.9: Gastro-esophageal Reflux Disease (GERD)</option>
             </select>
             <button type="button" class="btn btn-secondary" id="btn-add-dx">Add Diagnosis</button>
           </div>
           <div id="dx-tags-container" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;">
-            <span class="badge badge-active" data-code="I10" data-name="Essential (Primary) Hypertension">
-              I10: Essential (Primary) Hypertension
-              <button type="button" style="border:none; background:none; cursor:pointer; color:#065f46; margin-left:4px;" onclick="this.parentElement.remove()">×</button>
-            </span>
-            <span class="badge badge-active" data-code="E11.9" data-name="Type 2 Diabetes Mellitus without complications">
-              E11.9: Type 2 Diabetes Mellitus
+            <span class="badge badge-active" data-code="A90" data-name="Acute Febrile Illness">
+              A90: Acute Febrile Illness
               <button type="button" style="border:none; background:none; cursor:pointer; color:#065f46; margin-left:4px;" onclick="this.parentElement.remove()">×</button>
             </span>
           </div>
 
-          <!-- 5. Dynamic E-Prescription Multi-Row Builder -->
+          <!-- 5. Dynamic E-Prescription Multi-Row Builder (Rx) -->
           <div class="section-title" style="justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 8px;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>
-              Dynamic E-Prescription Builder (Rx)
+              Doctor's Prescription & Dosages (दवाइयों की खुराक व निर्देश)
             </div>
             <button type="button" class="btn btn-sm btn-secondary" id="btn-add-rx-row">
-              + Add Medicine
+              + Add Custom Medicine
             </button>
+          </div>
+
+          <!-- Quick Prescription Presets (Item 4: what medicine and how much dose given by doctor) -->
+          <div style="margin-bottom: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); padding: 10px 14px;">
+            <div style="font-size: 11.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">1-Click Medicine Presets (क्लिक कर के तुरंत जोड़ें):</div>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Paracetamol" data-dose="650 mg" data-freq="1-0-1" data-timing="खाने के बाद (After food)" data-days="3">+ Paracetamol 650mg (1-0-1)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Pantocid (Pantoprazole)" data-dose="40 mg" data-freq="1-0-0" data-timing="खाली पेट (Before food)" data-days="5">+ Pantocid 40mg (खाली पेट)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Augmentin (Amoxiclav)" data-dose="625 mg" data-freq="1-0-1" data-timing="खाने के बाद (After food)" data-days="5">+ Augmentin 625mg (1-0-1)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Azithral (Azithromycin)" data-dose="500 mg" data-freq="1-0-0" data-timing="खाने के बाद (After food)" data-days="3">+ Azithral 500mg (1-0-0)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Cetirizine" data-dose="10 mg" data-freq="0-0-1" data-timing="सोते समय (Bedtime)" data-days="5">+ Cetirizine 10mg (रात)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Emeset (Ondansetron)" data-dose="4 mg" data-freq="SOS" data-timing="उल्टी होने पर (SOS)" data-days="3">+ Emeset 4mg (SOS उल्टी)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="ORS Electral Powder" data-dose="1 Pkt" data-freq="1-1-1" data-timing="1L पानी में घोलकर पिएं" data-days="3">+ ORS Electral (घोलकर)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Telmisartan" data-dose="40 mg" data-freq="1-0-0" data-timing="सुबह नाश्ते के बाद" data-days="30">+ Telmisartan 40mg (BP)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Metformin SR" data-dose="500 mg" data-freq="1-0-1" data-timing="भोजन के साथ (With meals)" data-days="30">+ Metformin 500mg (Sugar)</button>
+            </div>
           </div>
 
           <table class="rx-table" id="rx-builder-table">
             <thead>
               <tr>
-                <th style="width: 30%;">Drug Name</th>
-                <th style="width: 15%;">Dosage</th>
-                <th style="width: 15%;">Frequency</th>
-                <th style="width: 20%;">Timing / Food</th>
+                <th style="width: 28%;">Medicine / Drug Name</th>
+                <th style="width: 14%;">Dose Strength</th>
+                <th style="width: 18%;">Doctor Dose Frequency</th>
+                <th style="width: 18%;">Timing / Food</th>
                 <th style="width: 12%;">Days</th>
-                <th style="width: 8%;">Action</th>
+                <th style="width: 10%;">Action</th>
               </tr>
             </thead>
             <tbody id="rx-rows-body">
               <tr>
-                <td><input type="text" class="form-input rx-drug" value="Telmisartan" /></td>
-                <td><input type="text" class="form-input rx-dose" value="40 mg" /></td>
-                <td>
-                  <select class="form-select rx-freq">
-                    <option value="1-0-0" selected>1-0-0 (सुबह / Morning)</option>
-                    <option value="1-0-1">1-0-1 (सुबह-शाम / Twice Daily)</option>
-                    <option value="0-0-1">0-0-1 (रात / Night)</option>
-                    <option value="1-1-1">1-1-1 (दिन में तीन बार / Thrice)</option>
-                    <option value="SOS">SOS (जरूरत पड़ने पर / As needed)</option>
-                  </select>
-                </td>
-                <td><input type="text" class="form-input rx-timing" value="खाने के बाद (After food)" /></td>
-                <td><input type="number" class="form-input rx-days" value="30" /></td>
-                <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">×</button></td>
-              </tr>
-              <tr>
-                <td><input type="text" class="form-input rx-drug" value="Metformin SR" /></td>
-                <td><input type="text" class="form-input rx-dose" value="500 mg" /></td>
+                <td><input type="text" class="form-input rx-drug" value="Paracetamol" /></td>
+                <td><input type="text" class="form-input rx-dose" value="650 mg" /></td>
                 <td>
                   <select class="form-select rx-freq">
                     <option value="1-0-1" selected>1-0-1 (सुबह-शाम / Twice Daily)</option>
@@ -609,94 +746,160 @@ export class PatientWorkspace {
                     <option value="SOS">SOS (जरूरत पड़ने पर / As needed)</option>
                   </select>
                 </td>
-                <td><input type="text" class="form-input rx-timing" value="भोजन के साथ (With meals)" /></td>
-                <td><input type="number" class="form-input rx-days" value="30" /></td>
+                <td><input type="text" class="form-input rx-timing" value="खाने के बाद (After food)" /></td>
+                <td><input type="number" class="form-input rx-days" value="3" /></td>
                 <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">×</button></td>
               </tr>
               <tr>
-                <td><input type="text" class="form-input rx-drug" value="Atorvastatin" /></td>
-                <td><input type="text" class="form-input rx-dose" value="10 mg" /></td>
+                <td><input type="text" class="form-input rx-drug" value="Pantocid (Pantoprazole)" /></td>
+                <td><input type="text" class="form-input rx-dose" value="40 mg" /></td>
                 <td>
                   <select class="form-select rx-freq">
-                    <option value="0-0-1" selected>0-0-1 (रात / Night)</option>
-                    <option value="1-0-0">1-0-0 (सुबह / Morning)</option>
+                    <option value="1-0-0" selected>1-0-0 (सुबह / Morning)</option>
                     <option value="1-0-1">1-0-1 (सुबह-शाम / Twice Daily)</option>
+                    <option value="0-0-1">0-0-1 (रात / Night)</option>
                     <option value="SOS">SOS (जरूरत पड़ने पर / As needed)</option>
                   </select>
                 </td>
-                <td><input type="text" class="form-input rx-timing" value="सोते समय (Bedtime)" /></td>
-                <td><input type="number" class="form-input rx-days" value="30" /></td>
+                <td><input type="text" class="form-input rx-timing" value="खाली पेट (Before food)" /></td>
+                <td><input type="number" class="form-input rx-days" value="5" /></td>
                 <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">×</button></td>
               </tr>
             </tbody>
           </table>
 
-          <!-- 6. Diagnostic Investigations Orders -->
+          <!-- 6. Diagnostic Investigations Ordered -->
           <div class="section-title" style="margin-top: 24px;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            Diagnostic Investigations Ordered
+            Diagnostic Lab Tests & Scans Ordered (जांच निर्देश)
           </div>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-bottom: 20px;">
             <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" class="inv-order" value="HbA1c" checked /> HbA1c (Glycated Hb)
+              <input type="checkbox" class="inv-order" value="CBC & Platelet Count" checked /> CBC & Platelet Count
             </label>
             <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" class="inv-order" value="Lipid Profile" checked /> Complete Lipid Profile
+              <input type="checkbox" class="inv-order" value="Dengue NS1 Antigen & IgM" checked /> Dengue NS1 & IgM
             </label>
             <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" class="inv-order" value="Serum Creatinine" checked /> Serum Creatinine & eGFR
+              <input type="checkbox" class="inv-order" value="Widal Test (Typhoid)" checked /> Widal Test (Typhoid)
             </label>
             <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" class="inv-order" value="Urine Microalbumin" checked /> Urine Microalbumin
+              <input type="checkbox" class="inv-order" value="Urine Routine & Microscopy" /> Urine Routine & Micro
             </label>
             <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" class="inv-order" value="12-Lead ECG" /> 12-Lead Resting ECG
+              <input type="checkbox" class="inv-order" value="Liver Function Test (LFT)" /> Liver Function (LFT)
+            </label>
+            <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" class="inv-order" value="Serum Creatinine & KFT" /> Kidney Function (KFT)
+            </label>
+            <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" class="inv-order" value="Chest X-Ray PA View" /> Chest X-Ray (PA View)
             </label>
           </div>
 
-          <!-- 6B. Upload Physical Prescription Scans & Diagnostic Reports (Item 3) -->
-          <div class="section-title" style="margin-top: 24px; justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              Upload Prescription Scans & Diagnostic Test Reports
-            </div>
-            <div>
-              <button type="button" class="btn btn-sm btn-outline" id="btn-browse-reports">
-                + Upload Scans / Reports
-              </button>
-              <input type="file" id="consult-file-uploader" multiple accept=".pdf,image/*" style="display: none;" />
-            </div>
-          </div>
-
-          <div style="background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 8px; padding: 14px 16px; margin-bottom: 20px;">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <div style="font-size: 12.5px; color: var(--text-secondary);">
-                Attach paper prescription scans, prior records, ECG traces, or lab result PDFs to this e-prescription.
+          <!-- 7. Doctor's Diet & Lifestyle Directives (Prompt: diet follow and given by doctor) -->
+          <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: var(--radius-lg); padding: 16px; margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <div style="font-weight: 700; color: #92400e; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">
+                <span>🥗</span>
+                Doctor's Dietary Advice & Lifestyle Follow-up (डॉक्टर द्वारा दी गई खान-पान सलाह)
               </div>
-              <span style="font-size: 11.5px; color: #1d4ed8; font-weight: 700;" id="consult-file-count-badge">${this.pendingUploadedReports.length} reports attached</span>
+              <span style="font-size: 11px; color: #b45309; font-weight: 600;">Prescribed Diet Chart</span>
             </div>
-            <div id="consult-uploaded-chips-list" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
-              ${this.pendingUploadedReports.map((file, idx) => `
-                <div style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 6px; font-size: 12px;">
-                  <span style="display: inline-flex; align-items: center; gap: 5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><strong>${file.name}</strong> (${file.size})</span>
-                  ${file.dataUrl ? `<a href="${file.dataUrl}" target="_blank" style="color: #1d4ed8; font-weight: 600; text-decoration: underline;">Preview</a>` : ''}
-                  <button type="button" style="border: none; background: none; color: #dc2626; cursor: pointer; display: inline-flex; align-items: center;" data-idx="${idx}" class="btn-remove-report" title="Remove report">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                  </button>
+
+            <!-- Quick Diet Pills -->
+            <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px;">
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="हल्का सुपाच्य भोजन (मूंग दाल खिचड़ी, दलिया, सूप) लें।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ खिचड़ी / दलिया</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="दिनभर 3 से 4 लीटर गुनगुना / उबला पानी पिएं।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ 3-4L उबला पानी</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="तली-भुनी, तीखी, खट्टी व मसालेदार चीजें सख्त बंद।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ तेल-मसाला बंद</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="ठंडा पानी, कोल्ड ड्रिंक्स व आइसक्रीम न लें।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ ठंडा पानी बंद</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="ओआरएस (ORS) या नारियल पानी का नियमित सेवन करें।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ ओआरएस / नारियल पानी</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="कम नमक का भोजन लें (Low Salt Diet)।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ कम नमक</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="मीठा, चीनी व गुड़ वर्जित (Sugar-Free Diabetic Diet)।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ चीनी बंद</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="भारी श्रम न करें, पर्याप्त विश्राम करें।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ पूर्ण विश्राम</button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
+              <div>
+                <label class="form-label" style="font-size: 11.5px; font-weight: 700; color: #78350f;">Specific Diet & Lifestyle Instructions:</label>
+                <textarea id="consult-advice" class="form-textarea" style="background: #ffffff;">आहार: हल्का सुपाच्य भोजन (मूंग दाल खिचड़ी/दलिया)। उबला पानी 3-4 लीटर पिएं। तली-भुनी, तीखी व मसालेदार चीजें सख्त बंद। ओआरएस घोल लें व पर्याप्त विश्राम करें।</textarea>
+              </div>
+              <div>
+                <label class="form-label" style="font-size: 11.5px; font-weight: 700; color: #78350f;">Next Review Date (दोबारा दिखाने की तारीख):</label>
+                <input type="date" id="consult-followup" class="form-input" style="background: #ffffff;" value="${new Date(Date.now() + 5*86400000).toISOString().slice(0, 10)}" />
+                <div style="font-size: 11px; color: #92400e; margin-top: 4px;">5 days follow-up after initial consultation</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 8. Arranged Upload of Prescription Scans & Diagnostic Reports (Prompt: option of upload preccription and test report arranged and uplaod in panel) -->
+          <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 18px 20px; margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 16px;">📁</span>
+                  <h4 style="font-size: 15px; font-weight: 700; color: var(--text-main); margin: 0;">Prescription Slips & Diagnostic Test Reports (पर्चा व जांच रिपोर्ट अपलोड)</h4>
+                </div>
+                <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Upload physical doctor slips or lab test reports arranged in clean panels</p>
+              </div>
+
+              <!-- Two Clear Upload Buttons -->
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-sm btn-secondary" id="btn-upload-paper-rx" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  + Upload Paper Slip (कागजी पर्चा)
+                </button>
+                <button type="button" class="btn btn-sm btn-primary" id="btn-upload-lab-report" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  + Upload Test Report (जांच रिपोर्ट)
+                </button>
+                <input type="file" id="consult-file-uploader" multiple accept=".pdf,image/*" style="display: none;" />
+              </div>
+            </div>
+
+            <!-- Arranged Reports Gallery / Grid -->
+            <div id="consult-uploaded-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px;">
+              ${this.pendingUploadedReports.length === 0 ? `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 24px; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 8px; color: var(--text-muted); font-size: 12.5px;">
+                  No prescriptions or lab reports attached yet. Use the buttons above to upload scanned paper prescriptions, CBC/blood test results, or radiology scans.
+                </div>
+              ` : this.pendingUploadedReports.map((file, idx) => `
+                <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
+                  <div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                      <span class="badge ${file.category === 'prescription' ? 'badge-active' : 'badge-blue'}" style="font-size: 10px; font-weight: 700;">
+                        ${file.category === 'prescription' ? '📋 Physical Doctor Slip' : '🧪 Diagnostic Test Report'}
+                      </span>
+                      <button type="button" class="btn-remove-report" data-idx="${idx}" style="border: none; background: none; color: #dc2626; cursor: pointer; font-size: 16px; font-weight: 700;" title="Remove report">×</button>
+                    </div>
+                    
+                    ${file.dataUrl && file.dataUrl.startsWith('data:image') ? `
+                      <div style="width: 100%; height: 110px; border-radius: 6px; overflow: hidden; margin-bottom: 8px; border: 1px solid #e2e8f0; background: #f1f5f9;">
+                        <img src="${file.dataUrl}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" class="btn-preview-report" data-idx="${idx}" />
+                      </div>
+                    ` : `
+                      <div style="width: 100%; height: 70px; border-radius: 6px; background: #eff6ff; border: 1px solid #bfdbfe; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                        <span style="font-size: 24px;">📄</span>
+                        <span style="font-size: 11px; font-weight: 700; color: #1d4ed8; margin-left: 6px;">PDF Document</span>
+                      </div>
+                    `}
+
+                    <div style="font-weight: 700; font-size: 12.5px; color: var(--text-main); line-height: 1.3;">${file.name}</div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Size: ${file.size} • ${file.time || 'Today'}</div>
+                  </div>
+
+                  <div style="display: flex; gap: 6px; margin-top: 10px; border-top: 1px solid #f1f5f9; padding-top: 8px;">
+                    ${file.dataUrl ? `
+                      <button type="button" class="btn btn-sm btn-outline btn-preview-report" data-idx="${idx}" style="flex: 1; font-size: 11px; padding: 3px 6px;">
+                        🔍 View Full
+                      </button>
+                      <a href="${file.dataUrl}" download="${file.name}" class="btn btn-sm btn-ghost" style="font-size: 11px; padding: 3px 6px; color: #1d4ed8;">
+                        ⬇ Download
+                      </a>
+                    ` : ''}
+                  </div>
                 </div>
               `).join('')}
-            </div>
-          </div>
-
-          <!-- 7. Advice & Follow Up -->
-          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px;">
-            <div>
-              <label class="form-label">Clinical Lifestyle & Dietary Advice:</label>
-              <textarea id="consult-advice" class="form-textarea">Diet: Low salt (<5g/day), refined sugar restricted. 30 minutes daily walking. Self-monitor blood pressure twice weekly.</textarea>
-            </div>
-            <div>
-              <label class="form-label">Follow-up Review Date:</label>
-              <input type="date" id="consult-followup" class="form-input" value="2026-10-28" />
             </div>
           </div>
 
@@ -714,35 +917,247 @@ export class PatientWorkspace {
       </div>
     `;
 
-    // File upload handler for prescription scans & reports (Item 3)
-    const fileInput = container.querySelector('#consult-file-uploader');
-    const browseBtn = container.querySelector('#btn-browse-reports');
-    const chipsList = container.querySelector('#consult-uploaded-chips-list');
-    const countBadge = container.querySelector('#consult-file-count-badge');
+    // 1. Patient lookup & switch handler
+    const searchInput = container.querySelector('#opd-search-patient-input');
+    const pullBtn = container.querySelector('#btn-opd-pull-patient');
+    const scanBtn = container.querySelector('#btn-opd-scan-modal');
+    const editProfileBtn = container.querySelector('#btn-edit-patient-profile');
 
-    const updateChips = () => {
-      if (!chipsList) return;
-      if (countBadge) countBadge.textContent = `${this.pendingUploadedReports.length} reports attached`;
-      chipsList.innerHTML = this.pendingUploadedReports.map((file, idx) => `
-        <div style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 6px; font-size: 12px;">
-          <span style="display: inline-flex; align-items: center; gap: 5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><strong>${file.name}</strong> (${file.size})</span>
-          ${file.dataUrl ? `<a href="${file.dataUrl}" target="_blank" style="color: #1d4ed8; font-weight: 600; text-decoration: underline;">Preview</a>` : ''}
-          <button type="button" style="border: none; background: none; color: #dc2626; cursor: pointer; display: inline-flex; align-items: center;" data-idx="${idx}" class="btn-remove-report" title="Remove report">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
+    editProfileBtn?.addEventListener('click', () => {
+      this.openEditPatientModal();
+    });
+
+    const executePatientLookup = () => {
+      const q = (searchInput?.value || '').trim();
+      if (!q) return;
+
+      const resolved = hospitalStore.resolveCardToken(q);
+      const targetPatient = resolved?.found ? resolved.patient : hospitalStore.getPatientByHealthId(q);
+
+      if (targetPatient) {
+        const cleanId = (targetPatient.healthId || targetPatient.id || '').replace(/\s+/g, '');
+        window.location.hash = `#patient?id=${cleanId}&tab=consultation`;
+        this.healthId = cleanId;
+        this.render();
+        showToast(`Loaded records for ${targetPatient.fullName}!`, 'success');
+      } else {
+        // Fallback: search by name in all patients
+        const all = hospitalStore.getAllPatients();
+        const matched = all.filter(p => p.fullName.toLowerCase().includes(q.toLowerCase()));
+        if (matched.length > 0) {
+          const first = matched[0];
+          const cleanId = (first.healthId || first.id || '').replace(/\s+/g, '');
+          window.location.hash = `#patient?id=${cleanId}&tab=consultation`;
+          this.healthId = cleanId;
+          this.render();
+          showToast(`Loaded records for ${first.fullName}!`, 'success');
+        } else {
+          showToast(`No patient found matching '${q}'. Check Card ID or mobile.`, 'error');
+        }
+      }
+    };
+
+    pullBtn?.addEventListener('click', executePatientLookup);
+    searchInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        executePatientLookup();
+      }
+    });
+
+    scanBtn?.addEventListener('click', () => {
+      new QRScannerModal((scannedData) => {
+        if (scannedData) {
+          const resolved = hospitalStore.resolveCardToken(scannedData);
+          if (resolved?.found && resolved.patient) {
+            const cleanId = (resolved.patient.healthId || resolved.patient.id || '').replace(/\s+/g, '');
+            window.location.hash = `#patient?id=${cleanId}&tab=consultation`;
+            this.healthId = cleanId;
+            this.render();
+            showToast(`Card QR verified! Loaded ${resolved.patient.fullName}`, 'success');
+          } else {
+            showToast(`Scanned data: ${scannedData}. Searching registry...`, 'info');
+            executePatientLookup();
+          }
+        }
+      });
+    });
+
+    // 2. Log Time-to-Time Vitals Handler
+    const submitVitalBtn = container.querySelector('#btn-submit-vital-log');
+    submitVitalBtn?.addEventListener('click', () => {
+      const timeVal = container.querySelector('#log-vital-time').value;
+      const tempVal = container.querySelector('#log-vital-temp').value;
+      const bpSysVal = container.querySelector('#log-vital-bp-sys').value;
+      const bpDiaVal = container.querySelector('#log-vital-bp-dia').value;
+      const pulseVal = container.querySelector('#log-vital-pulse').value;
+      const spo2Val = container.querySelector('#log-vital-spo2').value;
+      const weightVal = container.querySelector('#log-vital-weight').value;
+      const problemVal = container.querySelector('#log-vital-problem').value;
+      const dietVal = container.querySelector('#log-vital-diet').value;
+
+      const newEntry = hospitalStore.addPatientVitalLog(this.healthId, {
+        time: timeVal,
+        temp: tempVal,
+        bpSys: bpSysVal,
+        bpDia: bpDiaVal,
+        pulse: pulseVal,
+        spo2: spo2Val,
+        weight: weightVal,
+        problem: problemVal || 'Vitals noted during OPD encounter',
+        dietNote: dietVal
+      });
+
+      // Clear problem input and update table
+      const probInput = container.querySelector('#log-vital-problem');
+      if (probInput) probInput.value = '';
+
+      showToast(`Vitals logged at ${timeVal}: Temp ${tempVal}°F, BP ${bpSysVal}/${bpDiaVal}`, 'success');
+
+      // Re-render consultation tab to reflect new vitals timeline immediately
+      const mount = this.container.querySelector('#clinical-tab-viewport');
+      if (mount) this.renderConsultationTab(mount);
+    });
+
+    // 3. Quick Symptom Preset Buttons
+    container.querySelectorAll('.btn-symptom-preset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sym = btn.getAttribute('data-symptom');
+        const compInput = container.querySelector('#consult-complaints');
+        if (compInput) {
+          compInput.value = compInput.value ? `${compInput.value}, ${sym}` : sym;
+        }
+      });
+    });
+
+    // 4. Quick Prescription Preset Buttons
+    container.querySelectorAll('.btn-rx-quick').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const drug = btn.getAttribute('data-drug');
+        const dose = btn.getAttribute('data-dose');
+        const freq = btn.getAttribute('data-freq');
+        const timing = btn.getAttribute('data-timing');
+        const days = btn.getAttribute('data-days');
+
+        const tbody = container.querySelector('#rx-rows-body');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><input type="text" class="form-input rx-drug" value="${drug}" /></td>
+          <td><input type="text" class="form-input rx-dose" value="${dose}" /></td>
+          <td>
+            <select class="form-select rx-freq">
+              <option value="1-0-1" ${freq === '1-0-1' ? 'selected' : ''}>1-0-1 (सुबह-शाम / Twice)</option>
+              <option value="1-0-0" ${freq === '1-0-0' ? 'selected' : ''}>1-0-0 (सुबह / Morning)</option>
+              <option value="0-0-1" ${freq === '0-0-1' ? 'selected' : ''}>0-0-1 (रात / Night)</option>
+              <option value="1-1-1" ${freq === '1-1-1' ? 'selected' : ''}>1-1-1 (दिन में तीन बार / Thrice)</option>
+              <option value="SOS" ${freq === 'SOS' ? 'selected' : ''}>SOS (जरूरत पड़ने पर / As needed)</option>
+            </select>
+          </td>
+          <td><input type="text" class="form-input rx-timing" value="${timing}" /></td>
+          <td><input type="number" class="form-input rx-days" value="${days}" /></td>
+          <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">×</button></td>
+        `;
+        tbody.appendChild(tr);
+        showToast(`Added ${drug} (${freq}) to prescription`, 'info');
+      });
+    });
+
+    // 5. Quick Diet Preset Buttons
+    container.querySelectorAll('.btn-diet-preset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.getAttribute('data-text');
+        const adviceArea = container.querySelector('#consult-advice');
+        if (adviceArea) {
+          adviceArea.value = adviceArea.value ? `${adviceArea.value}\n• ${text}` : `• ${text}`;
+        }
+      });
+    });
+
+    // 6. Arranged Uploads: Prescription Scans & Lab Test Reports
+    let uploadCategoryTarget = 'prescription';
+    const fileInput = container.querySelector('#consult-file-uploader');
+    const uploadRxBtn = container.querySelector('#btn-upload-paper-rx');
+    const uploadLabBtn = container.querySelector('#btn-upload-lab-report');
+
+    uploadRxBtn?.addEventListener('click', () => {
+      uploadCategoryTarget = 'prescription';
+      fileInput?.click();
+    });
+
+    uploadLabBtn?.addEventListener('click', () => {
+      uploadCategoryTarget = 'test_report';
+      fileInput?.click();
+    });
+
+    const refreshUploadsGrid = () => {
+      const grid = container.querySelector('#consult-uploaded-grid');
+      if (!grid) return;
+
+      if (this.pendingUploadedReports.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 24px; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 8px; color: var(--text-muted); font-size: 12.5px;">
+            No prescriptions or lab reports attached yet. Use the buttons above to upload scanned paper prescriptions, CBC/blood test results, or radiology scans.
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = this.pendingUploadedReports.map((file, idx) => `
+        <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <span class="badge ${file.category === 'prescription' ? 'badge-active' : 'badge-blue'}" style="font-size: 10px; font-weight: 700;">
+                ${file.category === 'prescription' ? '📋 Physical Doctor Slip' : '🧪 Diagnostic Test Report'}
+              </span>
+              <button type="button" class="btn-remove-report" data-idx="${idx}" style="border: none; background: none; color: #dc2626; cursor: pointer; font-size: 16px; font-weight: 700;" title="Remove report">×</button>
+            </div>
+            
+            ${file.dataUrl && file.dataUrl.startsWith('data:image') ? `
+              <div style="width: 100%; height: 110px; border-radius: 6px; overflow: hidden; margin-bottom: 8px; border: 1px solid #e2e8f0; background: #f1f5f9;">
+                <img src="${file.dataUrl}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" class="btn-preview-report" data-idx="${idx}" />
+              </div>
+            ` : `
+              <div style="width: 100%; height: 70px; border-radius: 6px; background: #eff6ff; border: 1px solid #bfdbfe; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                <span style="font-size: 24px;">📄</span>
+                <span style="font-size: 11px; font-weight: 700; color: #1d4ed8; margin-left: 6px;">PDF Document</span>
+              </div>
+            `}
+
+            <div style="font-weight: 700; font-size: 12.5px; color: var(--text-main); line-height: 1.3;">${file.name}</div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Size: ${file.size} • ${file.time || 'Today'}</div>
+          </div>
+
+          <div style="display: flex; gap: 6px; margin-top: 10px; border-top: 1px solid #f1f5f9; padding-top: 8px;">
+            ${file.dataUrl ? `
+              <button type="button" class="btn btn-sm btn-outline btn-preview-report" data-idx="${idx}" style="flex: 1; font-size: 11px; padding: 3px 6px;">
+                🔍 View Full
+              </button>
+              <a href="${file.dataUrl}" download="${file.name}" class="btn btn-sm btn-ghost" style="font-size: 11px; padding: 3px 6px; color: #1d4ed8;">
+                ⬇ Download
+              </a>
+            ` : ''}
+          </div>
         </div>
       `).join('');
 
-      chipsList.querySelectorAll('.btn-remove-report').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const idx = parseInt(btn.getAttribute('data-idx'), 10);
+      // Bind preview buttons
+      grid.querySelectorAll('.btn-preview-report').forEach(b => {
+        b.addEventListener('click', () => {
+          const idx = parseInt(b.getAttribute('data-idx'), 10);
+          const rep = this.pendingUploadedReports[idx];
+          if (rep) this.openReportPreviewModal(rep);
+        });
+      });
+
+      // Bind remove buttons
+      grid.querySelectorAll('.btn-remove-report').forEach(b => {
+        b.addEventListener('click', () => {
+          const idx = parseInt(b.getAttribute('data-idx'), 10);
           this.pendingUploadedReports.splice(idx, 1);
-          updateChips();
+          refreshUploadsGrid();
         });
       });
     };
-
-    browseBtn?.addEventListener('click', () => fileInput?.click());
 
     fileInput?.addEventListener('change', (e) => {
       const files = Array.from(e.target.files || []);
@@ -753,24 +1168,34 @@ export class PatientWorkspace {
             name: f.name,
             size: (f.size / 1024).toFixed(1) + ' KB',
             type: f.type,
+            category: uploadCategoryTarget,
             dataUrl: re.target.result,
+            time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }),
             uploadedAt: new Date().toISOString()
           });
-          updateChips();
+          refreshUploadsGrid();
         };
         reader.readAsDataURL(f);
       });
     });
 
-    chipsList?.querySelectorAll('.btn-remove-report').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const idx = parseInt(btn.getAttribute('data-idx'), 10);
+    // Initial binding for preview/remove on grid
+    container.querySelectorAll('.btn-preview-report').forEach(b => {
+      b.addEventListener('click', () => {
+        const idx = parseInt(b.getAttribute('data-idx'), 10);
+        const rep = this.pendingUploadedReports[idx];
+        if (rep) this.openReportPreviewModal(rep);
+      });
+    });
+    container.querySelectorAll('.btn-remove-report').forEach(b => {
+      b.addEventListener('click', () => {
+        const idx = parseInt(b.getAttribute('data-idx'), 10);
         this.pendingUploadedReports.splice(idx, 1);
-        updateChips();
+        refreshUploadsGrid();
       });
     });
 
-    // Add diagnosis button handler
+    // 7. Add custom diagnosis button handler
     const addDxBtn = container.querySelector('#btn-add-dx');
     addDxBtn?.addEventListener('click', () => {
       const select = container.querySelector('#consult-dx-select');
@@ -788,17 +1213,17 @@ export class PatientWorkspace {
       tagContainer.appendChild(span);
     });
 
-    // Add medicine row handler
+    // 8. Add medicine row handler
     const addRxBtn = container.querySelector('#btn-add-rx-row');
     addRxBtn?.addEventListener('click', () => {
       const tbody = container.querySelector('#rx-rows-body');
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td><input type="text" class="form-input rx-drug" placeholder="Drug name" /></td>
+        <td><input type="text" class="form-input rx-drug" placeholder="Drug name (e.g. Paracetamol)" /></td>
         <td><input type="text" class="form-input rx-dose" placeholder="e.g. 500 mg" /></td>
         <td>
           <select class="form-select rx-freq">
-            <option value="1-0-1" selected>1-0-1 (सुबह-शाम / Twice Daily)</option>
+            <option value="1-0-1" selected>1-0-1 (सुबह-शाम / Twice)</option>
             <option value="1-0-0">1-0-0 (सुबह / Morning)</option>
             <option value="0-0-1">0-0-1 (रात / Night)</option>
             <option value="1-1-1">1-1-1 (दिन में तीन बार / Thrice)</option>
@@ -806,13 +1231,13 @@ export class PatientWorkspace {
           </select>
         </td>
         <td><input type="text" class="form-input rx-timing" value="खाने के बाद (After food)" /></td>
-        <td><input type="number" class="form-input rx-days" value="15" /></td>
+        <td><input type="number" class="form-input rx-days" value="5" /></td>
         <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">×</button></td>
       `;
       tbody.appendChild(tr);
     });
 
-    // Save Consultation Form Submit
+    // 9. Save Consultation Form Submit
     const form = container.querySelector('#consultation-form');
     form?.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -839,15 +1264,6 @@ export class PatientWorkspace {
       const advice = container.querySelector('#consult-advice').value;
       const followUpDate = container.querySelector('#consult-followup').value;
 
-      const vitalsData = {
-        bpSys: parseInt(container.querySelector('#vital-bp-sys').value, 10),
-        bpDia: parseInt(container.querySelector('#vital-bp-dia').value, 10),
-        pulse: parseInt(container.querySelector('#vital-pulse').value, 10),
-        spo2: parseInt(container.querySelector('#vital-spo2').value, 10),
-        temp: parseFloat(container.querySelector('#vital-temp').value),
-        weight: parseFloat(container.querySelector('#vital-weight').value)
-      };
-
       const diagnoses = Array.from(container.querySelectorAll('#dx-tags-container .badge')).map(tag => ({
         code: tag.getAttribute('data-code'),
         name: tag.getAttribute('data-name')
@@ -858,7 +1274,7 @@ export class PatientWorkspace {
         dosage: row.querySelector('.rx-dose').value,
         frequency: row.querySelector('.rx-freq').value,
         timing: row.querySelector('.rx-timing').value,
-        days: parseInt(row.querySelector('.rx-days').value, 10) || 30
+        days: parseInt(row.querySelector('.rx-days').value, 10) || 5
       })).filter(rx => rx.drug.trim());
 
       const investigationsOrdered = Array.from(container.querySelectorAll('.inv-order:checked')).map(cb => cb.value);
@@ -874,7 +1290,6 @@ export class PatientWorkspace {
         chiefComplaint,
         duration,
         examination,
-        vitals: vitalsData,
         diagnoses,
         prescriptions,
         investigationsOrdered,
@@ -883,12 +1298,24 @@ export class PatientWorkspace {
         followUpDate
       });
 
+      // Also persist uploaded reports into document vault
+      this.pendingUploadedReports.forEach(rep => {
+        hospitalStore.addDocument({
+          healthId: this.healthId,
+          title: rep.name,
+          category: rep.category === 'prescription' ? 'Doctor Prescription' : 'Diagnostic Lab Report',
+          dataUrl: rep.dataUrl,
+          size: rep.size
+        });
+      });
+
       this.pendingUploadedReports = [];
-      showToast('Consultation & prescriptions saved successfully! Attached reports synced.', 'success');
+      showToast('Consultation, prescriptions, diet directives & reports saved successfully!', 'success');
       this.activeTab = 'summary';
+      this.render();
     });
 
-    // Print Rx Slip
+    // 10. Print Rx Slip
     const printBtn = container.querySelector('#btn-print-rx');
     printBtn?.addEventListener('click', () => {
       this.printPrescription();
@@ -1016,28 +1443,33 @@ export class PatientWorkspace {
             No inpatient admission records for this patient. Click "New Inpatient Admission" to admit to ward.
           </div>
         ` : admissions.map(adm => `
-          <div style="border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 24px; background: #fafbfc;">
+          <div style="border: 1.5px solid var(--border-color); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 24px; background: #fafbfc; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
             <!-- Admission Meta Header & Inpatient Actions -->
-            <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; flex-wrap: wrap; gap: 12px;">
               <div>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span style="font-weight: 800; font-size: 15px; color: var(--text-main);">${adm.admittingDiagnosis}</span>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                  <span style="font-weight: 800; font-size: 16px; color: var(--text-main);">${adm.admittingDiagnosis}</span>
                   <span class="badge ${adm.status === 'Active Inpatient' ? 'badge-active' : 'badge-pending'}">${adm.status}</span>
+                  <span class="badge" style="background: #1e3a8a; color: #ffffff; font-weight: 800; font-size: 12px; font-family: monospace; padding: 3px 8px;">🛏️ Bed: ${adm.bedNumber}</span>
+                  <span class="badge badge-blue" style="font-weight: 700; font-size: 12px;">🏥 ${adm.ward}</span>
                 </div>
-                <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
-                  Location: <strong>${adm.ward} (${adm.bedNumber})</strong> • Admitted: <strong>${formatDate(adm.admittedAt)}</strong> • Attending: <strong>${adm.admittingDoctor}</strong>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">
+                  Admitted: <strong>${formatDate(adm.admittedAt)}</strong> • Attending Consultant: <strong>${adm.admittingDoctor}</strong>
                 </div>
               </div>
 
-              <!-- Inpatient Action Buttons (Item 3 & 4) -->
-              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <!-- Inpatient Action Buttons (Change Bed/Ward, Procedures, MAR) -->
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
                 ${adm.status === 'Active Inpatient' ? `
+                  <button type="button" class="btn btn-sm btn-outline btn-transfer-bed" data-admid="${adm.id}" style="border-color: #2563eb; color: #1d4ed8; font-weight: 700; background: #eff6ff;" title="Transfer to another ward or change bed number">
+                    🛏️ Change Bed / Ward
+                  </button>
                   <button type="button" class="btn btn-sm btn-primary btn-log-round" data-admid="${adm.id}">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     + Log Procedures & MAR Doses
                   </button>
                   <button type="button" class="btn btn-sm btn-secondary btn-edit-admission" data-admid="${adm.id}">
-                    Edit Stay Details
+                    Edit Details
                   </button>
                   <button type="button" class="btn btn-sm btn-outline btn-discharge-adm" data-admid="${adm.id}" style="color: #065f46; border-color: #a7f3d0;">
                     Discharge
@@ -1049,6 +1481,24 @@ export class PatientWorkspace {
                 `}
               </div>
             </div>
+
+            <!-- Ward & Bed Transfer History (if any transfers occurred) -->
+            ${adm.wardTransfers && adm.wardTransfers.length > 0 ? `
+              <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;">
+                <div style="font-size: 11.5px; font-weight: 700; color: #166534; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
+                  <span>🔄</span> Bed & Ward Transfer Log (वार्ड / बेड स्थानांतरण इतिहास):
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 6px;">
+                  ${adm.wardTransfers.map(tr => `
+                    <div style="font-size: 12px; color: #15803d; background: #ffffff; padding: 6px 10px; border-radius: 6px; border: 1px solid #dcfce7;">
+                      <span>📅 <strong>${formatDate(tr.transferredAt, true)}</strong>: Moved from <em>${tr.fromWard} (${tr.fromBed})</em> ➔ <strong style="color: #1e3a8a;">${tr.toWard} (${tr.toBed})</strong> by ${tr.clinician}.</span>
+                      <span style="margin-left: 6px; color: #374151;">Reason: <strong>${tr.reason}</strong></span>
+                      ${tr.handoverNotes ? `<div style="font-size: 11px; color: #4b5563; margin-top: 2px;">Handover: "${tr.handoverNotes}"</div>` : ''}
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
 
             <!-- Day by Day Rounds, Procedures & MAR -->
             <div style="font-size: 13px; font-weight: 700; color: var(--text-secondary); margin-bottom: 10px;">Day-by-Day Inpatient Course & Clinical Procedures:</div>
@@ -1152,6 +1602,14 @@ export class PatientWorkspace {
     const modalAdmitBtn = container.querySelector('#btn-modal-admit');
     modalAdmitBtn?.addEventListener('click', () => {
       this.openAdmitModal();
+    });
+
+    // Change Bed / Ward transfer button (Prompt: enter bed and option of change of bed or ward)
+    container.querySelectorAll('.btn-transfer-bed').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const admId = btn.getAttribute('data-admid');
+        this.openTransferBedModal(admId);
+      });
     });
 
     // Log Round & Procedures button
@@ -2408,6 +2866,287 @@ ${doc.previewText || 'Cryptographically verified clinical document content.'}
       overlay.remove();
       showToast('Document archived with cryptographic hash seal.', 'success');
       this.activeTab = 'documents';
+      this.render();
+    });
+  }
+
+  // ==========================================================================
+  // EDIT PATIENT CLINICAL DEMOGRAPHICS MODAL (Name, Age/DOB, Gender, Blood, Mobile)
+  // ==========================================================================
+  openEditPatientModal() {
+    const summary = hospitalStore.getPatientClinicalSummary(this.healthId);
+    const patient = summary?.patient;
+    if (!patient) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal-dialog" style="max-width: 580px;">
+        <div class="modal-header">
+          <div>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Edit Patient Demographics & Profile</h3>
+            <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Card ID: ${formatHealthId(patient.healthId || patient.id)} • Central Registry</p>
+          </div>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <form id="modal-edit-patient-form">
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 700;">Patient Full Name:</label>
+              <input type="text" id="edit-p-name" class="form-input" value="${patient.fullName || ''}" required />
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" class="form-group">
+              <div>
+                <label class="form-label" style="font-weight: 700;">Date of Birth (DOB):</label>
+                <input type="date" id="edit-p-dob" class="form-input" value="${patient.dob || '1996-05-14'}" required />
+              </div>
+              <div>
+                <label class="form-label" style="font-weight: 700;">Gender:</label>
+                <select class="form-select" id="edit-p-gender">
+                  <option value="Male" ${patient.gender === 'Male' ? 'selected' : ''}>Male (पुरुष)</option>
+                  <option value="Female" ${patient.gender === 'Female' ? 'selected' : ''}>Female (महिला)</option>
+                  <option value="Other" ${patient.gender === 'Other' ? 'selected' : ''}>Other (अन्य)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" class="form-group">
+              <div>
+                <label class="form-label" style="font-weight: 700;">Blood Group:</label>
+                <select class="form-select font-bold" id="edit-p-blood">
+                  <option value="A+" ${patient.bloodGroup === 'A+' ? 'selected' : ''}>A+ (A Positive)</option>
+                  <option value="A-" ${patient.bloodGroup === 'A-' ? 'selected' : ''}>A- (A Negative)</option>
+                  <option value="B+" ${patient.bloodGroup === 'B+' ? 'selected' : ''}>B+ (B Positive)</option>
+                  <option value="B-" ${patient.bloodGroup === 'B-' ? 'selected' : ''}>B- (B Negative)</option>
+                  <option value="AB+" ${patient.bloodGroup === 'AB+' ? 'selected' : ''}>AB+ (AB Positive)</option>
+                  <option value="AB-" ${patient.bloodGroup === 'AB-' ? 'selected' : ''}>AB- (AB Negative)</option>
+                  <option value="O+" ${patient.bloodGroup === 'O+' ? 'selected' : ''}>O+ (O Positive)</option>
+                  <option value="O-" ${patient.bloodGroup === 'O-' ? 'selected' : ''}>O- (O Negative)</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label" style="font-weight: 700;">Primary Mobile (10-Digit):</label>
+                <input type="tel" id="edit-p-mobile" class="form-input font-mono" value="${patient.mobile || ''}" pattern="[0-9]{10}" placeholder="9876543210" required />
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" class="form-group">
+              <div>
+                <label class="form-label">Emergency Contact Name:</label>
+                <input type="text" id="edit-p-em-name" class="form-input" value="${patient.emergencyContact?.name || ''}" placeholder="Contact person name" />
+              </div>
+              <div>
+                <label class="form-label">Emergency Contact Phone:</label>
+                <input type="tel" id="edit-p-em-phone" class="form-input font-mono" value="${patient.emergencyContact?.phone || ''}" placeholder="+91 9876543211" />
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary modal-close">Cancel</button>
+            <button type="submit" class="btn btn-primary">Update Patient Record</button>
+          </div>
+        </form>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    overlay.querySelectorAll('.modal-close').forEach(btn => {
+      btn.addEventListener('click', () => overlay.remove());
+    });
+
+    overlay.querySelector('#modal-edit-patient-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fullName = overlay.querySelector('#edit-p-name').value.trim();
+      const dob = overlay.querySelector('#edit-p-dob').value;
+      const gender = overlay.querySelector('#edit-p-gender').value;
+      const bloodGroup = overlay.querySelector('#edit-p-blood').value;
+      const mobile = overlay.querySelector('#edit-p-mobile').value.trim();
+      const emergencyName = overlay.querySelector('#edit-p-em-name').value.trim();
+      const emergencyPhone = overlay.querySelector('#edit-p-em-phone').value.trim();
+
+      hospitalStore.updatePatientDetails(this.healthId, {
+        fullName,
+        dob,
+        gender,
+        bloodGroup,
+        mobile,
+        emergencyContact: {
+          name: emergencyName,
+          phone: emergencyPhone
+        }
+      });
+
+      overlay.remove();
+      showToast(`Updated details for patient ${fullName}!`, 'success');
+      this.render();
+    });
+  }
+
+  // ==========================================================================
+  // PREVIEW UPLOADED PRESCRIPTION SLIP / DIAGNOSTIC REPORT MODAL
+  // ==========================================================================
+  openReportPreviewModal(report) {
+    if (!report) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal-dialog" style="max-width: 780px;">
+        <div class="modal-header">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">${report.name || 'Uploaded Document'}</h3>
+              <span class="badge ${report.category === 'prescription' ? 'badge-active' : 'badge-blue'}">
+                ${report.category === 'prescription' ? 'Physical Doctor Slip' : 'Diagnostic Lab Report'}
+              </span>
+            </div>
+            <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Size: ${report.size || 'Standard'} • Uploaded: ${report.time || 'Today'}</p>
+          </div>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <div class="modal-body" style="text-align: center; max-height: 75vh; overflow-y: auto; padding: 20px;">
+          ${report.dataUrl && report.dataUrl.startsWith('data:image') ? `
+            <img src="${report.dataUrl}" style="max-width: 100%; max-height: 520px; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 2px 8px rgba(0,0,0,0.08); object-fit: contain;" alt="Report preview" />
+          ` : `
+            <div style="padding: 60px 20px; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 8px;">
+              <div style="font-size: 48px; margin-bottom: 12px;">📄</div>
+              <h4 style="font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">PDF / Binary Document Archive</h4>
+              <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px;">This file is archived in secure cryptographic storage.</p>
+              ${report.dataUrl ? `
+                <a href="${report.dataUrl}" download="${report.name}" class="btn btn-primary">Download Document File</a>
+              ` : ''}
+            </div>
+          `}
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close">Close Preview</button>
+          ${report.dataUrl ? `
+            <a href="${report.dataUrl}" download="${report.name}" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Original File
+            </a>
+          ` : ''}
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    overlay.querySelectorAll('.modal-close').forEach(btn => {
+      btn.addEventListener('click', () => overlay.remove());
+    });
+  }
+
+  // ==========================================================================
+  // INPATIENT WARD / BED TRANSFER MODAL (वार्ड / बेड बदलें)
+  // ==========================================================================
+  openTransferBedModal(admissionId) {
+    const summary = hospitalStore.getPatientClinicalSummary(this.healthId);
+    const adm = (summary.admissions || []).find(a => a.id === admissionId);
+    if (!adm) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal-dialog" style="max-width: 600px;">
+        <div class="modal-header">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 18px;">🛏️</span>
+              <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Change Bed / Transfer Ward (वार्ड / बेड बदलें)</h3>
+            </div>
+            <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Patient: ${adm.memberName} • Diagnosis: ${adm.admittingDiagnosis}</p>
+          </div>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <form id="modal-transfer-bed-form">
+          <div class="modal-body">
+            <!-- Current Location Badge -->
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; margin-bottom: 16px;">
+              <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Current Inpatient Placement:</div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
+                <span class="badge" style="background: #1e3a8a; color: #ffffff; font-weight: 800; font-family: monospace;">Current Bed: ${adm.bedNumber}</span>
+                <span class="badge badge-blue">Ward: ${adm.ward}</span>
+                <span style="font-size: 12px; color: var(--text-muted);">Attending: ${adm.admittingDoctor}</span>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" class="form-group">
+              <div>
+                <label class="form-label" style="font-weight: 700;">Target New Ward (नया वार्ड):</label>
+                <select class="form-select" id="transfer-target-ward" required>
+                  <option value="General Medical Ward" ${adm.ward === 'General Medical Ward' ? 'selected' : ''}>General Medical Ward (सामान्य वार्ड)</option>
+                  <option value="Intensive Care Unit (ICU)" ${adm.ward.includes('ICU') ? 'selected' : ''}>Intensive Care Unit (ICU - गहन चिकित्सा)</option>
+                  <option value="Coronary Care Unit (CCU)" ${adm.ward.includes('CCU') ? 'selected' : ''}>Coronary Care Unit (CCU - हृदय रोग)</option>
+                  <option value="Surgical High Dependency (HDU)">Surgical High Dependency (HDU)</option>
+                  <option value="Orthopedic & Trauma Ward">Orthopedic & Trauma Ward</option>
+                  <option value="Emergency Observation Ward">Emergency Observation Ward</option>
+                  <option value="Pediatric Care Ward">Pediatric Care Ward (शिशु वार्ड)</option>
+                  <option value="Private Deluxe Room">Private Deluxe Room (निजी कमरा)</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label" style="font-weight: 700;">New Bed Number (नया बेड):</label>
+                <input type="text" id="transfer-target-bed" class="form-input font-mono font-bold" placeholder="e.g. Bed GW-108 or ICU-04" value="${adm.bedNumber.replace(/[0-9]+/, (n) => parseInt(n, 10) + 1)}" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 700;">Clinical Reason for Transfer (स्थानांतरण का कारण):</label>
+              <select class="form-select" id="transfer-reason" required>
+                <option value="Condition Stabilized - Step Down from ICU to General Ward">Condition Stabilized - Step Down from ICU to General Ward</option>
+                <option value="Condition Deteriorated - Immediate Escalation to ICU">Condition Deteriorated - Immediate Escalation to ICU</option>
+                <option value="Patient / Attendant Request for Room Upgrade">Patient / Attendant Request for Room Upgrade</option>
+                <option value="Infection Control / Isolation Precaution">Infection Control / Isolation Precaution</option>
+                <option value="Post-Operative Recovery Transfer">Post-Operative Recovery Transfer</option>
+                <option value="Routine Ward Bed Reallocation">Routine Ward Bed Reallocation</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 700;">Doctor & Nursing Handover Notes (हैंडओवर निर्देश):</label>
+              <textarea id="transfer-handover" class="form-textarea" placeholder="Shift vitals record, pending IV fluids, and nursing handover details...">Patient transferred to new bed in hemodynamically stable state. IV access patent. Shift handover completed with receiving ward sister.</textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary modal-close">Cancel</button>
+            <button type="submit" class="btn btn-primary" style="font-weight: 700;">Confirm Bed Transfer</button>
+          </div>
+        </form>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    overlay.querySelectorAll('.modal-close').forEach(btn => {
+      btn.addEventListener('click', () => overlay.remove());
+    });
+
+    overlay.querySelector('#modal-transfer-bed-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newWard = overlay.querySelector('#transfer-target-ward').value;
+      const newBed = overlay.querySelector('#transfer-target-bed').value.trim();
+      const reason = overlay.querySelector('#transfer-reason').value;
+      const handover = overlay.querySelector('#transfer-handover').value.trim();
+
+      hospitalStore.transferWard(admissionId, newWard, newBed, reason, handover);
+      overlay.remove();
+      showToast(`Transferred patient to ${newWard} (${newBed})!`, 'success');
+      this.activeTab = 'admissions';
       this.render();
     });
   }

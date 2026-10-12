@@ -862,7 +862,11 @@ export const DEFAULT_HOSPITAL_DOCTORS = [
     opdSchedule: "Mon, Wed, Fri (09:00 AM – 01:00 PM)",
     consultationFee: 50,
     avatar: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80",
-    status: "Active"
+    status: "Active",
+    appUsername: "doc.vikram",
+    appPin: "9182",
+    digitalSignature: "Digitally Signed by Dr. Vikram Sethi, MD, DM (NMC/MCI-2004/09182)",
+    appRole: "Attending Consultant (Doctor App Enabled)"
   },
   {
     id: "doc_02",
@@ -877,7 +881,11 @@ export const DEFAULT_HOSPITAL_DOCTORS = [
     opdSchedule: "Tue, Thu, Sat (09:00 AM – 02:00 PM)",
     consultationFee: 50,
     avatar: "https://images.unsplash.com/photo-1594824813590-4890c5f242e2?w=150&auto=format&fit=crop&q=80",
-    status: "Active"
+    status: "Active",
+    appUsername: "doc.neha",
+    appPin: "4810",
+    digitalSignature: "Digitally Signed by Dr. Neha Kapoor, MD (DMC-2011/48102)",
+    appRole: "Attending Consultant (Doctor App Enabled)"
   },
   {
     id: "doc_03",
@@ -892,7 +900,11 @@ export const DEFAULT_HOSPITAL_DOCTORS = [
     opdSchedule: "24x7 Emergency Shifts",
     consultationFee: 0,
     avatar: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=150&auto=format&fit=crop&q=80",
-    status: "Active"
+    status: "Active",
+    appUsername: "doc.amit",
+    appPin: "3819",
+    digitalSignature: "Digitally Signed by Dr. Amit Verma, MS, FACEM (MMC-2015/38192)",
+    appRole: "Trauma Consultant (Doctor App Enabled)"
   },
   {
     id: "doc_04",
@@ -907,7 +919,11 @@ export const DEFAULT_HOSPITAL_DOCTORS = [
     opdSchedule: "Mon, Thu (10:00 AM – 02:00 PM)",
     consultationFee: 50,
     avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&auto=format&fit=crop&q=80",
-    status: "Active"
+    status: "Active",
+    appUsername: "doc.sunita",
+    appPin: "1049",
+    digitalSignature: "Digitally Signed by Dr. Sunita Rao, MD (KMC-2012/10492)",
+    appRole: "Attending Pulmonologist (Doctor App Enabled)"
   }
 ];
 
