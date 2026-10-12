@@ -1,0 +1,54 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer Wheel Rim with 24 Perimeter Rivet Nodes -->
+  <circle cx="100" cy="100" r="92" stroke="#000080" stroke-width="4.5" opacity="0.3"/>
+  <circle cx="100" cy="100" r="84" stroke="#000080" stroke-width="2" opacity="0.25"/>
+  
+  <!-- Central Hub with Dual Rings -->
+  <circle cx="100" cy="100" r="22" fill="#ffffff" stroke="#000080" stroke-width="3" opacity="0.4"/>
+  <circle cx="100" cy="100" r="8" fill="#000080" opacity="0.4"/>
+
+  <!-- 24 Spokes generated at 15-degree increments -->
+  <g stroke="#000080" stroke-width="1.8" stroke-linecap="round" opacity="0.35">
+    <!-- 0 deg -->
+    <line x1="100" y1="22" x2="100" y2="78"/>
+    <!-- 180 deg -->
+    <line x1="100" y1="122" x2="100" y2="178"/>
+    <!-- 90 deg -->
+    <line x1="22" y1="100" x2="78" y2="100"/>
+    <!-- 270 deg -->
+    <line x1="122" y1="100" x2="178" y2="100"/>
+    <!-- 45 deg -->
+    <line x1="44.8" y1="44.8" x2="84.4" y2="84.4"/>
+    <!-- 225 deg -->
+    <line x1="115.6" y1="115.6" x2="155.2" y2="155.2"/>
+    <!-- 135 deg -->
+    <line x1="44.8" y1="155.2" x2="84.4" y2="115.6"/>
+    <!-- 315 deg -->
+    <line x1="115.6" y1="84.4" x2="155.2" y2="44.8"/>
+    
+    <!-- 15 deg & opposite -->
+    <line x1="120.2" y1="24.7" x2="105.7" y2="78.7"/>
+    <line x1="79.8" y1="175.3" x2="94.3" y2="121.3"/>
+    <!-- 30 deg & opposite -->
+    <line x1="139.5" y1="31.8" x2="111" y2="81"/>
+    <line x1="60.5" y1="168.2" x2="89" y2="119"/>
+    <!-- 60 deg & opposite -->
+    <line x1="168.2" y1="60.5" x2="119" y2="89"/>
+    <line x1="31.8" y1="139.5" x2="81" y2="111"/>
+    <!-- 75 deg & opposite -->
+    <line x1="175.3" y1="79.8" x2="121.3" y2="94.3"/>
+    <line x1="24.7" y1="120.2" x2="78.7" y2="105.7"/>
+    <!-- 105 deg & opposite -->
+    <line x1="175.3" y1="120.2" x2="121.3" y2="105.7"/>
+    <line x1="24.7" y1="79.8" x2="78.7" y2="94.3"/>
+    <!-- 120 deg & opposite -->
+    <line x1="168.2" y1="139.5" x2="119" y2="111"/>
+    <line x1="31.8" y1="60.5" x2="81" y2="89"/>
+    <!-- 150 deg & opposite -->
+    <line x1="139.5" y1="168.2" x2="111" y2="119"/>
+    <line x1="60.5" y1="31.8" x2="89" y2="81"/>
+    <!-- 165 deg & opposite -->
+    <line x1="120.2" y1="175.3" x2="105.7" y2="121.3"/>
+    <line x1="79.8" y1="24.7" x2="94.3" y2="78.7"/>
+  </g>
+</svg>

@@ -1,0 +1,19 @@
+<svg width="110" height="42" viewBox="0 0 110 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Emergency High-Visibility Red Pill Badge with White Clinical Border -->
+  <rect x="1" y="1" width="108" height="40" rx="8" fill="#b91c1c" stroke="#dc2626" stroke-width="1.5"/>
+  <rect x="3" y="3" width="104" height="36" rx="6" stroke="#fca5a5" stroke-width="0.75" stroke-opacity="0.6"/>
+
+  <!-- Left: Blood Droplet Symbol -->
+  <g transform="translate(14, 15)">
+    <path d="M0 -7C0 -7 6 0 6 4C6 7.3 3.3 10 0 10C-3.3 10 -6 7.3 -6 4C-6 0 0 -7 0 -7Z" fill="#ffffff"/>
+    <circle cx="1.5" cy="4.5" r="1.2" fill="#b91c1c"/>
+  </g>
+
+  <!-- Middle/Right: Blood Group Typography -->
+  <text x="30" y="17" font-family="'Inter', sans-serif" font-size="8.5" font-weight="700" fill="#fecaca" letter-spacing="0.8">
+    BLOOD / रक्त
+  </text>
+  <text x="30" y="33" font-family="'Inter', sans-serif" font-size="16" font-weight="900" fill="#ffffff" letter-spacing="0.5">
+    O+ POS
+  </text>
+</svg>

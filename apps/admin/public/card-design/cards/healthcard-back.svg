@@ -1,0 +1,184 @@
+<svg width="1000" height="630" viewBox="0 0 1000 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Guilloche Security Pattern Definition -->
+    <pattern id="back_guilloche" x="0" y="0" width="1000" height="630" patternUnits="userSpaceOnUse">
+      <g opacity="0.06" stroke="#047857" stroke-width="0.8" fill="none">
+        <path d="M0 60 Q 125 35, 250 60 T 500 60 T 750 60 T 1000 60"/>
+        <path d="M0 110 Q 125 85, 250 110 T 500 110 T 750 110 T 1000 110"/>
+        <path d="M0 160 Q 125 135, 250 160 T 500 160 T 750 160 T 1000 160"/>
+        <path d="M0 210 Q 125 185, 250 210 T 500 210 T 750 210 T 1000 210"/>
+        <path d="M0 260 Q 125 235, 250 260 T 500 260 T 750 260 T 1000 260"/>
+        <path d="M0 310 Q 125 285, 250 310 T 500 310 T 750 310 T 1000 310"/>
+        <path d="M0 360 Q 125 335, 250 360 T 500 360 T 750 360 T 1000 360"/>
+        <path d="M0 410 Q 125 385, 250 410 T 500 410 T 750 410 T 1000 410"/>
+        <path d="M0 460 Q 125 435, 250 460 T 500 460 T 750 460 T 1000 460"/>
+        <path d="M0 510 Q 125 485, 250 510 T 500 510 T 750 510 T 1000 510"/>
+        <path d="M0 560 Q 125 535, 250 560 T 500 560 T 750 560 T 1000 560"/>
+      </g>
+    </pattern>
+
+    <!-- Clip Path for CR80 Standard Rounded Corners -->
+    <clipPath id="back_card_clip">
+      <rect x="0" y="0" width="1000" height="630" rx="36" ry="36"/>
+    </clipPath>
+  </defs>
+
+  <!-- ================= MASTER BACK CARD CONTAINER ================= -->
+  <g clip-path="url(#back_card_clip)">
+    <!-- Base Authentic Off-White Surface -->
+    <rect width="1000" height="630" fill="#fcfdfd"/>
+    <rect width="1000" height="630" fill="#047857" fill-opacity="0.02"/>
+
+    <!-- Guilloche Lathe Grid -->
+    <rect width="1000" height="630" fill="url(#back_guilloche)"/>
+
+    <!-- Top Magnetic Stripe (HiCo Standard ISO 7811) -->
+    <rect x="0" y="28" width="1000" height="84" fill="#1e293b"/>
+    <!-- Subtle Magnetic Tape Reflection -->
+    <rect x="0" y="32" width="1000" height="12" fill="#ffffff" fill-opacity="0.06"/>
+    <rect x="0" y="96" width="1000" height="8" fill="#000000" fill-opacity="0.2"/>
+
+    <!-- Signature / Encoding Strip with Micro-Security Printing -->
+    <g transform="translate(44, 130)">
+      <rect x="0" y="0" width="620" height="42" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+      <g opacity="0.3" stroke="#047857" stroke-width="0.5">
+        <line x1="10" y1="12" x2="610" y2="12"/>
+        <line x1="10" y1="22" x2="610" y2="22"/>
+        <line x1="10" y1="32" x2="610" y2="32"/>
+      </g>
+      <text x="14" y="25" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" fill="#64748b" letter-spacing="1">
+        AUTHORIZED CITIZEN SIGNATURE / DIGITAL EMBED
+      </text>
+      <!-- CVC / Security Code Box -->
+      <rect x="630" y="0" width="90" height="42" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+      <text x="675" y="26" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800" fill="#0f172a">
+        729
+      </text>
+    </g>
+
+    <!-- Ashoka Chakra Watermark on Back -->
+    <g transform="translate(780, 360)" opacity="0.05">
+      <circle cx="0" cy="0" r="140" stroke="#000080" stroke-width="4" fill="none"/>
+      <circle cx="0" cy="0" r="30" stroke="#000080" stroke-width="2.5" fill="#ffffff"/>
+      <circle cx="0" cy="0" r="10" fill="#000080"/>
+    </g>
+
+    <!-- ================= MAIN INSTRUCTIONS & EMERGENCY SECTION ================= -->
+    <g transform="translate(44, 196)">
+      
+      <!-- Statutory Instructions (Hindi + English) -->
+      <g>
+        <text font-family="'Noto Sans Devanagari', 'Inter', sans-serif" font-size="11" font-weight="700" fill="#047857">
+          महत्वपूर्ण निर्देश / IMPORTANT INSTRUCTIONS:
+        </text>
+
+        <g transform="translate(0, 18)" font-family="'Inter', sans-serif" font-size="9" fill="#334155" line-height="1.4">
+          <text y="0">
+            1. This card carries no plain-text medical records. All health records remain encrypted in national health vaults.
+          </text>
+          <text y="14">
+            2. Medical access requires patient OTP or App consent, except in life-threatening trauma emergencies.
+          </text>
+          <text y="28">
+            3. Hospital clinicians must scan the front QR code or tap the NFC contactless smart chip for verified OPD intake.
+          </text>
+          <text y="42">
+            4. If found, please return to any Government Hospital or drop into any India Post mailbox (Postage Paid).
+          </text>
+        </g>
+      </g>
+
+      <!-- Emergency Contact & Residential Address Block -->
+      <g transform="translate(0, 86)">
+        <rect x="0" y="0" width="620" height="110" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.2"/>
+        
+        <g transform="translate(16, 18)">
+          <!-- Emergency Contact -->
+          <text font-family="'Inter', sans-serif" font-size="9.5" font-weight="800" fill="#b91c1c" letter-spacing="0.5">
+            EMERGENCY CONTACT • आपातकालीन संपर्क:
+          </text>
+          <text y="16" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#0f172a">
+            SUNITA SHARMA (SPOUSE) • +91 98765 43210
+          </text>
+
+          <!-- Address -->
+          <text y="38" font-family="'Inter', sans-serif" font-size="9.5" font-weight="800" fill="#047857" letter-spacing="0.5">
+            RESIDENTIAL JURISDICTION:
+          </text>
+          <text y="52" font-family="'Inter', sans-serif" font-size="10.5" font-weight="600" fill="#334155">
+            B-402, SHIVAM APARTMENTS, SECTOR 62, NOIDA, UTTAR PRADESH - 201309
+          </text>
+        </g>
+      </g>
+
+      <!-- National 24x7 Helplines -->
+      <g transform="translate(0, 216)">
+        <rect x="0" y="0" width="620" height="42" rx="6" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+        <g transform="translate(16, 25)">
+          <text font-family="'Inter', sans-serif" font-size="10" font-weight="700" fill="#1e3a8a">
+            TOLL-FREE HEALTH HELPLINE: <tspan font-weight="800" fill="#1d4ed8">1800-11-4477</tspan> | EMERGENCY: <tspan font-weight="800" fill="#dc2626">108 / 112</tspan>
+          </text>
+        </g>
+      </g>
+    </g>
+
+    <!-- Right Side: Issuing Authority Verification Stamp & Micro-QR -->
+    <g transform="translate(720, 204)">
+      <!-- Government Digital Signature Block -->
+      <rect x="0" y="0" width="236" height="254" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+      
+      <g transform="translate(18, 22)">
+        <circle cx="100" cy="42" r="34" stroke="#047857" stroke-width="1.5" fill="#f0fdf4"/>
+        <circle cx="100" cy="42" r="30" stroke="#047857" stroke-width="0.75" stroke-dasharray="3 2"/>
+        <path d="M100 22L108 30H118V42L126 50L118 58V70H108L100 78L92 70H82V58L74 50L82 42V30H92L100 22Z" fill="#047857" fill-opacity="0.15"/>
+        <text x="100" y="46" text-anchor="middle" font-family="'Inter', sans-serif" font-size="7.5" font-weight="800" fill="#047857">
+          DIGITALLY
+        </text>
+        <text x="100" y="55" text-anchor="middle" font-family="'Inter', sans-serif" font-size="7" font-weight="800" fill="#047857">
+          SIGNED
+        </text>
+
+        <text x="100" y="100" text-anchor="middle" font-family="'Inter', sans-serif" font-size="8.5" font-weight="700" fill="#0f172a">
+          NATIONAL HEALTH AUTHORITY
+        </text>
+        <text x="100" y="114" text-anchor="middle" font-family="'Inter', sans-serif" font-size="7.5" font-weight="600" fill="#64748b">
+          Ministry of Health &amp; Family Welfare
+        </text>
+
+        <!-- Digital Signing Timestamp -->
+        <g transform="translate(0, 134)">
+          <line x1="10" y1="0" x2="190" y2="0" stroke="#e2e8f0" stroke-width="1"/>
+          <text x="100" y="14" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="7.5" font-weight="700" fill="#334155">
+            ISSUED: 12-OCT-2026
+          </text>
+          <text x="100" y="27" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="7" font-weight="600" fill="#64748b">
+            CERT: SHA-256 / RSA-4096
+          </text>
+        </g>
+      </g>
+    </g>
+
+    <!-- ================= BOTTOM CARD FOOTER ================= -->
+    <g transform="translate(44, 574)">
+      <line x1="0" y1="0" x2="912" y2="0" stroke="#cbd5e1" stroke-width="0.75"/>
+      <g transform="translate(0, 20)">
+        <text font-family="'Inter', sans-serif" font-size="8.5" font-weight="600" fill="#64748b">
+          Official Portal: <tspan font-weight="700" fill="#047857">healthcard.gov.in</tspan> • Ayushman Bharat Digital Mission (ABDM)
+        </text>
+      </g>
+      <g transform="translate(912, 20)">
+        <text text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" fill="#0f172a">
+          BATCH: NHA-DEL-26-88194
+        </text>
+      </g>
+    </g>
+
+    <!-- Bottom Tricolor Security Accent Ribbon -->
+    <rect x="0" y="612" width="1000" height="6" fill="#047857"/>
+    <rect x="0" y="618" width="1000" height="6" fill="#ffffff"/>
+    <rect x="0" y="624" width="1000" height="6" fill="#f97316"/>
+
+    <!-- Subtle Outer Border -->
+    <rect x="1" y="1" width="998" height="628" rx="35" ry="35" stroke="#cbd5e1" stroke-width="2" fill="none"/>
+  </g>
+</svg>

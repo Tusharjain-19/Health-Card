@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Official Indian HealthCard Design System • CR80 Physical Card</title>
+  
+  <!-- Modern Official Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&family=Noto+Sans+Devanagari:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles/card.css" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 32px 20px;
+      line-height: 1.5;
+    }
+
+    .showcase-container {
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+
+    /* Header Banner */
+    .showcase-header {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
+    /* Main Showcase Grid: Interactive Card on Left, Live Controller on Right */
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      margin-bottom: 36px;
+    }
+
+    .card-stage-panel {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 4px 12px rgba(15,23,42,0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stage-controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: #047857;
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background: #065f46;
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      color: #334155;
+      border-color: #cbd5e1;
+    }
+    .btn-outline:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    /* 3D Flip Card Container */
+    .card-flip-perspective {
+      perspective: 1200px;
+      width: 520px;
+      height: 328px;
+      margin: 10px 0 20px 0;
+    }
+
+    .card-flipper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .card-flipper.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      top: 0;
+      left: 0;
+    }
+
+    .card-face.card-back-face {
+      transform: rotateY(180deg);
+    }
+
+    /* Live Controls & Specs Panel */
+    .controls-panel {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(15,23,42,0.04);
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 13.5px;
+      font-family: inherit;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #047857;
+      box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.15);
+    }
+
+    /* Design Elements Asset Gallery Grid */
+    .elements-section {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 28px;
+      margin-top: 24px;
+      box-shadow: 0 4px 12px rgba(15,23,42,0.04);
+    }
+
+    .assets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .asset-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .asset-card:hover {
+      border-color: #047857;
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .asset-preview-box {
+      width: 100%;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      padding: 8px;
+    }
+
+    .asset-preview-box img {
+      max-height: 80px;
+      max-width: 90%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="showcase-container">
+    
+    <!-- Header -->
+    <header class="showcase-header">
+      <div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+          <h1 style="font-size:22px; font-weight:800; color:#0f172a;">Official Indian Physical HealthCard Design</h1>
+          <span class="badge-pill">CR80 PVC • ISO 7810 ID-1</span>
+        </div>
+        <p style="font-size:13.5px; color:#475569;">
+          Tangible physical healthcare identity card engineered for India's national health grid (ABDM). Features authentic guilloche security patterns, Ashoka Chakra watermark, high-visibility emergency blood group, and laser-engraved serial tracking.
+        </p>
+      </div>
+
+      <div style="display:flex; gap:8px;">
+        <a href="cards/healthcard-front.svg" download="healthcard-front.svg" class="btn btn-outline" title="Download Front SVG">
+          Front SVG
+        </a>
+        <a href="cards/healthcard-back.svg" download="healthcard-back.svg" class="btn btn-outline" title="Download Back SVG">
+          Back SVG
+        </a>
+        <button type="button" class="btn btn-primary" onclick="window.print()">
+          Print 1:1 Scale
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace: Interactive Flip Card Stage + Live Customizer -->
+    <div class="showcase-grid">
+      
+      <!-- LEFT: Live Interactive Physical Card Display -->
+      <div class="card-stage-panel">
+        <div class="stage-controls">
+          <div style="font-size:12px; font-weight:700; color:#64748b; text-transform:uppercase;">
+            Standard 85.60 mm × 53.98 mm (Scale 1:1)
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="btn btn-outline" id="btn-toggle-flip" style="font-size:12px; padding:5px 10px;">
+              Flip to Back
+            </button>
+            <button type="button" class="btn btn-outline" id="btn-toggle-sheen" style="font-size:12px; padding:5px 10px;">
+              Toggle PVC Sheen
+            </button>
+          </div>
+        </div>
+
+        <!-- 3D Perspective Card Flipper -->
+        <div class="card-flip-perspective">
+          <div class="card-flipper" id="card-flipper">
+            
+            <!-- FRONT FACE -->
+            <div class="card-face card-front-face">
+              <div class="indian-healthcard-pvc" id="live-card-front">
+                
+                <!-- Security Guilloche Background Overlay -->
+                <div class="card-guilloche-bg"></div>
+
+                <!-- Watermarked Ashoka Chakra -->
+                <div class="card-ashoka-watermark"></div>
+
+                <!-- Top Tiranga Security Accent Ribbon -->
+                <div class="tricolor-stripe-top">
+                  <div class="stripe-saffron"></div>
+                  <div class="stripe-white"></div>
+                  <div class="stripe-green"></div>
+                </div>
+
+                <!-- Official Card Header -->
+                <div class="card-front-header">
+                  <div class="header-brand-block">
+                    <img src="assets/national-health-emblem.svg" class="header-emblem-svg" alt="NHA Emblem" />
+                    <div class="header-title-text">
+                      <span class="header-title-hi">राष्ट्रीय स्वास्थ्य प्राधिकरण • भारत सरकार</span>
+                      <span class="header-title-en">NATIONAL HEALTH AUTHORITY • GOVT OF INDIA</span>
+                      <span class="header-system-tag">HEALTHCARD DIGITAL IDENTITY</span>
+                    </div>
+                  </div>
+
+                  <div class="header-security-badges">
+                    <div class="hologram-patch" title="Optical Security Hologram"></div>
+                    <img src="assets/nfc-contactless-symbol.svg" class="nfc-wave-icon" alt="NFC" title="ISO 14443 Contactless Smart Chip" />
+                  </div>
+                </div>
+
+                <!-- Card Body (Photo, Citizen Demographics, Blood Group, QR Code) -->
+                <div class="card-front-body">
+                  
+                  <!-- Column 1: Photo & Smart Chip -->
+                  <div class="citizen-photo-container">
+                    <div class="citizen-photo-frame">
+                      <img id="card-photo-target" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80" alt="Citizen Photo" />
+                    </div>
+                    <div class="citizen-bio-tag">KYC VERIFIED</div>
+                    <div class="smart-chip-visual" title="Contactless Smart Chip"></div>
+                  </div>
+
+                  <!-- Column 2: Citizen Info & High-Visibility Blood Group -->
+                  <div class="citizen-info-column">
+                    <div>
+                      <div class="info-label">नाम / CITIZEN NAME</div>
+                      <div class="patient-name-en" id="display-name-en">RAHUL SHARMA</div>
+                      <div class="patient-name-hi" id="display-name-hi">राहुल शर्मा</div>
+                    </div>
+
+                    <div class="meta-row">
+                      <div>
+                        <div class="info-label">DOB / जन्म</div>
+                        <div class="meta-item-val" id="display-dob">14/08/1992</div>
+                      </div>
+                      <div>
+                        <div class="info-label">GENDER / लिंग</div>
+                        <div class="meta-item-val" id="display-gender">MALE / M</div>
+                      </div>
+                    </div>
+
+                    <!-- BIG AND CLEARLY VISIBLE BLOOD GROUP -->
+                    <div class="blood-group-emergency-badge" id="display-blood-container">
+                      <svg class="blood-drop-icon" viewBox="0 0 24 24" fill="#ffffff">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                      </svg>
+                      <div class="blood-text-group">
+                        <span class="blood-sub-label">BLOOD • रक्त समूह</span>
+                        <span class="blood-huge-val" id="display-blood">O+ POSITIVE</span>
+                      </div>
+                    </div>
+
+                    <!-- 10-DIGIT HEALTH ID IN 5-5 MONOSPACE BOX -->
+                    <div>
+                      <div class="info-label" style="color:var(--gov-green-dark); margin-top:4px;">
+                        10-DIGIT HEALTH ID
+                      </div>
+                      <div class="health-id-housing-box">
+                        <div class="health-id-digits" id="display-health-id">48291 73019</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Column 3: Dedicated QR Code Enclosure -->
+                  <div class="qr-enclosure-box">
+                    <img src="cards/healthcard-front.svg" style="width:78px; height:78px; object-fit:none; object-position:845px 150px; transform:scale(3.2);" alt="QR Code" class="qr-matrix-view" />
+                    <div class="qr-caption-text">
+                      आपातकालीन स्कैन<br />
+                      <strong>SCAN FOR EHR</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card Front Footer -->
+                <div class="card-front-footer">
+                  <span class="serial-number-text" id="display-serial">№ HC-IND-2026-9481028-IN</span>
+                  <span class="standard-compliance-text">CR80 PVC • ISO/IEC 7810 ID-1</span>
+                  <span style="font-weight:700; color:var(--gov-green);">GOVT OF INDIA</span>
+                </div>
+
+                <!-- Bottom Tiranga Security Accent Ribbon -->
+                <div class="tricolor-stripe-bottom">
+                  <div class="stripe-green"></div>
+                  <div class="stripe-white"></div>
+                  <div class="stripe-saffron"></div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- BACK FACE -->
+            <div class="card-face card-back-face">
+              <div class="indian-healthcard-pvc" id="live-card-back">
+                
+                <div class="card-guilloche-bg"></div>
+                <div class="card-ashoka-watermark" style="right:10%;"></div>
+
+                <div class="card-back-magstripe"></div>
+
+                <div class="card-back-sig-row">
+                  <div class="card-back-sig-strip">
+                    AUTHORIZED CITIZEN DIGITAL EMBED
+                  </div>
+                  <div class="card-back-cvc-box">
+                    729
+                  </div>
+                </div>
+
+                <div class="card-back-instructions">
+                  <strong style="color:var(--gov-green-dark);">महत्वपूर्ण निर्देश / IMPORTANT INSTRUCTIONS:</strong><br />
+                  1. This card carries no plaintext medical records. All data remains encrypted in national vaults.<br />
+                  2. Medical access requires patient OTP or App consent, except in life-threatening trauma emergencies.<br />
+                  3. If found, please return to any Government Hospital or drop into any India Post mailbox.<br />
+                  
+                  <div style="margin-top:6px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:4px 8px;">
+                    <strong style="color:#b91c1c;">EMERGENCY CONTACT:</strong> SUNITA SHARMA (SPOUSE) • +91 98765 43210<br />
+                    <strong>RESIDENCE:</strong> B-402, SHIVAM APTS, SEC-62, NOIDA, UP - 201309
+                  </div>
+                </div>
+
+                <div class="card-back-footer-row">
+                  <span>Helpline: <strong>1800-11-4477</strong> (24x7 Toll-Free)</span>
+                  <span>healthcard.gov.in</span>
+                  <span>Batch: NHA-DEL-26</span>
+                </div>
+
+                <div class="tricolor-stripe-bottom">
+                  <div class="stripe-green"></div>
+                  <div class="stripe-white"></div>
+                  <div class="stripe-saffron"></div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Real-Time Customizer & Technical Specs -->
+      <div class="controls-panel">
+        <h2 style="font-size:16px; font-weight:800; color:#0f172a; margin-bottom:14px;">
+          Live Card Data Inspector
+        </h2>
+
+        <div class="form-group">
+          <label class="form-label">Patient Name (English)</label>
+          <input type="text" id="input-name-en" class="form-input" value="RAHUL SHARMA" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Patient Name (Hindi)</label>
+          <input type="text" id="input-name-hi" class="form-input" value="राहुल शर्मा" />
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Blood Group</label>
+            <select id="input-blood" class="form-input" style="font-weight:700; color:#b91c1c;">
+              <option value="O+ POSITIVE" selected>O+ POSITIVE</option>
+              <option value="O- NEGATIVE">O- NEGATIVE</option>
+              <option value="A+ POSITIVE">A+ POSITIVE</option>
+              <option value="A- NEGATIVE">A- NEGATIVE</option>
+              <option value="B+ POSITIVE">B+ POSITIVE</option>
+              <option value="B- NEGATIVE">B- NEGATIVE</option>
+              <option value="AB+ POSITIVE">AB+ POSITIVE</option>
+              <option value="AB- NEGATIVE">AB- NEGATIVE</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Date of Birth</label>
+            <input type="text" id="input-dob" class="form-input" value="14/08/1992" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">10-Digit Health ID (5-5 Partitioned)</label>
+          <input type="text" id="input-health-id" class="form-input" value="48291 73019" maxlength="11" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Laser Engraved Serial</label>
+          <input type="text" id="input-serial" class="form-input" value="№ HC-IND-2026-9481028-IN" />
+        </div>
+
+        <div style="margin-top:20px; padding:12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; font-size:12px; color:#475569;">
+          <strong style="color:#047857;">Security Spec Verified:</strong>
+          <ul style="margin:6px 0 0 16px; line-height:1.4;">
+            <li>Zero mobile number or plaintext personal clutter on front</li>
+            <li>Guilloche anti-counterfeit micro-lines</li>
+            <li>High-visibility emergency trauma blood group tag</li>
+            <li>Conforms to ISO/IEC 7810 ID-1 standard</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Standalone Design Elements Gallery (The user requested all design elements) -->
+    <div class="elements-section">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h2 style="font-size:18px; font-weight:800; color:#0f172a;">Modular Design Elements &amp; Security Assets</h2>
+          <p style="font-size:13px; color:#64748b; margin-top:2px;">All individual vector components used to compose this authentic Indian healthcare identity card.</p>
+        </div>
+        <span class="badge-pill">8 Modular Assets</span>
+      </div>
+
+      <div class="assets-grid">
+        
+        <!-- Element 1: National Health Authority Emblem -->
+        <div class="asset-card">
+          <div class="asset-preview-box">
+            <img src="assets/national-health-emblem.svg" alt="NHA Emblem" />
+          </div>
+          <strong style="font-size:13px; color:#0f172a;">National Health Emblem</strong>
+          <span style="font-size:11px; color:#64748b; margin:2px 0 8px 0;">Ashoka Chakra + Medical Cross</span>
+          <a href="assets/national-health-emblem.svg" download class="btn btn-outline" style="font-size:11px; padding:3px 8px;">Download SVG</a>
+        </div>
+
+        <!-- Element 2: Guilloche Lathe Background Pattern -->
+        <div class="asset-card">
+          <div class="asset-preview-box" style="background:#f8fafc;">
+            <img src="assets/guilloche-security-bg.svg" alt="Guilloche Pattern" />
+          </div>
+          <strong style="font-size:13px; color:#0f172a;">Guilloche Security Mesh</strong>
+          <span style="font-size:11px; color:#64748b; margin:2px 0 8px 0;">Mathematical anti-copy waves</span>
+          <a href="assets/guilloche-security-bg.svg" download class="btn btn-outline" style="font-size:11px; padding:3px 8px;">Download SVG</a>
+        </div>
+
+        <!-- Element 3: Ashoka Chakra Watermark -->
+        <div class="asset-card">
+          <div class="asset-preview-box">
+            <img src="assets/ashoka-chakra-watermark.svg" alt="Ashoka Chakra" />
+          </div>
+          <strong style="font-size:13px; color:#0f172a;">Ashoka Chakra Watermark</strong>
+          <span style="font-size:11px; color:#64748b; margin:2px 0 8px 0;">24-Spoke Dharma Chakra</span>
+          <a href="assets/ashoka-chakra-watermark.svg" download class="btn btn-outline" style="font-size:11px; padding:3px 8px;">Download SVG</a>
+        </div>
+
+        <!-- Element 4: Optical Hologram Seal -->
+        <div class="asset-card">
+          <div class="asset-preview-box">
+            <img src="assets/holographic-security-seal.svg" alt="Holographic Seal" />
+          </div>
+          <strong style="font-size:13px; color:#0f172a;">Optical Hologram Seal</strong>
+          <span style="font-size:11px; color:#64748b; margin:2px 0 8px 0;">Iridescent security foil</span>
+          <a href="assets/holographic-security-seal.svg" download class="btn btn-outline" style="font-size:11px; padding:3px 8px;">Download SVG</a>
+        </div>
+
+        <!-- Element 5: High-Visibility Blood Group Pill -->
+        <div class="asset-card">
+          <div class="asset-preview-box">
+            <img src="assets/blood-group-badge.svg" alt="Blood Group Badge" />
+          </div>
+          <strong style="font-size:13px; color:#0f172a;">Emergency Blood Badge</strong>
+          <span style="font-size:11px; color:#64748b; margin:2px 0 8px 0;">High-visibility trauma indicator</span>
+          <a href="assets/blood-group-badge.svg" download class="btn btn-outline" style="font-size:11px; padding:3px 8px;">Download SVG</a>
+        </div>
+
+        <!-- Element 6: NFC Contactless Wave Symbol -->
+        <div class="asset-card">
+          <div class="asset-preview-box">
+            <img src="assets/nfc-contactless-symbol.svg" alt="NFC Symbol" />
+          </div>
+          <strong style="font-size:13px; color:#0f172a;">NFC Contactless Symbol</strong>
+          <span style="font-size:11px; color:#64748b; margin:2px 0 8px 0;">ISO 14443 transmission wave</span>
+          <a href="assets/nfc-contactless-symbol.svg" download class="btn btn-outline" style="font-size:11px; padding:3px 8px;">Download SVG</a>
+        </div>
+
+        <!-- Element 7: Indian Tricolor Security Ribbon -->
+        <div class="asset-card">
+          <div class="asset-preview-box">
+            <img src="assets/tricolor-security-ribbon.svg" alt="Tricolor Ribbon" />
+          </div>
+          <strong style="font-size:13px; color:#0f172a;">Tricolor Security Band</strong>
+          <span style="font-size:11px; color:#64748b; margin:2px 0 8px 0;">Saffron-White-Green micro-band</span>
+          <a href="assets/tricolor-security-ribbon.svg" download class="btn btn-outline" style="font-size:11px; padding:3px 8px;">Download SVG</a>
+        </div>
+
+        <!-- Element 8: Dedicated QR Code Frame -->
+        <div class="asset-card">
+          <div class="asset-preview-box">
+            <img src="assets/qr-code-frame.svg" alt="QR Frame" />
+          </div>
+          <strong style="font-size:13px; color:#0f172a;">Dedicated QR Frame</strong>
+          <span style="font-size:11px; color:#64748b; margin:2px 0 8px 0;">Optical scan alignment brackets</span>
+          <a href="assets/qr-code-frame.svg" download class="btn btn-outline" style="font-size:11px; padding:3px 8px;">Download SVG</a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Interactive 3D Card Flipper
+    const flipper = document.getElementById('card-flipper');
+    const flipBtn = document.getElementById('btn-toggle-flip');
+    flipBtn.addEventListener('click', () => {
+      flipper.classList.toggle('flipped');
+      flipBtn.textContent = flipper.classList.contains('flipped') ? 'Flip to Front' : 'Flip to Back';
+    });
+
+    // Toggle PVC Sheen
+    const sheenBtn = document.getElementById('btn-toggle-sheen');
+    const frontCard = document.getElementById('live-card-front');
+    let sheenOn = true;
+    sheenBtn.addEventListener('click', () => {
+      sheenOn = !sheenOn;
+      frontCard.style.setProperty('--sheen-opacity', sheenOn ? '1' : '0');
+      sheenBtn.textContent = sheenOn ? 'Sheen: ON' : 'Sheen: OFF';
+    });
+
+    // Live Form Binding
+    document.getElementById('input-name-en').addEventListener('input', (e) => {
+      document.getElementById('display-name-en').textContent = (e.target.value || 'CITIZEN NAME').toUpperCase();
+    });
+
+    document.getElementById('input-name-hi').addEventListener('input', (e) => {
+      document.getElementById('display-name-hi').textContent = e.target.value || 'नागरिक नाम';
+    });
+
+    document.getElementById('input-blood').addEventListener('change', (e) => {
+      document.getElementById('display-blood').textContent = e.target.value;
+    });
+
+    document.getElementById('input-dob').addEventListener('input', (e) => {
+      document.getElementById('display-dob').textContent = e.target.value;
+    });
+
+    document.getElementById('input-health-id').addEventListener('input', (e) => {
+      let val = e.target.value.replace(/[^0-9]/g, '');
+      if (val.length > 5) {
+        val = val.substring(0, 5) + ' ' + val.substring(5, 10);
+      }
+      e.target.value = val;
+      document.getElementById('display-health-id').textContent = val || '00000 00000';
+    });
+
+    document.getElementById('input-serial').addEventListener('input', (e) => {
+      document.getElementById('display-serial').textContent = e.target.value;
+    });
+  </script>
+</body>
+</html>

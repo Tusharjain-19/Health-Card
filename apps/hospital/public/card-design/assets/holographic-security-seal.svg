@@ -1,0 +1,44 @@
+<svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Iridescent Optical Hologram Rainbow Gradient -->
+    <linearGradient id="holo_base" x1="0" y1="0" x2="70" y2="70" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffd166"/>
+      <stop offset="25%" stop-color="#06d6a0"/>
+      <stop offset="50%" stop-color="#118ab2"/>
+      <stop offset="75%" stop-color="#ef476f"/>
+      <stop offset="100%" stop-color="#e9d8a6"/>
+    </linearGradient>
+    <linearGradient id="holo_foil" x1="70" y1="0" x2="0" y2="70" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/>
+      <stop offset="40%" stop-color="#38bdf8" stop-opacity="0.5"/>
+      <stop offset="70%" stop-color="#fb7185" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#facc15" stop-opacity="0.7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Circular Hologram Body with Metallic Border -->
+  <circle cx="35" cy="35" r="33" fill="url(#holo_base)"/>
+  <circle cx="35" cy="35" r="33" fill="url(#holo_foil)"/>
+  <circle cx="35" cy="35" r="33" stroke="#b45309" stroke-width="1.2" stroke-opacity="0.5"/>
+  <circle cx="35" cy="35" r="30.5" stroke="#ffffff" stroke-width="0.8" stroke-dasharray="2 1.5"/>
+
+  <!-- Concentric Security Diffractive Waves -->
+  <g stroke="#ffffff" stroke-width="0.6" stroke-opacity="0.8" fill="none">
+    <circle cx="35" cy="35" r="26"/>
+    <circle cx="35" cy="35" r="21"/>
+    <circle cx="35" cy="35" r="16"/>
+  </g>
+
+  <!-- Central Optical Health Shield Icon -->
+  <path d="M35 18L47 23V34C47 43 41.5 48.5 35 51C28.5 48.5 23 43 23 34V23L35 18Z" 
+        fill="#ffffff" fill-opacity="0.85" stroke="#ffffff" stroke-width="0.8"/>
+  <path d="M35 25V43M26 34H44" stroke="#047857" stroke-width="2.2" stroke-linecap="round"/>
+
+  <!-- Prismatic Microtext Circular Track -->
+  <text font-family="'Inter', sans-serif" font-size="3.2" font-weight="800" fill="#0f172a" fill-opacity="0.75" letter-spacing="0.8">
+    <textPath href="#holo_text_path" startOffset="50%" text-anchor="middle">
+      SECURE ID • NHA • VERIFIED
+    </textPath>
+  </text>
+  <path id="holo_text_path" d="M12 35 A23 23 0 1 1 58 35 A23 23 0 1 1 12 35" fill="none"/>
+</svg>

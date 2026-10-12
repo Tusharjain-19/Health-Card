@@ -1,0 +1,13 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Contactless Radio Frequency Broadcast Arcs (Standard ISO 14443) -->
+  <g stroke="#047857" stroke-width="2.8" stroke-linecap="round">
+    <!-- Inner Arc -->
+    <path d="M19 16C22.5 18 24.5 21 24.5 24C24.5 27 22.5 30 19 32" stroke-opacity="0.95"/>
+    <!-- Middle Arc -->
+    <path d="M25 11C30.5 14.5 33.5 19 33.5 24C33.5 29 30.5 33.5 25 37" stroke-opacity="0.85"/>
+    <!-- Outer Arc -->
+    <path d="M31 6C38.5 10.5 42.5 17 42.5 24C42.5 31 38.5 37.5 31 42" stroke-opacity="0.75"/>
+    <!-- Core Dot -->
+    <circle cx="13" cy="24" r="2.2" fill="#047857"/>
+  </g>
+</svg>
