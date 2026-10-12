@@ -266,26 +266,16 @@ export class IntakeView {
             </div>
           </div>
 
-          <!-- Card Option -->
-          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-lg); padding: 14px 18px; margin-bottom: 22px;">
-            <div style="font-weight: 700; color: #166534; font-size: 13.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              HealthCard 10-Digit ID Configuration
+          <!-- Existing HealthCard Option (Optional) -->
+          <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 14px 18px; margin-bottom: 22px;">
+            <div style="font-weight: 700; color: var(--text-main); font-size: 13.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 15h10"/><path d="M7 11h10"/></svg>
+              Existing HealthCard / ABHA Number (Optional / यदि मरीज के पास पहले से हो)
             </div>
-            <div style="font-size: 12px; color: #15803d; margin-bottom: 8px;">
-              The system will automatically allocate a unique 10-digit Health ID (e.g. 5-5 grouped format) and generate a verified QR code token.
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+              Hospitals register patients without generating new HealthCards. If the patient holds an official HealthCard, enter their 10-digit number below to link records. If not, leave blank.
             </div>
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <label style="font-size: 12.5px; font-weight: 600; color: #166534; display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                <input type="radio" name="card-mode" value="auto" checked />
-                Auto-generate fresh 10-digit Health ID
-              </label>
-              <label style="font-size: 12.5px; font-weight: 600; color: #166534; display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                <input type="radio" name="card-mode" value="manual" id="radio-manual-card" />
-                Assign specific 10-digit card number
-              </label>
-            </div>
-            <input type="text" id="reg-custom-hid" class="form-input font-mono" placeholder="Enter 10 digits (e.g. 61234 56789)" style="display: none; margin-top: 8px; max-width: 280px;" />
+            <input type="text" id="reg-existing-hid" class="form-input font-mono" placeholder="10-digit Health ID (e.g. 74839 16251) - Leave blank if no card" maxlength="11" style="max-width: 320px;" />
           </div>
 
           <div style="display: flex; justify-content: flex-end; gap: 12px;">
@@ -308,7 +298,7 @@ export class IntakeView {
     const mount = this.container.querySelector('#patient-action-hub-mount');
     if (!mount) return;
 
-    const cleanId = (patient.healthId || '').replace(/\s+/g, '');
+    const cleanId = (patient.healthId || patient.mobile || patient.id || '').replace(/\s+/g, '');
 
     mount.innerHTML = `
       <div style="background: #ffffff; border: 2px solid var(--color-primary); border-radius: var(--radius-xl); padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); animation: fadeIn 0.2s ease;">
@@ -320,10 +310,19 @@ export class IntakeView {
               <div style="display: flex; align-items: center; gap: 8px;">
                 <h3 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0;">${patient.fullName}</h3>
                 <span class="blood-group-tag" style="font-size: 12px; padding: 2px 7px;">${patient.bloodGroup || 'O+'}</span>
-                <span class="badge badge-active" style="font-size: 11px;">Verified HealthCard</span>
+                ${patient.healthId ? `
+                  <span class="badge badge-active" style="font-size: 11px;">Verified HealthCard</span>
+                ` : `
+                  <span class="badge badge-pending" style="font-size: 11px;">Hospital Registered (${patient.regNumber || 'Walk-In'})</span>
+                `}
               </div>
               <div style="display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--text-secondary); margin-top: 4px;">
-                <span class="font-mono" style="font-weight: 700; color: var(--color-primary);">${formatHealthId(patient.healthId)}</span>
+                ${patient.healthId ? `
+                  <span class="font-mono" style="font-weight: 700; color: var(--color-primary);">${formatHealthId(patient.healthId)}</span>
+                ` : `
+                  <span class="font-mono" style="font-weight: 700; color: #b45309;">${patient.regNumber || 'UHID Registered'}</span>
+                  <span class="badge" style="background: #fef3c7; color: #b45309; font-size: 10px; font-weight: 600;">No HealthCard</span>
+                `}
                 <span>•</span>
                 <span>${calculateAge(patient.dob)}</span>
                 <span>•</span>
@@ -587,19 +586,9 @@ export class IntakeView {
       this.startCamera();
     });
 
-    // Register Form: Custom HID toggle
-    const radioManual = this.container.querySelector('#radio-manual-card');
-    const customHidInput = this.container.querySelector('#reg-custom-hid');
-    this.container.querySelectorAll('input[name="card-mode"]').forEach(radio => {
-      radio.addEventListener('change', () => {
-        if (customHidInput) {
-          customHidInput.style.display = radioManual?.checked ? 'block' : 'none';
-        }
-      });
-    });
-
-    // Register Form: Auto-group custom HID
-    customHidInput?.addEventListener('input', (e) => {
+    // Auto-group 10-digit existing Health ID if typed
+    const existingHidInput = this.container.querySelector('#reg-existing-hid');
+    existingHidInput?.addEventListener('input', (e) => {
       const raw = e.target.value.replace(/\D/g, '');
       if (raw.length <= 10) {
         e.target.value = raw.length > 5 ? `${raw.slice(0, 5)} ${raw.slice(5, 10)}` : raw;
@@ -777,8 +766,7 @@ export class IntakeView {
     const city = this.container.querySelector('#reg-city').value.trim();
     const pincode = this.container.querySelector('#reg-pincode').value.trim();
 
-    const isManual = this.container.querySelector('#radio-manual-card')?.checked;
-    const customHid = isManual ? this.container.querySelector('#reg-custom-hid').value.trim() : null;
+    const existingHid = this.container.querySelector('#reg-existing-hid')?.value.trim();
 
     try {
       const result = hospitalStore.registerPatient({
@@ -791,11 +779,14 @@ export class IntakeView {
         address: address,
         city: city,
         pincode: pincode,
-        healthId: customHid
+        healthId: existingHid || null
       });
 
       if (result && result.patient) {
-        showToast(`Registered successfully! Health ID: ${result.patient.healthId}`, 'success');
+        const msg = result.patient.healthId
+          ? `Patient registered with Health ID ${result.patient.healthId}`
+          : `Patient registered successfully (UHID: ${result.patient.regNumber})`;
+        showToast(msg, 'success');
         this.resolvedPatient = result.patient;
         this.renderActionHub(result.patient);
       }

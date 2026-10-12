@@ -327,7 +327,13 @@ class HospitalStorageService {
     if (!healthId) return null;
     this.refresh();
     const clean = healthId.replace(/\s+/g, '');
-    return (this.centralData.members || []).find(m => (m.healthId || '').replace(/\s+/g, '') === clean) || null;
+    const cleanDigits = healthId.replace(/\D/g, '');
+    return (this.centralData.members || []).find(m => 
+      (m.healthId && m.healthId.replace(/\s+/g, '') === clean) ||
+      (m.mobile && cleanDigits.length >= 10 && m.mobile.replace(/\D/g, '') === cleanDigits) ||
+      (m.regNumber && m.regNumber.replace(/\s+/g, '').toLowerCase() === clean.toLowerCase()) ||
+      (m.id && m.id === clean)
+    ) || null;
   }
 
   getPatientByMobile(mobile) {
@@ -337,28 +343,26 @@ class HospitalStorageService {
     return (this.centralData.members || []).find(m => (m.mobile || '').replace(/\D/g, '') === clean) || null;
   }
 
-  // Fast Hospital Registration for Walk-in / New Patients
+  // Fast Hospital Registration for Walk-in / New Patients (No auto HealthCard creation)
   registerPatient(patientData) {
     this.refresh();
     if (!patientData.fullName) throw new Error('Patient name is required');
 
-    // Generate or format 10-digit Health ID
-    let rawHealthId = (patientData.healthId || '').replace(/\D/g, '');
-    if (rawHealthId.length !== 10) {
-      // Auto-generate fresh 10-digit number
-      let candidate = '';
-      let isUnique = false;
-      while (!isUnique) {
-        candidate = Math.floor(1000000000 + Math.random() * 9000000000).toString();
-        const existing = (this.centralData.members || []).find(m => (m.healthId || '').replace(/\s+/g, '') === candidate);
-        if (!existing) isUnique = true;
+    // Only set Health ID if the patient ALREADY holds an existing HealthCard
+    let formattedHealthId = null;
+    let cleanId = null;
+    if (patientData.healthId && patientData.healthId.trim()) {
+      const raw = patientData.healthId.replace(/\D/g, '');
+      if (raw.length === 10) {
+        formattedHealthId = `${raw.slice(0, 5)} ${raw.slice(5, 10)}`;
+        cleanId = raw;
       }
-      rawHealthId = candidate;
     }
 
-    const formattedHealthId = `${rawHealthId.slice(0, 5)} ${rawHealthId.slice(5, 10)}`;
-    const cleanId = rawHealthId;
     const memberId = `mem_${Date.now()}`;
+    const cleanMobile = patientData.mobile ? patientData.mobile.replace(/\D/g, '').slice(-10) : '';
+    const regNumber = `UHID-${cleanMobile || Math.floor(100000 + Math.random() * 900000)}`;
+    const primaryLookupKey = cleanId || cleanMobile || memberId;
 
     // Avatar by gender
     const defaultAvatar = patientData.gender === 'Female'
@@ -377,10 +381,12 @@ class HospitalStorageService {
     const newMember = {
       id: memberId,
       fullName: patientData.fullName.trim(),
-      healthId: formattedHealthId,
+      regNumber: regNumber,
+      healthId: formattedHealthId, // null if patient doesn't have a HealthCard
+      hasHealthCard: !!formattedHealthId,
       dob: dob,
       gender: patientData.gender || 'Male',
-      mobile: patientData.mobile ? patientData.mobile.replace(/\D/g, '').slice(-10) : '9876543210',
+      mobile: cleanMobile || '9876543210',
       bloodGroup: patientData.bloodGroup || 'O+',
       guardianName: patientData.guardianName || '',
       address: patientData.address || 'Civil Lines',
@@ -390,46 +396,48 @@ class HospitalStorageService {
       photoUrl: patientData.photoUrl || defaultAvatar,
       emergencyContact: {
         name: patientData.guardianName || 'Relative',
-        phone: patientData.mobile ? `+91 ${patientData.mobile}` : '+91 9876543210'
+        phone: cleanMobile ? `+91 ${cleanMobile}` : '+91 9876543210'
       },
       kyc: {
-        status: "Verified",
-        documentType: "Aadhaar / Health ID (Hospital Counter)",
+        status: formattedHealthId ? "Verified" : "Hospital Registered",
+        documentType: formattedHealthId ? "HealthCard (Linked)" : "Hospital OPD Slip",
         verifiedAt: new Date().toISOString()
       },
       registeredAt: new Date().toISOString()
     };
 
-    // Linked Card Object
-    const cardToken = `tok_${cleanId}`;
-    const qrPayload = `https://hc.national.gov.in/c/${cleanId}`;
-    const newCard = {
-      id: `card_${Date.now()}`,
-      memberId: memberId,
-      healthId: formattedHealthId,
-      serialNumber: formattedHealthId,
-      token: cardToken,
-      qrPayload: qrPayload,
-      status: "Active",
-      template: "teal",
-      issuedAt: new Date().toISOString(),
-      qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrPayload)}`
-    };
-
     if (!this.centralData.members) this.centralData.members = [];
-    if (!this.centralData.cards) this.centralData.cards = [];
-
     this.centralData.members.unshift(newMember);
-    this.centralData.cards.unshift(newCard);
+
+    // NOTE: Hospitals DO NOT create new HealthCards.
+    // If the patient brought an existing card number, link it to existing card record if needed
+    if (formattedHealthId) {
+      const existingCard = (this.centralData.cards || []).find(c => (c.healthId || '').replace(/\s+/g, '') === cleanId);
+      if (!existingCard) {
+        // Only if existing card wasn't already in demo seed, record reference
+        this.centralData.cards.unshift({
+          id: `card_${Date.now()}`,
+          memberId: memberId,
+          healthId: formattedHealthId,
+          serialNumber: formattedHealthId,
+          token: `tok_${cleanId}`,
+          qrPayload: `https://hc.national.gov.in/c/${cleanId}`,
+          status: "Active",
+          template: "teal",
+          issuedAt: new Date().toISOString()
+        });
+      }
+    }
+
     this.saveCentral();
 
     // Mark verified in session
-    sessionStorage.setItem(`id_confirmed_${cleanId}`, 'true');
+    sessionStorage.setItem(`id_confirmed_${primaryLookupKey}`, 'true');
 
     // Initialize vitals if provided
     if (patientData.vitals) {
       if (!this.clinicalData.vitals) this.clinicalData.vitals = {};
-      this.clinicalData.vitals[cleanId] = {
+      this.clinicalData.vitals[primaryLookupKey] = {
         ...patientData.vitals,
         recordedAt: new Date().toISOString(),
         recordedBy: this.getCurrentStaff().fullName
@@ -439,14 +447,14 @@ class HospitalStorageService {
 
     this.logAudit({
       action: "PATIENT_REGISTERED",
-      target: `${newMember.fullName} (${formattedHealthId})`,
-      details: `New patient registered at hospital counter by ${this.getCurrentStaff().fullName}. Assigned Health ID ${formattedHealthId}`
+      target: `${newMember.fullName} (${formattedHealthId || regNumber})`,
+      details: `New patient registered at hospital counter by ${this.getCurrentStaff().fullName}. ${formattedHealthId ? `Linked Health ID ${formattedHealthId}` : `UHID ${regNumber} (No HealthCard issued)`}`
     });
 
     return {
       success: true,
       patient: newMember,
-      card: newCard
+      card: null
     };
   }
 

@@ -290,11 +290,24 @@ export class AdmissionsView {
         <form id="general-admit-form">
           <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Select Patient (मरीज चुनें) *</label>
-              <select id="gen-patient-select" class="form-select" required>
-                ${patients.map(p => `
-                  <option value="${p.healthId}">${p.fullName} (${formatHealthId(p.healthId)}) - ${p.bloodGroup || 'O+'}</option>
-                `).join('')}
+              <label class="form-label" style="font-weight: 600;">Select Patient (Search by Mobile No, Health ID, or Name) *</label>
+              <div style="display: flex; gap: 6px; margin-bottom: 6px;">
+                <input type="text" id="gen-patient-search-input" class="form-input" placeholder="Search Mobile No, Health ID, or Name..." style="font-size: 12.5px; padding: 6px 10px;" />
+                <button type="button" class="btn btn-sm btn-secondary" id="btn-gen-clear-search" style="padding: 6px 10px; font-size: 11px;">Clear</button>
+              </div>
+              <select id="gen-patient-select" class="form-select font-mono" required style="font-size: 12.5px; font-weight: 600;">
+                <option value="">-- Choose Patient (${patients.length} registered) --</option>
+                ${patients.map(p => {
+                  const targetVal = (p.healthId || p.mobile || p.id || '').replace(/\s+/g, '');
+                  const cleanHealthId = (p.healthId || '').replace(/\s+/g, '');
+                  const cleanMobile = (p.mobile || '').replace(/\D/g, '');
+                  const displayId = p.healthId ? p.healthId : (p.regNumber || 'No HealthCard');
+                  return `
+                    <option value="${targetVal}" data-mobile="${cleanMobile}" data-hid="${cleanHealthId}" data-name="${(p.fullName || '').toLowerCase()}">
+                      ${p.fullName} • Mob: ${p.mobile || 'N/A'} • ${displayId} (${p.bloodGroup || 'O+'})
+                    </option>
+                  `;
+                }).join('')}
               </select>
             </div>
 
@@ -347,6 +360,42 @@ export class AdmissionsView {
     wardSelect.addEventListener('change', () => {
       const selected = wards.find(w => w.name === wardSelect.value) || wards[0];
       bedSelect.innerHTML = selected.beds.map(b => `<option value="${b}">${b}</option>`).join('');
+    });
+
+    // Patient live search by mobile number, Health ID, or name
+    const patientSearchInput = overlay.querySelector('#gen-patient-search-input');
+    const patientSelect = overlay.querySelector('#gen-patient-select');
+    const clearSearchBtn = overlay.querySelector('#btn-gen-clear-search');
+
+    patientSearchInput?.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      const cleanDigits = q.replace(/\D/g, '');
+      let firstMatch = null;
+
+      Array.from(patientSelect.options).forEach((opt, idx) => {
+        if (idx === 0) return;
+        const text = opt.textContent.toLowerCase();
+        const mob = (opt.getAttribute('data-mobile') || '').replace(/\D/g, '');
+        const hid = (opt.getAttribute('data-hid') || '').replace(/\D/g, '');
+        const name = opt.getAttribute('data-name') || '';
+
+        const matches = text.includes(q) || name.includes(q) || (cleanDigits.length >= 2 && (mob.includes(cleanDigits) || hid.includes(cleanDigits)));
+        if (matches) {
+          opt.style.display = '';
+          if (!firstMatch) firstMatch = opt;
+        } else {
+          opt.style.display = 'none';
+        }
+      });
+
+      if (firstMatch && q.length >= 2) {
+        patientSelect.value = firstMatch.value;
+      }
+    });
+
+    clearSearchBtn?.addEventListener('click', () => {
+      if (patientSearchInput) patientSearchInput.value = '';
+      Array.from(patientSelect.options).forEach(opt => opt.style.display = '');
     });
 
     overlay.querySelectorAll('.modal-close').forEach(btn => {

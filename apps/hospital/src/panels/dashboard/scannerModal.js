@@ -48,14 +48,29 @@ export class DocumentScannerModal {
           <!-- Patient Selection -->
           <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; margin-bottom: 14px;">
             <div class="form-group" style="margin-bottom: 0;">
-              <label class="form-label" style="font-weight: 700;">Target Patient HealthCard:</label>
-              <select id="scanner-patient-select" class="form-select font-mono" style="font-size: 13px; font-weight: 600;">
-                <option value="">-- Select Patient from Registry --</option>
-                ${patients.map(p => `
-                  <option value="${(p.healthId || '').replace(/\s+/g, '')}" ${this.preselectedPatientId && this.preselectedPatientId.replace(/\s+/g, '') === (p.healthId || '').replace(/\s+/g, '') ? 'selected' : ''}>
-                    ${p.fullName} • ${p.healthId} (${p.gender || 'M'}, ${p.age || '32'}y)
-                  </option>
-                `).join('')}
+              <label class="form-label" style="font-weight: 700;">Target Patient (Search by Mobile No, Health ID, or Name):</label>
+              <div style="display: flex; gap: 6px; margin-bottom: 6px;">
+                <input type="text" id="scanner-patient-search-input" class="form-input" placeholder="Search Mobile No, Health ID, or Name..." style="font-size: 12.5px; padding: 6px 10px;" />
+                <button type="button" class="btn btn-sm btn-secondary" id="btn-clear-patient-search" style="padding: 6px 10px; font-size: 11px;">Clear</button>
+              </div>
+              <select id="scanner-patient-select" class="form-select font-mono" style="font-size: 12.5px; font-weight: 600;">
+                <option value="">-- Select Patient from Registry (${patients.length} available) --</option>
+                ${patients.map(p => {
+                  const cleanHealthId = (p.healthId || '').replace(/\s+/g, '');
+                  const cleanMobile = (p.mobile || '').replace(/\D/g, '');
+                  const targetVal = cleanHealthId || cleanMobile || p.id;
+                  const isSelected = this.preselectedPatientId && (
+                    this.preselectedPatientId.replace(/\s+/g, '') === cleanHealthId ||
+                    this.preselectedPatientId.replace(/\D/g, '') === cleanMobile ||
+                    this.preselectedPatientId === p.id
+                  );
+                  const displayId = p.healthId ? p.healthId : (p.regNumber || 'No HealthCard');
+                  return `
+                    <option value="${targetVal}" data-mobile="${cleanMobile}" data-hid="${cleanHealthId}" data-name="${(p.fullName || '').toLowerCase()}" ${isSelected ? 'selected' : ''}>
+                      ${p.fullName} • Mob: ${p.mobile || 'N/A'} • ${displayId} (${p.gender || 'M'})
+                    </option>
+                  `;
+                }).join('')}
               </select>
             </div>
 
@@ -177,6 +192,42 @@ export class DocumentScannerModal {
   }
 
   bindEvents(overlay) {
+    // Dynamic Search & Filter for Patients (Search by mobile number, Health ID, or Name)
+    const patientSearchInput = overlay.querySelector('#scanner-patient-search-input');
+    const patientSelect = overlay.querySelector('#scanner-patient-select');
+    const clearSearchBtn = overlay.querySelector('#btn-clear-patient-search');
+
+    patientSearchInput?.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      const cleanDigits = q.replace(/\D/g, '');
+      let firstMatch = null;
+
+      Array.from(patientSelect.options).forEach((opt, idx) => {
+        if (idx === 0) return; // Keep placeholder
+        const text = opt.textContent.toLowerCase();
+        const mob = (opt.getAttribute('data-mobile') || '').replace(/\D/g, '');
+        const hid = (opt.getAttribute('data-hid') || '').replace(/\D/g, '');
+        const name = opt.getAttribute('data-name') || '';
+
+        const matches = text.includes(q) || name.includes(q) || (cleanDigits.length >= 2 && (mob.includes(cleanDigits) || hid.includes(cleanDigits)));
+        if (matches) {
+          opt.style.display = '';
+          if (!firstMatch) firstMatch = opt;
+        } else {
+          opt.style.display = 'none';
+        }
+      });
+
+      if (firstMatch && q.length >= 2) {
+        patientSelect.value = firstMatch.value;
+      }
+    });
+
+    clearSearchBtn?.addEventListener('click', () => {
+      if (patientSearchInput) patientSearchInput.value = '';
+      Array.from(patientSelect.options).forEach(opt => opt.style.display = '');
+    });
+
     const fileTab = overlay.querySelector('#tab-btn-file');
     const camTab = overlay.querySelector('#tab-btn-camera');
     const filePanel = overlay.querySelector('#panel-file-upload');
