@@ -107,7 +107,8 @@ export class StaffView {
                       
                       <!-- Doctor App Credentials Chip -->
                       <div style="margin-top: 4px; display: inline-flex; align-items: center; gap: 5px; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 2px 7px; border-radius: 4px; font-size: 10.5px;">
-                        <span style="color: #166534; font-weight: 700;">📱 App:</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                        <span style="color: #166534; font-weight: 700;">App:</span>
                         <span class="font-mono" style="font-weight: 700; color: #15803d;">${doc.appUsername || 'doc.' + doc.id}</span>
                         <span style="color: #86efac;">|</span>
                         <span style="color: #166534;">PIN: <strong>${doc.appPin || '••••'}</strong></span>
@@ -123,7 +124,10 @@ export class StaffView {
                   <span style="font-family: monospace; font-weight: 700; font-size: 11.5px; color: #1d4ed8; background: #eff6ff; border: 1px solid #bfdbfe; padding: 2px 7px; border-radius: 4px; display: inline-block;">
                     ${doc.regNumber || 'NMC Verified'}
                   </span>
-                  <div style="font-size: 10.5px; color: #059669; margin-top: 3px; font-weight: 600;">✓ E-Signature Verified</div>
+                  <div style="font-size: 10.5px; color: #059669; margin-top: 3px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    E-Signature Verified
+                  </div>
                 </td>
                 <td>
                   <div style="font-weight: 600; color: var(--text-main); font-size: 12px;">${doc.opdRoom || 'OPD Room 101'}</div>
@@ -385,7 +389,7 @@ export class StaffView {
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                 <div style="font-weight: 700; color: #166534; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-                  Doctor Mobile & Tablet App Credentials (चिकित्सक ऐप क्रेडेंशियल्स)
+                  Doctor Mobile & Tablet App Credentials
                 </div>
                 <span class="badge badge-active" style="font-size: 10px;">Doctor App Authorized</span>
               </div>
@@ -615,7 +619,7 @@ export class StaffView {
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                 <div style="font-weight: 700; color: #166534; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-                  Doctor Mobile & Tablet App Credentials (चिकित्सक ऐप क्रेडेंशियल्स)
+                  Doctor Mobile & Tablet App Credentials
                 </div>
                 <span class="badge badge-active" style="font-size: 10px;">Doctor App Authorized</span>
               </div>

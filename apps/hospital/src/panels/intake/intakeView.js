@@ -1,5 +1,5 @@
 /**
- * HealthCard Hospital Portal: Patient Desk & Registration (मरीज पंजीकरण एवं कार्ड डेस्क)
+ * HealthCard Hospital Portal: Patient Desk & Registration Desk
  * Clean, accessible Indian hospital reception and clinical intake workflow:
  * 1. Fast lookup via real camera QR scan or 10-digit Health ID / Mobile
  * 2. 1-Minute walk-in patient registration with auto-issued 10-digit Health ID
@@ -42,7 +42,7 @@ export class IntakeView {
           <div>
             <h1 class="page-title" style="display: flex; align-items: center; gap: 8px;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              Patient Reception & HealthCard Desk (मरीज पंजीकरण)
+              Patient Reception & HealthCard Desk
             </h1>
             <p class="page-subtitle">Verify HealthCard with live camera QR scan, search existing citizens, or register new walk-in patients</p>
           </div>
@@ -56,11 +56,11 @@ export class IntakeView {
         <div style="display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border-color); padding-bottom: 2px;">
           <button type="button" class="intake-tab-btn ${this.activeTab === 'search' ? 'active' : ''}" id="tab-btn-search" style="padding: 10px 20px; font-size: 14px; font-weight: 700; border: none; background: transparent; cursor: pointer; color: ${this.activeTab === 'search' ? 'var(--color-primary)' : 'var(--text-muted)'}; border-bottom: 3px solid ${this.activeTab === 'search' ? 'var(--color-primary)' : 'transparent'}; margin-bottom: -4px; display: inline-flex; align-items: center; gap: 8px;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            1. Find Patient / Scan HealthCard (मौजूदा मरीज)
+            1. Find Patient / Scan HealthCard
           </button>
           <button type="button" class="intake-tab-btn ${this.activeTab === 'register' ? 'active' : ''}" id="tab-btn-register" style="padding: 10px 20px; font-size: 14px; font-weight: 700; border: none; background: transparent; cursor: pointer; color: ${this.activeTab === 'register' ? 'var(--color-primary)' : 'var(--text-muted)'}; border-bottom: 3px solid ${this.activeTab === 'register' ? 'var(--color-primary)' : 'transparent'}; margin-bottom: -4px; display: inline-flex; align-items: center; gap: 8px;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            2. Register New Patient (नया मरीज पंजीकरण)
+            2. Register New Patient
           </button>
         </div>
 
@@ -194,7 +194,7 @@ export class IntakeView {
       <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 26px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border-color);">
           <div>
-            <h2 style="font-size: 17px; font-weight: 700; color: var(--text-main); margin: 0;">New Patient Registration (नया मरीज पंजीकरण)</h2>
+            <h2 style="font-size: 17px; font-weight: 700; color: var(--text-main); margin: 0;">New Patient Registration</h2>
             <p style="font-size: 12px; color: var(--text-muted); margin: 3px 0 0 0;">Fill basic patient details to immediately issue an active HealthCard and assign 10-digit Health ID</p>
           </div>
           <span class="badge badge-active">Instant Registration</span>
@@ -203,33 +203,33 @@ export class IntakeView {
         <form id="new-patient-form">
           <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Full Patient Name (पूरा नाम) *</label>
+              <label class="form-label" style="font-weight: 600;">Full Patient Name *</label>
               <input type="text" id="reg-name" class="form-input" placeholder="e.g. Ramesh Kumar Gupta" required />
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Age in Years (उम्र) *</label>
+              <label class="form-label" style="font-weight: 600;">Age in Years *</label>
               <input type="number" id="reg-age" class="form-input" placeholder="e.g. 42" min="1" max="120" required />
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Gender (लिंग) *</label>
+              <label class="form-label" style="font-weight: 600;">Gender *</label>
               <select id="reg-gender" class="form-select" required>
-                <option value="Male">Male (पुरुष)</option>
-                <option value="Female">Female (महिला)</option>
-                <option value="Other">Other (अन्य)</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
               </select>
             </div>
           </div>
 
           <div style="display: grid; grid-template-columns: 1.5fr 1fr 1.5fr; gap: 16px; margin-bottom: 16px;">
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Mobile Number (मोबाइल नंबर) *</label>
+              <label class="form-label" style="font-weight: 600;">Mobile Number *</label>
               <input type="tel" id="reg-mobile" class="form-input font-mono" placeholder="10-digit mobile (e.g. 9811223344)" maxlength="10" required />
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Blood Group (रक्त समूह)</label>
+              <label class="form-label" style="font-weight: 600;">Blood Group</label>
               <select id="reg-blood" class="form-select">
                 <option value="O+">O+</option>
                 <option value="A+">A+</option>
@@ -251,17 +251,17 @@ export class IntakeView {
 
           <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Residential Address (स्थानीय पता)</label>
+              <label class="form-label" style="font-weight: 600;">Residential Address</label>
               <input type="text" id="reg-address" class="form-input" placeholder="Street / Colony / Ward" value="Civil Lines" />
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">City (शहर)</label>
+              <label class="form-label" style="font-weight: 600;">City</label>
               <input type="text" id="reg-city" class="form-input" placeholder="City" value="New Delhi" />
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Pincode (पिन कोड)</label>
+              <label class="form-label" style="font-weight: 600;">Pincode</label>
               <input type="text" id="reg-pincode" class="form-input font-mono" placeholder="Pincode" value="110029" maxlength="6" />
             </div>
           </div>
@@ -270,7 +270,7 @@ export class IntakeView {
           <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 14px 18px; margin-bottom: 22px;">
             <div style="font-weight: 700; color: var(--text-main); font-size: 13.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 15h10"/><path d="M7 11h10"/></svg>
-              Existing HealthCard / ABHA Number (Optional / यदि मरीज के पास पहले से हो)
+              Existing HealthCard / ABHA Number (Optional)
             </div>
             <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
               Hospitals register patients without generating new HealthCards. If the patient holds an official HealthCard, enter their 10-digit number below to link records. If not, leave blank.
@@ -356,7 +356,7 @@ export class IntakeView {
             </div>
             <div>
               <div style="font-weight: 800; font-size: 14px; color: #1e40af;">Write OPD Rx</div>
-              <div style="font-size: 11.5px; color: #3b82f6; margin-top: 2px;">ओपीडी पर्ची बनाएं (1-0-1 dosage, advice)</div>
+              <div style="font-size: 11.5px; color: #3b82f6; margin-top: 2px;">OPD consultation (1-0-1 dosages, advice & follow-up)</div>
             </div>
           </button>
 
@@ -367,7 +367,7 @@ export class IntakeView {
             </div>
             <div>
               <div style="font-weight: 800; font-size: 14px; color: #92400e;">Upload / Scan Slip</div>
-              <div style="font-size: 11.5px; color: #d97706; margin-top: 2px;">कागजी पर्ची / रिपोर्ट फोटो अपलोड</div>
+              <div style="font-size: 11.5px; color: #d97706; margin-top: 2px;">Prescription slips & diagnostic lab reports</div>
             </div>
           </button>
 
@@ -378,7 +378,7 @@ export class IntakeView {
             </div>
             <div>
               <div style="font-weight: 800; font-size: 14px; color: #065f46;">Admit to IPD Ward</div>
-              <div style="font-size: 11.5px; color: #059669; margin-top: 2px;">अस्पताल में भर्ती (ICU / General Ward)</div>
+              <div style="font-size: 11.5px; color: #059669; margin-top: 2px;">Inpatient admission (ICU / General Ward beds)</div>
             </div>
           </button>
 
@@ -389,7 +389,7 @@ export class IntakeView {
             </div>
             <div>
               <div style="font-weight: 800; font-size: 14px; color: #5b21b6;">View Medical Chart</div>
-              <div style="font-size: 11.5px; color: #7c3aed; margin-top: 2px;">संपूर्ण मेडिकल रिकॉर्ड एवं इतिहास</div>
+              <div style="font-size: 11.5px; color: #7c3aed; margin-top: 2px;">Complete longitudinal clinical history & scans</div>
             </div>
           </button>
         </div>
@@ -440,7 +440,7 @@ export class IntakeView {
       <div class="modal-dialog" style="max-width: 580px;">
         <div class="modal-header">
           <div>
-            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Inpatient Ward Admission (मरीज भर्ती)</h3>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Inpatient Ward Admission</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Admit ${patient.fullName} (${formatHealthId(patient.healthId)})</p>
           </div>
           <button type="button" class="btn btn-sm btn-ghost modal-close">
@@ -452,14 +452,14 @@ export class IntakeView {
           <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
               <div class="form-group">
-                <label class="form-label" style="font-weight: 600;">Admission Ward (वार्ड) *</label>
+                <label class="form-label" style="font-weight: 600;">Admission Ward *</label>
                 <select id="admit-ward-select" class="form-select" required>
                   ${wards.map(w => `<option value="${w.name}">${w.name}</option>`).join('')}
                 </select>
               </div>
 
               <div class="form-group">
-                <label class="form-label" style="font-weight: 600;">Bed Number (बेड नंबर) *</label>
+                <label class="form-label" style="font-weight: 600;">Bed Number *</label>
                 <select id="admit-bed-select" class="form-select" required>
                   ${wards[0].beds.map(b => `<option value="${b}">${b}</option>`).join('')}
                 </select>
@@ -467,19 +467,19 @@ export class IntakeView {
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Attending Doctor (सलाहकार डॉक्टर) *</label>
+              <label class="form-label" style="font-weight: 600;">Attending Doctor *</label>
               <select id="admit-doctor-select" class="form-select" required>
                 ${doctors.map(d => `<option value="${d.name}">${d.name} (${d.department})</option>`).join('')}
               </select>
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Admitting Diagnosis / Chief Complaints (प्रारंभिक निदान) *</label>
+              <label class="form-label" style="font-weight: 600;">Admitting Diagnosis / Chief Complaints *</label>
               <input type="text" id="admit-diagnosis" class="form-input" placeholder="e.g. Acute Gastroenteritis with severe dehydration" required />
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Initial Doctor Intake Note (प्रारंभिक निर्देश)</label>
+              <label class="form-label" style="font-weight: 600;">Initial Doctor Intake Note</label>
               <textarea id="admit-initial-note" class="form-textarea" rows="2" placeholder="Start IV fluids, maintain intake/output chart, urgent CBC & serum electrolytes."></textarea>
             </div>
           </div>

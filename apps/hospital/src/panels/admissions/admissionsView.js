@@ -33,14 +33,14 @@ export class AdmissionsView {
           <div>
             <h1 class="page-title" style="display: flex; align-items: center; gap: 8px;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2.2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h10"/><path d="M12 9v6"/></svg>
-              Inpatient Department (IPD) & Ward Management (अंतरंग रोगी विभाग)
+              Inpatient Department (IPD) & Ward Management
             </h1>
             <p class="page-subtitle">Real-time bed allocation, fluid ward/bed transfers, daily rounds, and discharge summaries</p>
           </div>
           <div style="display: flex; gap: 10px;">
             <button type="button" class="btn btn-primary" id="btn-top-admit" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 700;">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-              + Admit Patient to Ward (रोगी भर्ती)
+              + Admit Patient to Ward
             </button>
             <a href="#intake" class="btn btn-outline" style="display: inline-flex; align-items: center; gap: 6px;">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -88,7 +88,7 @@ export class AdmissionsView {
         <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 22px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); margin-bottom: 24px;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
             <div>
-              <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin: 0;">Currently Admitted Patients (वार्ड में भर्ती मरीज)</h3>
+              <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main); margin: 0;">Currently Admitted Patients</h3>
               <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0 0;">Manage daily clinical rounds, bed shifts, ward transfers, and patient discharge</p>
             </div>
             <span class="badge badge-active" style="font-size: 11.5px;">${activeList.length} Active Inpatients</span>
@@ -182,7 +182,7 @@ export class AdmissionsView {
         <!-- Historical Discharged Inpatients Archive -->
         <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 22px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
-            <h3 style="font-size: 15px; font-weight: 700; color: var(--text-main); margin: 0;">Discharged Patient Archive (डिस्चार्ज रिकॉर्ड)</h3>
+            <h3 style="font-size: 15px; font-weight: 700; color: var(--text-main); margin: 0;">Discharged Patient Archive</h3>
             <span style="font-size: 12px; color: var(--text-muted);">${pastList.length} records archived</span>
           </div>
 
@@ -279,7 +279,7 @@ export class AdmissionsView {
       <div class="modal-dialog" style="max-width: 600px;">
         <div class="modal-header">
           <div>
-            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Admit Patient to Inpatient Ward (रोगी भर्ती)</h3>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Admit Patient to Inpatient Ward</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Select patient and allocate bed in Emergency, ICU, or General Ward</p>
           </div>
           <button type="button" class="btn btn-sm btn-ghost modal-close">
@@ -313,14 +313,14 @@ export class AdmissionsView {
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
               <div class="form-group">
-                <label class="form-label" style="font-weight: 600;">Ward (वार्ड) *</label>
+                <label class="form-label" style="font-weight: 600;">Ward *</label>
                 <select id="gen-ward-select" class="form-select" required>
                   ${wards.map(w => `<option value="${w.name}">${w.name}</option>`).join('')}
                 </select>
               </div>
 
               <div class="form-group">
-                <label class="form-label" style="font-weight: 600;">Bed Number (बेड नंबर) *</label>
+                <label class="form-label" style="font-weight: 600;">Bed Number *</label>
                 <select id="gen-bed-select" class="form-select" required>
                   ${wards[0].beds.map(b => `<option value="${b}">${b}</option>`).join('')}
                 </select>
@@ -328,19 +328,19 @@ export class AdmissionsView {
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Attending Doctor (सलाहकार डॉक्टर) *</label>
+              <label class="form-label" style="font-weight: 600;">Attending Doctor *</label>
               <select id="gen-doctor-select" class="form-select" required>
                 ${doctors.map(d => `<option value="${d.name}">${d.name} (${d.department})</option>`).join('')}
               </select>
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Admitting Diagnosis / Complaints (प्रारंभिक निदान) *</label>
+              <label class="form-label" style="font-weight: 600;">Admitting Diagnosis / Complaints *</label>
               <input type="text" id="gen-diagnosis" class="form-input" placeholder="e.g. Acute Appendicitis / High Grade Fever under evaluation" required />
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Initial Instructions / Notes (प्रारंभिक निर्देश)</label>
+              <label class="form-label" style="font-weight: 600;">Initial Instructions / Notes</label>
               <textarea id="gen-initial-note" class="form-textarea" rows="2" placeholder="NPO after midnight, start IV fluids, urgent ultrasound abdomen."></textarea>
             </div>
           </div>
@@ -429,7 +429,7 @@ export class AdmissionsView {
   }
 
   // ==========================================
-  // WARD / BED TRANSFER MODAL (वार्ड ट्रांसफर)
+  // WARD / BED TRANSFER MODAL
   // ==========================================
   openTransferModal(admissionId) {
     const adm = (hospitalStore.clinicalData.admissions || []).find(a => a.id === admissionId);
@@ -443,7 +443,7 @@ export class AdmissionsView {
       <div class="modal-dialog" style="max-width: 540px;">
         <div class="modal-header">
           <div>
-            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Transfer Ward & Bed (वार्ड / बेड स्थानांतरण)</h3>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Transfer Ward & Bed</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Patient: <strong>${adm.memberName}</strong> (${formatHealthId(adm.healthId)})</p>
           </div>
           <button type="button" class="btn btn-sm btn-ghost modal-close">
@@ -462,14 +462,14 @@ export class AdmissionsView {
             <!-- Destination Ward & Bed -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
               <div class="form-group">
-                <label class="form-label" style="font-weight: 600;">Transfer to Ward (नया वार्ड) *</label>
+                <label class="form-label" style="font-weight: 600;">Transfer to Ward *</label>
                 <select id="trf-ward-select" class="form-select" required>
                   ${wards.map(w => `<option value="${w.name}" ${w.name === adm.ward ? 'selected' : ''}>${w.name}</option>`).join('')}
                 </select>
               </div>
 
               <div class="form-group">
-                <label class="form-label" style="font-weight: 600;">Transfer to Bed (नया बेड) *</label>
+                <label class="form-label" style="font-weight: 600;">Transfer to Bed *</label>
                 <select id="trf-bed-select" class="form-select" required>
                   ${wards[0].beds.map(b => `<option value="${b}">${b}</option>`).join('')}
                 </select>
@@ -478,7 +478,7 @@ export class AdmissionsView {
 
             <!-- Clinical Reason for Transfer -->
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Clinical Reason for Transfer (स्थानांतरण का कारण) *</label>
+              <label class="form-label" style="font-weight: 600;">Clinical Reason for Transfer *</label>
               <select id="trf-reason-select" class="form-select" required>
                 <option value="Patient stabilized: Shifting from Emergency/Casualty to General Ward">Patient stabilized: Shifting from Casualty to Ward</option>
                 <option value="Critical escalation: Shifting from Ward to ICU">Critical escalation: Shifting from Ward to ICU</option>
@@ -555,7 +555,7 @@ export class AdmissionsView {
       <div class="modal-dialog" style="max-width: 520px;">
         <div class="modal-header">
           <div>
-            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Add Daily Ward Round Note (दैनिक राउंड)</h3>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Add Daily Ward Round Note</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">${adm.memberName} • ${adm.ward} (Bed ${adm.bedNumber})</p>
           </div>
           <button type="button" class="btn btn-sm btn-ghost modal-close">
@@ -619,7 +619,7 @@ export class AdmissionsView {
       <div class="modal-dialog" style="max-width: 580px;">
         <div class="modal-header">
           <div>
-            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Discharge Patient (मरीज डिस्चार्ज एवं छुट्टी)</h3>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Discharge Patient</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">${adm.memberName} (${formatHealthId(adm.healthId)})</p>
           </div>
           <button type="button" class="btn btn-sm btn-ghost modal-close">
@@ -632,25 +632,25 @@ export class AdmissionsView {
             <div class="form-group">
               <label class="form-label" style="font-weight: 600;">Discharge Condition / Outcome *</label>
               <select id="dis-condition-select" class="form-select" required>
-                <option value="Discharged Stable / Cured">Discharged Stable / Cured (रोगमुक्त / स्थिर)</option>
-                <option value="Relieved / Improved">Relieved / Improved (सुधार सहित)</option>
-                <option value="Referred to Higher Medical Center">Referred to Higher Medical Center (उच्च केंद्र रेफर)</option>
-                <option value="LAMA (Left Against Medical Advice)">LAMA (मरीज की स्वेच्छा से छुट्टी)</option>
+                <option value="Discharged Stable / Cured">Discharged Stable / Cured</option>
+                <option value="Relieved / Improved">Relieved / Improved</option>
+                <option value="Referred to Higher Medical Center">Referred to Higher Medical Center</option>
+                <option value="LAMA (Left Against Medical Advice)">LAMA (Left Against Medical Advice)</option>
               </select>
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Final Clinical Diagnosis (अंतिम निदान) *</label>
+              <label class="form-label" style="font-weight: 600;">Final Clinical Diagnosis *</label>
               <input type="text" id="dis-diagnosis" class="form-input" value="${adm.admittingDiagnosis}" required />
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Hospital Course Summary (अस्पताल में उपचार सारांश)</label>
+              <label class="form-label" style="font-weight: 600;">Hospital Course Summary</label>
               <textarea id="dis-summary" class="form-textarea" rows="2" placeholder="Patient admitted with acute complaints. Successfully managed with IV fluids, antibiotics, and clinical monitoring. Hemodynamically stable at discharge."></textarea>
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 600;">Discharge Advice & Follow-Up (डिस्चार्ज सलाह एवं अगली मुलाकात)</label>
+              <label class="form-label" style="font-weight: 600;">Discharge Advice & Follow-Up</label>
               <textarea id="dis-advice" class="form-textarea" rows="2" placeholder="Continue oral medications for 5 days. High protein diet. Follow-up in OPD after 7 days or SOS in emergency."></textarea>
             </div>
           </div>

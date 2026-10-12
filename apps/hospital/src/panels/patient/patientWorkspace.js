@@ -454,8 +454,9 @@ export class PatientWorkspace {
               <button type="button" class="btn btn-primary" id="btn-opd-pull-patient" style="white-space: nowrap; font-weight: 700;">
                 Load Patient
               </button>
-              <button type="button" class="btn btn-secondary" id="btn-opd-scan-modal" title="Scan HealthCard QR via Camera" style="white-space: nowrap;">
-                📷 Scan QR
+              <button type="button" class="btn btn-secondary" id="btn-opd-scan-modal" title="Scan HealthCard QR via Camera" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                Scan QR
               </button>
             </div>
             <div id="opd-patient-search-results" style="display: none; margin-top: 8px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px; max-height: 200px; overflow-y: auto;"></div>
@@ -478,8 +479,9 @@ export class PatientWorkspace {
                 ${patient.healthId ? formatHealthId(patient.healthId) : (patient.regNumber || 'Walk-in UHID')}
               </div>
             </div>
-            <button type="button" class="btn btn-sm btn-outline" id="btn-edit-patient-profile" title="Edit patient profile details" style="padding: 4px 8px; font-size: 11px; background: #ffffff; white-space: nowrap;">
-              ✏️ Edit
+            <button type="button" class="btn btn-sm btn-outline" id="btn-edit-patient-profile" title="Edit patient profile details" style="padding: 4px 8px; font-size: 11px; background: #ffffff; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              Edit
             </button>
           </div>
         </div>
@@ -488,7 +490,7 @@ export class PatientWorkspace {
       <div class="consultation-form-card">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
           <div>
-            <h3 style="font-size: 17px; font-weight: 700; color: var(--text-main); margin: 0;">Outpatient Consultation & E-Prescription Suite (ओपीडी परामर्श)</h3>
+            <h3 style="font-size: 17px; font-weight: 700; color: var(--text-main); margin: 0;">Outpatient Consultation & E-Prescription Suite</h3>
             <p style="font-size: 12.5px; color: var(--text-muted); margin: 2px 0 0 0;">AIIMS Outpatient Department • National Medical Commission (NMC) Certified</p>
           </div>
           <span class="badge badge-active">OPD Active Session</span>
@@ -534,37 +536,37 @@ export class PatientWorkspace {
           <!-- 1. Chief Complaints & Problem with duration -->
           <div class="form-group" style="margin-bottom: 20px;">
             <label class="form-label" style="font-weight: 700; color: var(--text-main);">
-              Chief Problem / Clinical Complaints & Duration (मुख्य समस्या व लक्षण):
+              Chief Problem / Clinical Complaints & Duration:
             </label>
             <!-- Quick Symptom Presets -->
             <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
-              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="तेज बुखार व कंपकंपी (High fever with chills)" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ तेज बुखार</button>
-              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="खांसी व बलगम (Productive cough)" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ खांसी</button>
-              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="गले में खराश व दर्द (Sore throat)" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ गले में खराश</button>
-              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="सिरदर्द व बदन दर्द (Headache & bodyache)" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ बदन दर्द</button>
-              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="पेट दर्द व मरोड़ (Abdominal pain)" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ पेट दर्द</button>
-              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="उल्टी व जी मिचलाना (Vomiting & nausea)" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ उल्टी / मितली</button>
-              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="कमजोरी व चक्कर (Weakness & dizziness)" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ कमजोरी</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="High fever with chills" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ High Fever</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="Productive cough" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ Cough</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="Sore throat & pain" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ Sore Throat</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="Headache & bodyache" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ Bodyache</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="Abdominal pain & cramps" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ Abdominal Pain</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="Vomiting & nausea" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ Vomiting / Nausea</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-symptom-preset" data-symptom="General weakness & dizziness" style="font-size: 11px; padding: 2px 8px; border: 1px solid #cbd5e1; background: #ffffff;">+ Weakness</button>
             </div>
             <div style="display: flex; gap: 10px;">
-              <input type="text" id="consult-complaints" class="form-input" placeholder="e.g. तेज बुखार, सिरदर्द और बदन दर्द (High fever, bodyache since 3 days)..." value="तेज बुखार व कंपकंपी (High fever with chills), सिरदर्द और अत्यधिक कमजोरी।" required style="flex: 2;" />
-              <input type="text" id="consult-duration" class="form-input" placeholder="Duration (e.g. 3 दिन, 1 हफ्ता)" value="3 दिन (3 days)" style="flex: 1;" />
+              <input type="text" id="consult-complaints" class="form-input" placeholder="e.g. Acute high fever with chills, bodyache, persistent cough..." value="" required style="flex: 2;" />
+              <input type="text" id="consult-duration" class="form-input" placeholder="Duration (e.g. 3 days, 1 week)" value="" style="flex: 1;" />
             </div>
           </div>
 
           <!-- 2. Systemic Examination Notes -->
           <div class="form-group" style="margin-bottom: 20px;">
-            <label class="form-label" style="font-weight: 700;">Clinical Examination & Systemic Findings (शारीरिक परीक्षण):</label>
-            <textarea id="consult-exam" class="form-textarea" placeholder="Physical observations, cardiovascular, respiratory, and abdominal examination...">Conscious, oriented, febrile to touch. Throat congested with erythema. Bilateral chest air entry clear, no wheeze. S1 S2 heard normal. Per abdomen soft, non-tender.</textarea>
+            <label class="form-label" style="font-weight: 700;">Clinical Examination & Systemic Findings:</label>
+            <textarea id="consult-exam" class="form-textarea" placeholder="Physical observations, cardiovascular, respiratory, and abdominal examination..."></textarea>
           </div>
 
-          <!-- 3. Time-to-Time Vitals Tracking Section (Prompt: vital as they releted with time to tiem temperature and problem) -->
+          <!-- 3. Time-to-Time Vitals Tracking Section -->
           <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: var(--radius-xl); padding: 18px 20px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
               <div>
                 <div style="display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 18px;">⏱️</span>
-                  <h4 style="font-size: 15px; font-weight: 700; color: var(--text-main); margin: 0;">Time-to-Time Temperature & Vitals Monitoring (समय अनुसार तापमान व वाइटल्स)</h4>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <h4 style="font-size: 15px; font-weight: 700; color: var(--text-main); margin: 0;">Time-to-Time Temperature & Vitals Monitoring</h4>
                 </div>
                 <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Track temperature curve, blood pressure, and symptom progress with timestamped logs</p>
               </div>
@@ -648,7 +650,7 @@ export class PatientWorkspace {
                       <td style="font-weight: 700; color: var(--color-primary); font-family: monospace;">${vh.time}</td>
                       <td>
                         <span style="background: ${badgeBg}; color: ${badgeColor}; border: 1px solid ${badgeBorder}; padding: 2px 7px; border-radius: 4px; font-weight: 800; font-size: 12px;">
-                          ${tempNum}°F ${isHigh ? '🔥 High' : isMild ? '⚠️ Mild' : '✓ Normal'}
+                          ${tempNum}°F ${isHigh ? 'High (Fever)' : isMild ? 'Mild' : 'Normal'}
                         </span>
                       </td>
                       <td>
@@ -661,7 +663,7 @@ export class PatientWorkspace {
                         ${vh.problem || 'Routine monitoring'}
                       </td>
                       <td style="font-size: 11px; color: var(--text-muted);">
-                        ${vh.dietNote ? `<div style="color: #15803d; font-weight: 600;">🥗 ${vh.dietNote}</div>` : ''}
+                        ${vh.dietNote ? `<div style="color: #15803d; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm0 5v5l4 2"/></svg> ${vh.dietNote}</div>` : ''}
                         <div>${vh.recordedBy || 'Clinician'}</div>
                       </td>
                     </tr>
@@ -674,7 +676,7 @@ export class PatientWorkspace {
           <!-- 4. ICD-10 Clinical Diagnosis Tagging -->
           <div class="section-title">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-            ICD-10 Clinical Diagnosis (निदान)
+            ICD-10 Clinical Diagnosis
           </div>
           <div style="display: flex; gap: 8px; margin-bottom: 12px;">
             <select class="form-select" id="consult-dx-select">
@@ -699,26 +701,26 @@ export class PatientWorkspace {
           <div class="section-title" style="justify-content: space-between;">
             <div style="display: flex; align-items: center; gap: 8px;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>
-              Doctor's Prescription & Dosages (दवाइयों की खुराक व निर्देश)
+              Doctor's Prescription & Dosages
             </div>
             <button type="button" class="btn btn-sm btn-secondary" id="btn-add-rx-row">
               + Add Custom Medicine
             </button>
           </div>
 
-          <!-- Quick Prescription Presets (Item 4: what medicine and how much dose given by doctor) -->
+          <!-- Quick Prescription Presets -->
           <div style="margin-bottom: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); padding: 10px 14px;">
-            <div style="font-size: 11.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">1-Click Medicine Presets (क्लिक कर के तुरंत जोड़ें):</div>
+            <div style="font-size: 11.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">1-Click Quick Medicine Presets:</div>
             <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Paracetamol" data-dose="650 mg" data-freq="1-0-1" data-timing="खाने के बाद (After food)" data-days="3">+ Paracetamol 650mg (1-0-1)</button>
-              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Pantocid (Pantoprazole)" data-dose="40 mg" data-freq="1-0-0" data-timing="खाली पेट (Before food)" data-days="5">+ Pantocid 40mg (खाली पेट)</button>
-              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Augmentin (Amoxiclav)" data-dose="625 mg" data-freq="1-0-1" data-timing="खाने के बाद (After food)" data-days="5">+ Augmentin 625mg (1-0-1)</button>
-              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Azithral (Azithromycin)" data-dose="500 mg" data-freq="1-0-0" data-timing="खाने के बाद (After food)" data-days="3">+ Azithral 500mg (1-0-0)</button>
-              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Cetirizine" data-dose="10 mg" data-freq="0-0-1" data-timing="सोते समय (Bedtime)" data-days="5">+ Cetirizine 10mg (रात)</button>
-              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Emeset (Ondansetron)" data-dose="4 mg" data-freq="SOS" data-timing="उल्टी होने पर (SOS)" data-days="3">+ Emeset 4mg (SOS उल्टी)</button>
-              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="ORS Electral Powder" data-dose="1 Pkt" data-freq="1-1-1" data-timing="1L पानी में घोलकर पिएं" data-days="3">+ ORS Electral (घोलकर)</button>
-              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Telmisartan" data-dose="40 mg" data-freq="1-0-0" data-timing="सुबह नाश्ते के बाद" data-days="30">+ Telmisartan 40mg (BP)</button>
-              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Metformin SR" data-dose="500 mg" data-freq="1-0-1" data-timing="भोजन के साथ (With meals)" data-days="30">+ Metformin 500mg (Sugar)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Paracetamol" data-dose="650 mg" data-freq="1-0-1" data-timing="After meals" data-days="3">+ Paracetamol 650mg (1-0-1)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Pantocid (Pantoprazole)" data-dose="40 mg" data-freq="1-0-0" data-timing="Before breakfast (Empty stomach)" data-days="5">+ Pantocid 40mg (Empty Stomach)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Augmentin (Amoxiclav)" data-dose="625 mg" data-freq="1-0-1" data-timing="After meals" data-days="5">+ Augmentin 625mg (1-0-1)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Azithral (Azithromycin)" data-dose="500 mg" data-freq="1-0-0" data-timing="After meals" data-days="3">+ Azithral 500mg (1-0-0)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Cetirizine" data-dose="10 mg" data-freq="0-0-1" data-timing="At bedtime" data-days="5">+ Cetirizine 10mg (Bedtime)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Emeset (Ondansetron)" data-dose="4 mg" data-freq="SOS" data-timing="As needed for vomiting / nausea" data-days="3">+ Emeset 4mg (SOS)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="ORS Electral Powder" data-dose="1 Pkt" data-freq="1-1-1" data-timing="Dissolved in 1L drinking water" data-days="3">+ ORS Electral (Hydration)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Telmisartan" data-dose="40 mg" data-freq="1-0-0" data-timing="Morning after breakfast" data-days="30">+ Telmisartan 40mg (OD)</button>
+              <button type="button" class="btn btn-sm btn-outline btn-rx-quick" data-drug="Metformin SR" data-dose="500 mg" data-freq="1-0-1" data-timing="With meals" data-days="30">+ Metformin 500mg (BD)</button>
             </div>
           </div>
 
@@ -739,14 +741,14 @@ export class PatientWorkspace {
                 <td><input type="text" class="form-input rx-dose" value="650 mg" /></td>
                 <td>
                   <select class="form-select rx-freq">
-                    <option value="1-0-1" selected>1-0-1 (सुबह-शाम / Twice Daily)</option>
-                    <option value="1-0-0">1-0-0 (सुबह / Morning)</option>
-                    <option value="0-0-1">0-0-1 (रात / Night)</option>
-                    <option value="1-1-1">1-1-1 (दिन में तीन बार / Thrice)</option>
-                    <option value="SOS">SOS (जरूरत पड़ने पर / As needed)</option>
+                    <option value="1-0-1" selected>1-0-1 (Twice Daily)</option>
+                    <option value="1-0-0">1-0-0 (Morning)</option>
+                    <option value="0-0-1">0-0-1 (Night)</option>
+                    <option value="1-1-1">1-1-1 (Thrice Daily)</option>
+                    <option value="SOS">SOS (As needed)</option>
                   </select>
                 </td>
-                <td><input type="text" class="form-input rx-timing" value="खाने के बाद (After food)" /></td>
+                <td><input type="text" class="form-input rx-timing" value="After meals" /></td>
                 <td><input type="number" class="form-input rx-days" value="3" /></td>
                 <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">×</button></td>
               </tr>
@@ -755,13 +757,13 @@ export class PatientWorkspace {
                 <td><input type="text" class="form-input rx-dose" value="40 mg" /></td>
                 <td>
                   <select class="form-select rx-freq">
-                    <option value="1-0-0" selected>1-0-0 (सुबह / Morning)</option>
-                    <option value="1-0-1">1-0-1 (सुबह-शाम / Twice Daily)</option>
-                    <option value="0-0-1">0-0-1 (रात / Night)</option>
-                    <option value="SOS">SOS (जरूरत पड़ने पर / As needed)</option>
+                    <option value="1-0-0" selected>1-0-0 (Morning)</option>
+                    <option value="1-0-1">1-0-1 (Twice Daily)</option>
+                    <option value="0-0-1">0-0-1 (Night)</option>
+                    <option value="SOS">SOS (As needed)</option>
                   </select>
                 </td>
-                <td><input type="text" class="form-input rx-timing" value="खाली पेट (Before food)" /></td>
+                <td><input type="text" class="form-input rx-timing" value="Before food (Empty stomach)" /></td>
                 <td><input type="number" class="form-input rx-days" value="5" /></td>
                 <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">×</button></td>
               </tr>
@@ -771,7 +773,7 @@ export class PatientWorkspace {
           <!-- 6. Diagnostic Investigations Ordered -->
           <div class="section-title" style="margin-top: 24px;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            Diagnostic Lab Tests & Scans Ordered (जांच निर्देश)
+            Diagnostic Lab Tests & Scans Ordered
           </div>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-bottom: 20px;">
             <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
@@ -797,48 +799,48 @@ export class PatientWorkspace {
             </label>
           </div>
 
-          <!-- 7. Doctor's Diet & Lifestyle Directives (Prompt: diet follow and given by doctor) -->
+          <!-- 7. Doctor's Diet & Lifestyle Directives -->
           <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: var(--radius-lg); padding: 16px; margin-bottom: 24px;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
               <div style="font-weight: 700; color: #92400e; font-size: 13.5px; display: flex; align-items: center; gap: 6px;">
-                <span>🥗</span>
-                Doctor's Dietary Advice & Lifestyle Follow-up (डॉक्टर द्वारा दी गई खान-पान सलाह)
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm0 5v5l4 2"/></svg>
+                Doctor's Dietary Advice & Lifestyle Follow-up
               </div>
               <span style="font-size: 11px; color: #b45309; font-weight: 600;">Prescribed Diet Chart</span>
             </div>
 
             <!-- Quick Diet Pills -->
             <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px;">
-              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="हल्का सुपाच्य भोजन (मूंग दाल खिचड़ी, दलिया, सूप) लें।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ खिचड़ी / दलिया</button>
-              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="दिनभर 3 से 4 लीटर गुनगुना / उबला पानी पिएं।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ 3-4L उबला पानी</button>
-              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="तली-भुनी, तीखी, खट्टी व मसालेदार चीजें सख्त बंद।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ तेल-मसाला बंद</button>
-              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="ठंडा पानी, कोल्ड ड्रिंक्स व आइसक्रीम न लें।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ ठंडा पानी बंद</button>
-              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="ओआरएस (ORS) या नारियल पानी का नियमित सेवन करें।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ ओआरएस / नारियल पानी</button>
-              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="कम नमक का भोजन लें (Low Salt Diet)।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ कम नमक</button>
-              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="मीठा, चीनी व गुड़ वर्जित (Sugar-Free Diabetic Diet)।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ चीनी बंद</button>
-              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="भारी श्रम न करें, पर्याप्त विश्राम करें।" style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ पूर्ण विश्राम</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="Take light digestible meals (moong dal khichdi, oats, vegetable soup)." style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ Light Digestible Diet</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="Drink 3 to 4 liters of warm boiled water daily throughout the day." style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ 3-4L Warm Water</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="Strictly avoid fried, heavily spiced, sour and oily foods." style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ Avoid Oily/Spicy</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="Avoid chilled water, carbonated drinks, and ice creams." style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ Avoid Cold Drinks</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="Maintain regular oral hydration with ORS solution and coconut water." style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ ORS / Coconut Water</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="Follow a low sodium / salt-restricted diet (<5g per day)." style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ Low Salt Diet</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="Sugar-free diabetic diet: eliminate refined sugar, sweets, and jaggery." style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ Diabetic Sugar-Free</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-diet-preset" data-text="Avoid heavy physical exertion; ensure adequate bed rest." style="font-size: 11px; padding: 2px 8px; border: 1px solid #fcd34d; background: #ffffff;">+ Adequate Bed Rest</button>
             </div>
 
             <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
               <div>
                 <label class="form-label" style="font-size: 11.5px; font-weight: 700; color: #78350f;">Specific Diet & Lifestyle Instructions:</label>
-                <textarea id="consult-advice" class="form-textarea" style="background: #ffffff;">आहार: हल्का सुपाच्य भोजन (मूंग दाल खिचड़ी/दलिया)। उबला पानी 3-4 लीटर पिएं। तली-भुनी, तीखी व मसालेदार चीजें सख्त बंद। ओआरएस घोल लें व पर्याप्त विश्राम करें।</textarea>
+                <textarea id="consult-advice" class="form-textarea" style="background: #ffffff;" placeholder="Enter specific clinical diet and lifestyle advice...">Diet: Light digestible diet (khichdi, oats, clear soup). Drink 3-4 liters warm water daily. Avoid oily and spicy foods. Complete rest recommended.</textarea>
               </div>
               <div>
-                <label class="form-label" style="font-size: 11.5px; font-weight: 700; color: #78350f;">Next Review Date (दोबारा दिखाने की तारीख):</label>
+                <label class="form-label" style="font-size: 11.5px; font-weight: 700; color: #78350f;">Next Review Date:</label>
                 <input type="date" id="consult-followup" class="form-input" style="background: #ffffff;" value="${new Date(Date.now() + 5*86400000).toISOString().slice(0, 10)}" />
                 <div style="font-size: 11px; color: #92400e; margin-top: 4px;">5 days follow-up after initial consultation</div>
               </div>
             </div>
           </div>
 
-          <!-- 8. Arranged Upload of Prescription Scans & Diagnostic Reports (Prompt: option of upload preccription and test report arranged and uplaod in panel) -->
+          <!-- 8. Arranged Upload of Prescription Scans & Diagnostic Reports -->
           <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 18px 20px; margin-bottom: 24px;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
               <div>
                 <div style="display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 16px;">📁</span>
-                  <h4 style="font-size: 15px; font-weight: 700; color: var(--text-main); margin: 0;">Prescription Slips & Diagnostic Test Reports (पर्चा व जांच रिपोर्ट अपलोड)</h4>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  <h4 style="font-size: 15px; font-weight: 700; color: var(--text-main); margin: 0;">Prescription Slips & Diagnostic Test Reports</h4>
                 </div>
                 <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Upload physical doctor slips or lab test reports arranged in clean panels</p>
               </div>
@@ -847,11 +849,11 @@ export class PatientWorkspace {
               <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                 <button type="button" class="btn btn-sm btn-secondary" id="btn-upload-paper-rx" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                  + Upload Paper Slip (कागजी पर्चा)
+                  + Upload Prescription Slip
                 </button>
                 <button type="button" class="btn btn-sm btn-primary" id="btn-upload-lab-report" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  + Upload Test Report (जांच रिपोर्ट)
+                  + Upload Lab / Scan Report
                 </button>
                 <input type="file" id="consult-file-uploader" multiple accept=".pdf,image/*" style="display: none;" />
               </div>
@@ -868,7 +870,7 @@ export class PatientWorkspace {
                   <div>
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
                       <span class="badge ${file.category === 'prescription' ? 'badge-active' : 'badge-blue'}" style="font-size: 10px; font-weight: 700;">
-                        ${file.category === 'prescription' ? '📋 Physical Doctor Slip' : '🧪 Diagnostic Test Report'}
+                        ${file.category === 'prescription' ? 'Prescription Slip' : 'Diagnostic Lab Report'}
                       </span>
                       <button type="button" class="btn-remove-report" data-idx="${idx}" style="border: none; background: none; color: #dc2626; cursor: pointer; font-size: 16px; font-weight: 700;" title="Remove report">×</button>
                     </div>
@@ -879,7 +881,7 @@ export class PatientWorkspace {
                       </div>
                     ` : `
                       <div style="width: 100%; height: 70px; border-radius: 6px; background: #eff6ff; border: 1px solid #bfdbfe; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
-                        <span style="font-size: 24px;">📄</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                         <span style="font-size: 11px; font-weight: 700; color: #1d4ed8; margin-left: 6px;">PDF Document</span>
                       </div>
                     `}
@@ -890,11 +892,13 @@ export class PatientWorkspace {
 
                   <div style="display: flex; gap: 6px; margin-top: 10px; border-top: 1px solid #f1f5f9; padding-top: 8px;">
                     ${file.dataUrl ? `
-                      <button type="button" class="btn btn-sm btn-outline btn-preview-report" data-idx="${idx}" style="flex: 1; font-size: 11px; padding: 3px 6px;">
-                        🔍 View Full
+                      <button type="button" class="btn btn-sm btn-outline btn-preview-report" data-idx="${idx}" style="flex: 1; font-size: 11px; padding: 3px 6px; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        View Full
                       </button>
-                      <a href="${file.dataUrl}" download="${file.name}" class="btn btn-sm btn-ghost" style="font-size: 11px; padding: 3px 6px; color: #1d4ed8;">
-                        ⬇ Download
+                      <a href="${file.dataUrl}" download="${file.name}" class="btn btn-sm btn-ghost" style="font-size: 11px; padding: 3px 6px; color: #1d4ed8; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download
                       </a>
                     ` : ''}
                   </div>
@@ -1046,11 +1050,11 @@ export class PatientWorkspace {
           <td><input type="text" class="form-input rx-dose" value="${dose}" /></td>
           <td>
             <select class="form-select rx-freq">
-              <option value="1-0-1" ${freq === '1-0-1' ? 'selected' : ''}>1-0-1 (सुबह-शाम / Twice)</option>
-              <option value="1-0-0" ${freq === '1-0-0' ? 'selected' : ''}>1-0-0 (सुबह / Morning)</option>
-              <option value="0-0-1" ${freq === '0-0-1' ? 'selected' : ''}>0-0-1 (रात / Night)</option>
-              <option value="1-1-1" ${freq === '1-1-1' ? 'selected' : ''}>1-1-1 (दिन में तीन बार / Thrice)</option>
-              <option value="SOS" ${freq === 'SOS' ? 'selected' : ''}>SOS (जरूरत पड़ने पर / As needed)</option>
+              <option value="1-0-1" ${freq === '1-0-1' ? 'selected' : ''}>1-0-1 (Twice Daily)</option>
+              <option value="1-0-0" ${freq === '1-0-0' ? 'selected' : ''}>1-0-0 (Morning)</option>
+              <option value="0-0-1" ${freq === '0-0-1' ? 'selected' : ''}>0-0-1 (Night)</option>
+              <option value="1-1-1" ${freq === '1-1-1' ? 'selected' : ''}>1-1-1 (Thrice Daily)</option>
+              <option value="SOS" ${freq === 'SOS' ? 'selected' : ''}>SOS (As needed)</option>
             </select>
           </td>
           <td><input type="text" class="form-input rx-timing" value="${timing}" /></td>
@@ -1107,7 +1111,7 @@ export class PatientWorkspace {
           <div>
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
               <span class="badge ${file.category === 'prescription' ? 'badge-active' : 'badge-blue'}" style="font-size: 10px; font-weight: 700;">
-                ${file.category === 'prescription' ? '📋 Physical Doctor Slip' : '🧪 Diagnostic Test Report'}
+                ${file.category === 'prescription' ? 'Prescription Slip' : 'Diagnostic Lab Report'}
               </span>
               <button type="button" class="btn-remove-report" data-idx="${idx}" style="border: none; background: none; color: #dc2626; cursor: pointer; font-size: 16px; font-weight: 700;" title="Remove report">×</button>
             </div>
@@ -1118,7 +1122,7 @@ export class PatientWorkspace {
               </div>
             ` : `
               <div style="width: 100%; height: 70px; border-radius: 6px; background: #eff6ff; border: 1px solid #bfdbfe; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
-                <span style="font-size: 24px;">📄</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                 <span style="font-size: 11px; font-weight: 700; color: #1d4ed8; margin-left: 6px;">PDF Document</span>
               </div>
             `}
@@ -1129,11 +1133,13 @@ export class PatientWorkspace {
 
           <div style="display: flex; gap: 6px; margin-top: 10px; border-top: 1px solid #f1f5f9; padding-top: 8px;">
             ${file.dataUrl ? `
-              <button type="button" class="btn btn-sm btn-outline btn-preview-report" data-idx="${idx}" style="flex: 1; font-size: 11px; padding: 3px 6px;">
-                🔍 View Full
+              <button type="button" class="btn btn-sm btn-outline btn-preview-report" data-idx="${idx}" style="flex: 1; font-size: 11px; padding: 3px 6px; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                View Full
               </button>
-              <a href="${file.dataUrl}" download="${file.name}" class="btn btn-sm btn-ghost" style="font-size: 11px; padding: 3px 6px; color: #1d4ed8;">
-                ⬇ Download
+              <a href="${file.dataUrl}" download="${file.name}" class="btn btn-sm btn-ghost" style="font-size: 11px; padding: 3px 6px; color: #1d4ed8; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download
               </a>
             ` : ''}
           </div>
@@ -1223,14 +1229,14 @@ export class PatientWorkspace {
         <td><input type="text" class="form-input rx-dose" placeholder="e.g. 500 mg" /></td>
         <td>
           <select class="form-select rx-freq">
-            <option value="1-0-1" selected>1-0-1 (सुबह-शाम / Twice)</option>
-            <option value="1-0-0">1-0-0 (सुबह / Morning)</option>
-            <option value="0-0-1">0-0-1 (रात / Night)</option>
-            <option value="1-1-1">1-1-1 (दिन में तीन बार / Thrice)</option>
-            <option value="SOS">SOS (जरूरत पड़ने पर / As needed)</option>
+            <option value="1-0-1" selected>1-0-1 (Twice Daily)</option>
+            <option value="1-0-0">1-0-0 (Morning)</option>
+            <option value="0-0-1">0-0-1 (Night)</option>
+            <option value="1-1-1">1-1-1 (Thrice Daily)</option>
+            <option value="SOS">SOS (As needed)</option>
           </select>
         </td>
-        <td><input type="text" class="form-input rx-timing" value="खाने के बाद (After food)" /></td>
+        <td><input type="text" class="form-input rx-timing" value="After meals" /></td>
         <td><input type="number" class="form-input rx-days" value="5" /></td>
         <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">×</button></td>
       `;
@@ -1450,8 +1456,14 @@ export class PatientWorkspace {
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                   <span style="font-weight: 800; font-size: 16px; color: var(--text-main);">${adm.admittingDiagnosis}</span>
                   <span class="badge ${adm.status === 'Active Inpatient' ? 'badge-active' : 'badge-pending'}">${adm.status}</span>
-                  <span class="badge" style="background: #1e3a8a; color: #ffffff; font-weight: 800; font-size: 12px; font-family: monospace; padding: 3px 8px;">🛏️ Bed: ${adm.bedNumber}</span>
-                  <span class="badge badge-blue" style="font-weight: 700; font-size: 12px;">🏥 ${adm.ward}</span>
+                  <span class="badge" style="background: #1e3a8a; color: #ffffff; font-weight: 800; font-size: 12px; font-family: monospace; padding: 3px 8px; display: inline-flex; align-items: center; gap: 4px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+                    Bed: ${adm.bedNumber}
+                  </span>
+                  <span class="badge badge-blue" style="font-weight: 700; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/><line x1="9" y1="9" x2="9" y2="9.01"/><line x1="15" y1="9" x2="15" y2="9.01"/><line x1="9" y1="13" x2="9" y2="13.01"/><line x1="15" y1="13" x2="15" y2="13.01"/></svg>
+                    ${adm.ward}
+                  </span>
                 </div>
                 <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">
                   Admitted: <strong>${formatDate(adm.admittedAt)}</strong> • Attending Consultant: <strong>${adm.admittingDoctor}</strong>
@@ -1461,8 +1473,9 @@ export class PatientWorkspace {
               <!-- Inpatient Action Buttons (Change Bed/Ward, Procedures, MAR) -->
               <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
                 ${adm.status === 'Active Inpatient' ? `
-                  <button type="button" class="btn btn-sm btn-outline btn-transfer-bed" data-admid="${adm.id}" style="border-color: #2563eb; color: #1d4ed8; font-weight: 700; background: #eff6ff;" title="Transfer to another ward or change bed number">
-                    🛏️ Change Bed / Ward
+                  <button type="button" class="btn btn-sm btn-outline btn-transfer-bed" data-admid="${adm.id}" style="border-color: #2563eb; color: #1d4ed8; font-weight: 700; background: #eff6ff; display: inline-flex; align-items: center; gap: 5px;" title="Transfer to another ward or change bed number">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+                    Change Bed / Ward
                   </button>
                   <button type="button" class="btn btn-sm btn-primary btn-log-round" data-admid="${adm.id}">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -1486,12 +1499,13 @@ export class PatientWorkspace {
             ${adm.wardTransfers && adm.wardTransfers.length > 0 ? `
               <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;">
                 <div style="font-size: 11.5px; font-weight: 700; color: #166534; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
-                  <span>🔄</span> Bed & Ward Transfer Log (वार्ड / बेड स्थानांतरण इतिहास):
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                  Bed & Ward Transfer History:
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 6px;">
                   ${adm.wardTransfers.map(tr => `
                     <div style="font-size: 12px; color: #15803d; background: #ffffff; padding: 6px 10px; border-radius: 6px; border: 1px solid #dcfce7;">
-                      <span>📅 <strong>${formatDate(tr.transferredAt, true)}</strong>: Moved from <em>${tr.fromWard} (${tr.fromBed})</em> ➔ <strong style="color: #1e3a8a;">${tr.toWard} (${tr.toBed})</strong> by ${tr.clinician}.</span>
+                      <span style="display: inline-flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> <strong>${formatDate(tr.transferredAt, true)}</strong>: Moved from <em>${tr.fromWard} (${tr.fromBed})</em> &rarr; <strong style="color: #1e3a8a;">${tr.toWard} (${tr.toBed})</strong> by ${tr.clinician}.</span>
                       <span style="margin-left: 6px; color: #374151;">Reason: <strong>${tr.reason}</strong></span>
                       ${tr.handoverNotes ? `<div style="font-size: 11px; color: #4b5563; margin-top: 2px;">Handover: "${tr.handoverNotes}"</div>` : ''}
                     </div>
@@ -2907,9 +2921,9 @@ ${doc.previewText || 'Cryptographically verified clinical document content.'}
               <div>
                 <label class="form-label" style="font-weight: 700;">Gender:</label>
                 <select class="form-select" id="edit-p-gender">
-                  <option value="Male" ${patient.gender === 'Male' ? 'selected' : ''}>Male (पुरुष)</option>
-                  <option value="Female" ${patient.gender === 'Female' ? 'selected' : ''}>Female (महिला)</option>
-                  <option value="Other" ${patient.gender === 'Other' ? 'selected' : ''}>Other (अन्य)</option>
+                  <option value="Male" ${patient.gender === 'Male' ? 'selected' : ''}>Male</option>
+                  <option value="Female" ${patient.gender === 'Female' ? 'selected' : ''}>Female</option>
+                  <option value="Other" ${patient.gender === 'Other' ? 'selected' : ''}>Other</option>
                 </select>
               </div>
             </div>
@@ -3018,7 +3032,9 @@ ${doc.previewText || 'Cryptographically verified clinical document content.'}
             <img src="${report.dataUrl}" style="max-width: 100%; max-height: 520px; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 2px 8px rgba(0,0,0,0.08); object-fit: contain;" alt="Report preview" />
           ` : `
             <div style="padding: 60px 20px; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 8px;">
-              <div style="font-size: 48px; margin-bottom: 12px;">📄</div>
+              <div style="margin-bottom: 12px;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              </div>
               <h4 style="font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">PDF / Binary Document Archive</h4>
               <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px;">This file is archived in secure cryptographic storage.</p>
               ${report.dataUrl ? `
@@ -3048,7 +3064,7 @@ ${doc.previewText || 'Cryptographically verified clinical document content.'}
   }
 
   // ==========================================================================
-  // INPATIENT WARD / BED TRANSFER MODAL (वार्ड / बेड बदलें)
+  // INPATIENT WARD / BED TRANSFER MODAL
   // ==========================================================================
   openTransferBedModal(admissionId) {
     const summary = hospitalStore.getPatientClinicalSummary(this.healthId);
@@ -3062,8 +3078,8 @@ ${doc.previewText || 'Cryptographically verified clinical document content.'}
         <div class="modal-header">
           <div>
             <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 18px;">🛏️</span>
-              <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Change Bed / Transfer Ward (वार्ड / बेड बदलें)</h3>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+              <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Change Bed / Transfer Ward</h3>
             </div>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Patient: ${adm.memberName} • Diagnosis: ${adm.admittingDiagnosis}</p>
           </div>
@@ -3086,26 +3102,26 @@ ${doc.previewText || 'Cryptographically verified clinical document content.'}
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" class="form-group">
               <div>
-                <label class="form-label" style="font-weight: 700;">Target New Ward (नया वार्ड):</label>
+                <label class="form-label" style="font-weight: 700;">Target New Ward:</label>
                 <select class="form-select" id="transfer-target-ward" required>
-                  <option value="General Medical Ward" ${adm.ward === 'General Medical Ward' ? 'selected' : ''}>General Medical Ward (सामान्य वार्ड)</option>
-                  <option value="Intensive Care Unit (ICU)" ${adm.ward.includes('ICU') ? 'selected' : ''}>Intensive Care Unit (ICU - गहन चिकित्सा)</option>
-                  <option value="Coronary Care Unit (CCU)" ${adm.ward.includes('CCU') ? 'selected' : ''}>Coronary Care Unit (CCU - हृदय रोग)</option>
+                  <option value="General Medical Ward" ${adm.ward === 'General Medical Ward' ? 'selected' : ''}>General Medical Ward</option>
+                  <option value="Intensive Care Unit (ICU)" ${adm.ward.includes('ICU') ? 'selected' : ''}>Intensive Care Unit (ICU)</option>
+                  <option value="Coronary Care Unit (CCU)" ${adm.ward.includes('CCU') ? 'selected' : ''}>Coronary Care Unit (CCU)</option>
                   <option value="Surgical High Dependency (HDU)">Surgical High Dependency (HDU)</option>
                   <option value="Orthopedic & Trauma Ward">Orthopedic & Trauma Ward</option>
                   <option value="Emergency Observation Ward">Emergency Observation Ward</option>
-                  <option value="Pediatric Care Ward">Pediatric Care Ward (शिशु वार्ड)</option>
-                  <option value="Private Deluxe Room">Private Deluxe Room (निजी कमरा)</option>
+                  <option value="Pediatric Care Ward">Pediatric Care Ward</option>
+                  <option value="Private Deluxe Room">Private Deluxe Room</option>
                 </select>
               </div>
               <div>
-                <label class="form-label" style="font-weight: 700;">New Bed Number (नया बेड):</label>
+                <label class="form-label" style="font-weight: 700;">New Bed Number:</label>
                 <input type="text" id="transfer-target-bed" class="form-input font-mono font-bold" placeholder="e.g. Bed GW-108 or ICU-04" value="${adm.bedNumber.replace(/[0-9]+/, (n) => parseInt(n, 10) + 1)}" required />
               </div>
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 700;">Clinical Reason for Transfer (स्थानांतरण का कारण):</label>
+              <label class="form-label" style="font-weight: 700;">Clinical Reason for Transfer:</label>
               <select class="form-select" id="transfer-reason" required>
                 <option value="Condition Stabilized - Step Down from ICU to General Ward">Condition Stabilized - Step Down from ICU to General Ward</option>
                 <option value="Condition Deteriorated - Immediate Escalation to ICU">Condition Deteriorated - Immediate Escalation to ICU</option>
@@ -3117,7 +3133,7 @@ ${doc.previewText || 'Cryptographically verified clinical document content.'}
             </div>
 
             <div class="form-group">
-              <label class="form-label" style="font-weight: 700;">Doctor & Nursing Handover Notes (हैंडओवर निर्देश):</label>
+              <label class="form-label" style="font-weight: 700;">Doctor & Nursing Handover Notes:</label>
               <textarea id="transfer-handover" class="form-textarea" placeholder="Shift vitals record, pending IV fluids, and nursing handover details...">Patient transferred to new bed in hemodynamically stable state. IV access patent. Shift handover completed with receiving ward sister.</textarea>
             </div>
           </div>

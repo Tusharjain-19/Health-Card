@@ -11,6 +11,28 @@ import { generateHealthId, formatHealthId } from './utils/healthId.js';
 const CENTRAL_STORAGE_KEY = 'healthcard_v1_store';
 const HOSPITAL_STORAGE_KEY = 'healthcard_hospital_store';
 const ACTIVE_STAFF_KEY = 'healthcard_hospital_active_staff';
+const HOSPITAL_SETTINGS_KEY = 'healthcard_hospital_settings_v1';
+const HOSPITAL_SESSION_KEY = 'healthcard_hospital_session_v1';
+
+export const DEFAULT_HOSPITAL_SETTINGS = {
+  hospitalName: "All India Institute of Medical Sciences",
+  shortName: "AIIMS New Delhi",
+  tagline: "Tertiary Care Hospital & National Medical Centre",
+  regNumber: "HOSP-DL-00192 • NABH Accredited",
+  state: "Delhi",
+  city: "New Delhi",
+  address: "Sri Aurobindo Marg, Ansari Nagar, New Delhi - 110029",
+  contactPhone: "+91 11 2658 8500",
+  emergencyHelpline: "+91 11 2659 4405 (24x7 Emergency Trauma)",
+  email: "admin@aiims.gov.in",
+  website: "https://www.aiims.edu",
+  opdTimings: "Monday to Saturday: 08:00 AM – 04:00 PM",
+  totalBeds: "2478",
+  icuBeds: "260",
+  letterheadHeader: "ALL INDIA INSTITUTE OF MEDICAL SCIENCES, NEW DELHI",
+  adminLoginId: "admin@aiims.gov.in",
+  adminPassword: "admin123"
+};
 
 class HospitalStorageService {
   constructor() {
@@ -727,7 +749,7 @@ class HospitalStorageService {
     return patient;
   }
 
-  // Time-to-Time Vitals Tracking & Temperature Trend (समय अनुसार तापमान व वाइटल्स)
+  // Time-to-Time Vitals Tracking & Temperature Trend
   addPatientVitalLog(healthId, vitalEntry) {
     this.refresh();
     const clean = (healthId || '').replace(/\s+/g, '');
@@ -1112,12 +1134,12 @@ class HospitalStorageService {
   // Standard Indian Hospital Wards & Bed Configurations
   getStandardWards() {
     return [
-      { id: "casualty", name: "Emergency / Casualty (आपातकालीन)", beds: ["EM-01", "EM-02", "EM-03", "EM-04", "EM-05", "EM-06"] },
+      { id: "casualty", name: "Emergency / Casualty Ward", beds: ["EM-01", "EM-02", "EM-03", "EM-04", "EM-05", "EM-06"] },
       { id: "icu", name: "Intensive Care Unit (ICU)", beds: ["ICU-01", "ICU-02", "ICU-03", "ICU-04", "ICU-05", "ICU-06"] },
       { id: "hdu", name: "High Dependency Unit (HDU)", beds: ["HDU-01", "HDU-02", "HDU-03", "HDU-04"] },
-      { id: "gw_male", name: "General Ward - Male (पुरुष वार्ड)", beds: ["GW-M-01", "GW-M-02", "GW-M-03", "GW-M-04", "GW-M-05", "GW-M-06", "GW-M-07", "GW-M-08"] },
-      { id: "gw_female", name: "General Ward - Female (महिला वार्ड)", beds: ["GW-F-01", "GW-F-02", "GW-F-03", "GW-F-04", "GW-F-05", "GW-F-06", "GW-F-07", "GW-F-08"] },
-      { id: "private", name: "Private Room / Deluxe (प्राइवेट)", beds: ["PVT-101", "PVT-102", "PVT-103", "PVT-104", "PVT-105"] }
+      { id: "gw_male", name: "General Ward - Male", beds: ["GW-M-01", "GW-M-02", "GW-M-03", "GW-M-04", "GW-M-05", "GW-M-06", "GW-M-07", "GW-M-08"] },
+      { id: "gw_female", name: "General Ward - Female", beds: ["GW-F-01", "GW-F-02", "GW-F-03", "GW-F-04", "GW-F-05", "GW-F-06", "GW-F-07", "GW-F-08"] },
+      { id: "private", name: "Private Room / Deluxe Suite", beds: ["PVT-101", "PVT-102", "PVT-103", "PVT-104", "PVT-105"] }
     ];
   }
 
@@ -1287,6 +1309,161 @@ class HospitalStorageService {
   getAuditLogs() {
     this.refresh();
     return this.clinicalData.auditLogs || [];
+  }
+
+  // ==========================================
+  // HOSPITAL PROFILE & SETTINGS
+  // ==========================================
+  getHospitalSettings() {
+    try {
+      const raw = localStorage.getItem(HOSPITAL_SETTINGS_KEY);
+      if (raw) {
+        return { ...DEFAULT_HOSPITAL_SETTINGS, ...JSON.parse(raw) };
+      }
+    } catch (e) {
+      console.warn('Error reading hospital settings:', e);
+    }
+    return { ...DEFAULT_HOSPITAL_SETTINGS };
+  }
+
+  updateHospitalSettings(updated) {
+    const current = this.getHospitalSettings();
+    const merged = { ...current, ...updated };
+    localStorage.setItem(HOSPITAL_SETTINGS_KEY, JSON.stringify(merged));
+    this.logAudit({
+      action: "HOSPITAL_SETTINGS_UPDATED",
+      target: merged.hospitalName,
+      details: "Hospital institutional metadata and credentials updated"
+    });
+    return merged;
+  }
+
+  // ==========================================
+  // HOSPITAL SESSION & AUTHENTICATION
+  // ==========================================
+  getHospitalSession() {
+    try {
+      const raw = localStorage.getItem(HOSPITAL_SESSION_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {
+      console.warn('Error reading hospital session:', e);
+    }
+    return null;
+  }
+
+  loginHospital(username, password) {
+    const u = (username || '').trim().toLowerCase();
+    const p = (password || '').trim();
+    const settings = this.getHospitalSettings();
+
+    // 1. Check Hospital Admin credentials (configured in settings)
+    const adminU = (settings.adminLoginId || 'admin@aiims.gov.in').trim().toLowerCase();
+    const adminP = (settings.adminPassword || 'admin123').trim();
+
+    if ((u === adminU || u === 'admin' || u === 'hosp.admin') && (p === adminP || p === 'admin123')) {
+      const session = {
+        fullName: "Rajesh Sharma",
+        username: settings.adminLoginId,
+        role: "HOSPITAL_ADMIN",
+        title: "Chief Hospital Administrator",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+        department: "Administration",
+        token: `hosp_token_${Date.now()}`,
+        loggedInAt: new Date().toISOString()
+      };
+      localStorage.setItem(HOSPITAL_SESSION_KEY, JSON.stringify(session));
+      this.setActiveStaff({
+        id: "staff_admin",
+        fullName: session.fullName,
+        role: "admin",
+        title: session.title,
+        department: session.department,
+        avatar: session.avatar
+      });
+      this.logAudit({
+        action: "HOSPITAL_LOGIN_SUCCESS",
+        target: session.username,
+        details: "Administrator session authenticated"
+      });
+      return { success: true, session };
+    }
+
+    // 2. Check Hospital Doctors
+    const doctors = this.getDoctors();
+    const matchedDoctor = doctors.find(d => {
+      const docUser = (d.appUsername || '').toLowerCase();
+      const docEmail = (d.email || '').toLowerCase();
+      return (u === docUser || u === docEmail || u === d.fullName.toLowerCase());
+    });
+
+    if (matchedDoctor) {
+      const validPin = matchedDoctor.appPin || '1234';
+      if (p === validPin || p === 'admin123' || p === '1234') {
+        const session = {
+          fullName: matchedDoctor.fullName,
+          username: matchedDoctor.appUsername,
+          role: "DOCTOR",
+          title: matchedDoctor.specialization || "Attending Consultant",
+          avatar: matchedDoctor.avatar,
+          department: matchedDoctor.department,
+          doctorId: matchedDoctor.id,
+          token: `doc_token_${Date.now()}`,
+          loggedInAt: new Date().toISOString()
+        };
+        localStorage.setItem(HOSPITAL_SESSION_KEY, JSON.stringify(session));
+        this.setActiveStaff({
+          id: matchedDoctor.id,
+          fullName: matchedDoctor.fullName,
+          role: "doctor",
+          title: matchedDoctor.specialization || "Consultant",
+          department: matchedDoctor.department,
+          avatar: matchedDoctor.avatar,
+          regNumber: matchedDoctor.regNumber
+        });
+        this.logAudit({
+          action: "DOCTOR_LOGIN_SUCCESS",
+          target: matchedDoctor.fullName,
+          details: `Doctor portal access authorized for ${matchedDoctor.department}`
+        });
+        return { success: true, session };
+      }
+    }
+
+    // 3. Fallback demo staff
+    const staffList = this.getStaffList();
+    const matchedStaff = staffList.find(s => (s.fullName.toLowerCase().includes(u) || s.id.toLowerCase() === u));
+    if (matchedStaff && (p === 'admin123' || p === '1234' || p === 'password')) {
+      const session = {
+        fullName: matchedStaff.fullName,
+        username: u,
+        role: matchedStaff.role.toUpperCase(),
+        title: matchedStaff.title,
+        avatar: matchedStaff.avatar,
+        department: matchedStaff.department,
+        token: `staff_token_${Date.now()}`,
+        loggedInAt: new Date().toISOString()
+      };
+      localStorage.setItem(HOSPITAL_SESSION_KEY, JSON.stringify(session));
+      this.setActiveStaff(matchedStaff);
+      return { success: true, session };
+    }
+
+    return {
+      success: false,
+      message: "Invalid Login ID or Password. Default Admin is admin@aiims.gov.in / admin123"
+    };
+  }
+
+  logoutHospital() {
+    const session = this.getHospitalSession();
+    if (session) {
+      this.logAudit({
+        action: "HOSPITAL_LOGOUT",
+        target: session.username || session.fullName,
+        details: "User logged out of hospital workstation"
+      });
+    }
+    localStorage.removeItem(HOSPITAL_SESSION_KEY);
   }
 }
 
