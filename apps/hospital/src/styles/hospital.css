@@ -894,3 +894,11 @@
   border-color: #1d4ed8;
 }
 
+@media (max-width: 860px) {
+  .auth-gateway-container > div {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+}
+
+

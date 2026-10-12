@@ -1555,6 +1555,8 @@ class HospitalStorageService {
       totalBeds: formData.totalBeds || "100",
       icuBeds: formData.icuBeds || "20",
       accreditation: formData.accreditation || "NABH Accredited",
+      logoUrl: formData.logoUrl || "",
+      documents: Array.isArray(formData.documents) ? formData.documents : [],
       status: "PENDING_APPROVAL",
       appliedAt: new Date().toISOString(),
       notes: formData.notes || "Online application submitted via Institutional Gateway"
@@ -1566,10 +1568,21 @@ class HospitalStorageService {
     this.logAudit({
       action: "HOSPITAL_APPLICATION_SUBMITTED",
       target: newApp.hospitalName,
-      details: `Application ${refNumber} logged for central administrator review`
+      details: `Application ${refNumber} logged with ${newApp.documents.length} regulatory licenses attached`
     });
 
     return newApp;
+  }
+
+  updateHospitalApplication(appId, updatedData) {
+    const apps = this.getHospitalApplications();
+    const appIndex = apps.findIndex(a => a.id === appId || a.refNumber === appId);
+    if (appIndex === -1) return null;
+
+    const merged = { ...apps[appIndex], ...updatedData, updatedAt: new Date().toISOString() };
+    apps[appIndex] = merged;
+    this.saveHospitalApplications(apps);
+    return merged;
   }
 
   approveHospitalApplication(appId, customCredentials = null) {
@@ -1613,6 +1626,8 @@ class HospitalStorageService {
       adminName: app.adminName,
       adminLoginId: issuedLoginId,
       adminPassword: issuedPassword,
+      logoUrl: app.logoUrl || "",
+      documents: app.documents || [],
       status: "Verified",
       badge: "Empanelled",
       accreditation: app.accreditation
@@ -1855,7 +1870,8 @@ class HospitalStorageService {
           icuBeds: matchedHospital.icuBeds,
           letterheadHeader: matchedHospital.letterheadHeader,
           adminLoginId: matchedHospital.adminLoginId,
-          adminPassword: matchedHospital.adminPassword
+          adminPassword: matchedHospital.adminPassword,
+          logoUrl: matchedHospital.logoUrl || ""
         });
 
         const session = {

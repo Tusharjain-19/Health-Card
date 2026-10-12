@@ -69,8 +69,8 @@ export class HospitalApp {
         <!-- Institutional Clinical Header (Uncluttered, No AI, Clean Rectangular Buttons) -->
         <header class="hospital-header">
           <a href="#dashboard" class="brand-wrapper">
-            <div class="brand-emblem">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M2 12h20"/></svg>
+            <div class="brand-emblem" style="overflow: hidden;">
+              ${settings.logoUrl ? `<img src="${settings.logoUrl}" style="width: 100%; height: 100%; object-fit: contain; border-radius: var(--radius-md);" alt="${settings.shortName}" />` : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M2 12h20"/></svg>`}
             </div>
             <div>
               <div class="brand-title">${settings.shortName || 'HealthCard Hospital'}</div>
@@ -110,18 +110,18 @@ export class HospitalApp {
             </a>
           </nav>
 
-          <!-- Right Header Controls: Authenticated Clinician / Administrator Persona -->
+          <!-- Right Header Controls: Compact Clean Authenticated Persona -->
           <div class="header-actions">
-            <!-- Active Shift Persona Chip with Dropdown Actions -->
-            <div class="persona-switcher" id="btn-persona-switcher" title="User Session Profile & Actions" style="cursor: pointer;">
-              <img src="${session?.avatar || activeStaff.avatar || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80'}" class="persona-avatar" alt="${session?.fullName || activeStaff.fullName}" />
-              <div class="persona-info">
-                <div class="persona-name">${session?.fullName || activeStaff.fullName}</div>
-                <div class="persona-role" style="display: flex; align-items: center; gap: 4px;">
-                  <span>${(session?.role || activeStaff.role || 'STAFF').toUpperCase()}</span>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-                </div>
+            <!-- Small Compact Persona Chip -->
+            <div class="persona-switcher-compact" id="btn-persona-switcher" title="User Session Profile & Actions" style="cursor: pointer; display: flex; align-items: center; gap: 7px; padding: 3px 10px 3px 3px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 20px; transition: all 0.15s ease;">
+              <img src="${session?.avatar || activeStaff.avatar || 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80'}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1.5px solid #1d4ed8;" alt="${session?.fullName || activeStaff.fullName}" />
+              <div style="font-size: 11.5px; font-weight: 700; color: #0f172a; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                ${(session?.fullName || activeStaff.fullName).split(' ')[0]}
               </div>
+              <span class="badge ${session?.role === 'HOSPITAL_ADMIN' ? 'badge-active' : 'badge-blue'}" style="font-size: 9.5px; padding: 1px 6px; text-transform: uppercase; font-weight: 700;">
+                ${session?.role === 'HOSPITAL_ADMIN' ? 'Admin' : 'Doctor'}
+              </span>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
           </div>
         </header>
