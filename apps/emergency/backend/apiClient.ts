@@ -1,5 +1,5 @@
 /**
- * HealthCard Emergency & Trauma Portal — Dedicated Backend Client Service
+ * HealthCard Emergency & Trauma Portal: Dedicated Backend Client Service
  * Connects the Emergency & Resuscitation Portal to the Central Medical Server (Port 5000 / LAN IP).
  * Safe local mock fallback preserved per user requirement.
  */

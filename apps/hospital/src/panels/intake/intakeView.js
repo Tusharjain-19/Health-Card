@@ -1,5 +1,5 @@
 /**
- * HealthCard Hospital Portal — Patient Intake, Scanner & Mandatory Identity Gate
+ * HealthCard Hospital Portal: Patient Intake, Scanner & Mandatory Identity Gate
  * Implements PRD ACC-01, ACC-02, ACC-03, ACC-04, ACC-05.
  * 1. Resolves opaque card token to masked identity
  * 2. Mandates physical in-person identity verification

@@ -1,5 +1,5 @@
 /**
- * HealthCard Hospital Portal — Centralized Clinical Storage & Sync Service
+ * HealthCard Hospital Portal: Centralized Clinical Storage & Sync Service
  * Seamlessly interfaces with centralized storage (matching apps/admin and apps/applicant)
  * and manages local clinical data, encounters, admissions, and audit records.
  */
@@ -499,7 +499,7 @@ class HospitalStorageService {
       id: `bg_${now}`,
       healthId: patient.healthId,
       patientId: patient.id,
-      orgName: "AIIMS New Delhi — Trauma Emergency",
+      orgName: "AIIMS New Delhi: Trauma Emergency",
       clinician: clinicianName || staff.fullName,
       department: department || staff.department || "Emergency & Trauma",
       scopes: ["demographics", "allergies", "conditions", "medications", "encounters", "labs", "hospitalizations", "documents"],
@@ -603,7 +603,7 @@ class HospitalStorageService {
     const newConsultation = {
       id: `cns_${Date.now()}`,
       date: new Date().toISOString(),
-      facility: "AIIMS New Delhi — Clinical OPD",
+      facility: "AIIMS New Delhi: Clinical OPD",
       clinician: staff.fullName,
       regNumber: staff.regNumber || "NMC/MCI-2004/09182",
       kind: "opd",

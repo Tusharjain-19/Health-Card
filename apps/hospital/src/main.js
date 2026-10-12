@@ -1,5 +1,5 @@
 /**
- * HealthCard Hospital & Clinician Portal — Main Application Shell & Hash Router
+ * HealthCard Hospital & Clinician Portal: Main Application Shell & Hash Router
  * Clean enterprise clinical architecture strictly adhering to PRD and design guidelines.
  * Features:
  * - Rectangular navigation buttons with border-radius (zero AI gimmickry)
@@ -52,7 +52,7 @@ export class HospitalApp {
             </div>
           </a>
 
-          <!-- Main Clinical Navigation Tabs — 5 Essential Modules -->
+          <!-- Main Clinical Navigation Tabs: 5 Essential Modules -->
           <nav class="header-nav">
             <a href="#dashboard" class="nav-link" id="nav-dashboard">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -132,7 +132,9 @@ export class HospitalApp {
             <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Hospital Multi-Workstation Synchronization</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Manage hospital portal access across multiple counter PCs on the local network</p>
           </div>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <div class="modal-body">
@@ -211,7 +213,7 @@ export class HospitalApp {
       if (health && health.status === 'healthy') {
         alertBox.style.background = '#f0fdf4';
         alertBox.style.color = '#15803d';
-        alertBox.innerHTML = `✓ Connection successful! Server Version: ${health.version} • Status: ${health.status}`;
+        alertBox.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="display:inline-block; vertical-align:-2px; margin-right:4px;"><path d="M20 6L9 17l-5-5"/></svg>Connection successful! Server Version: ${health.version} • Status: ${health.status}`;
       } else {
         alertBox.style.background = '#fef2f2';
         alertBox.style.color = '#dc2626';
@@ -240,7 +242,9 @@ export class HospitalApp {
             <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Switch Healthcare Staff Persona</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Select role to test clinical access permissions and department workflows</p>
           </div>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <div class="modal-body">

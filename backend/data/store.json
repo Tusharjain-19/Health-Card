@@ -101,7 +101,7 @@
       "name": "Outpatient Clinical Consultation",
       "department": "General Medicine / Specialty",
       "category": "Consultation",
-      "standardFee": 50,
+      "standardFee": 500,
       "description": "Comprehensive physical examination, history review, provisional diagnosis, and e-prescription issuance."
     },
     {

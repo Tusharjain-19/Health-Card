@@ -1,4 +1,4 @@
-# HealthCard — Admin & Card Issuer Portal
+# HealthCard: Admin & Card Issuer Portal
 
 > Independent deployment for Issuer Admins, Verification Officers, and Compliance Auditors.
 

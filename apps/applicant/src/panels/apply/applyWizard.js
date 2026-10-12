@@ -1,5 +1,5 @@
 /**
- * HealthCard Citizen Application — World-Class Minimal Light Mode
+ * HealthCard Citizen Application: World-Class Minimal Light Mode
  * Features:
  * - Side-by-Side Split Architecture: Real-time Live CR80 Card Preview (Sticky Left) + Unified Form Flow (Right)
  * - 8-Pill Blood Group Grid (Highlight in bold red #dc2626)
@@ -450,7 +450,10 @@ export class ApplyWizard {
                       ${this.getKycNumberLabel()}
                     </label>
                     ${this.formData.kycType === 'Aadhaar Card' && this.formData.isAadhaarVerified ? `
-                      <span class="badge badge-teal" style="font-weight:700; font-size:11px;">✓ UIDAI Verified</span>
+                      <span class="badge badge-teal" style="font-weight:700; font-size:11px; display:inline-flex; align-items:center; gap:4px;">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                        UIDAI Verified
+                      </span>
                     ` : ''}
                   </div>
                   <div style="display:flex; gap:8px;">
@@ -1079,7 +1082,7 @@ export class ApplyWizard {
         }
         this.formData.isAadhaarVerified = true;
         closeAadhaarModal();
-        showToast('✓ Aadhaar e-KYC verified successfully with UIDAI!', 'success');
+        showToast('Aadhaar e-KYC verified successfully with UIDAI!', 'success');
         this.render();
         this.bindEvents();
         this.updateCardPreview();
@@ -1294,7 +1297,7 @@ export class ApplyWizard {
         }
         this.formData.isEmailVerified = true;
         closeEmailModal();
-        showToast('✓ Gmail / Email address verified via OTP!', 'success');
+        showToast('Email address verified via OTP!', 'success');
         this.render();
         this.bindEvents();
       };
@@ -1652,7 +1655,8 @@ export class ApplyWizard {
             </div>
           </div>
           <span style="display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:#166534; background:#dcfce7; padding:4px 10px; border-radius:9999px;">
-            ✓ ₹50.00 Confirmed
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+            ₹50.00 Confirmed
           </span>
         </div>
 
@@ -1715,7 +1719,7 @@ export class ApplyWizard {
 
             <div class="metric-tile">
               <div class="metric-tile-label">Application Status & Fee</div>
-              <div class="metric-tile-value" style="color:#0f172a; font-size:14px;">PAID — ₹50.00</div>
+              <div class="metric-tile-value" style="color:#0f172a; font-size:14px;">PAID: ₹50.00</div>
               <div style="font-size:10.5px; color:#64748b; margin-top:2px;">${order.payment?.mode || 'UPI / BHIM'} • Ref: ${applicationRef}</div>
             </div>
           </div>
@@ -1759,9 +1763,10 @@ export class ApplyWizard {
                     <div class="doc-field-label">Identity Document & e-KYC</div>
                     <div class="doc-field-value">
                       <strong>${member.kyc?.documentType || 'Aadhaar Card'}</strong>: 
-                      <span style="font-family:var(--font-family-mono); font-weight:700;">${member.kyc?.documentNumber || '—'}</span>
-                      <span style="font-size:10px; color:#166534; font-weight:700; background:#ecfdf5; padding:2px 6px; border-radius:3px; border:1px solid #bbf7d0; margin-left:4px;">
-                        ${member.kyc?.isAadhaarVerified ? '✓ UIDAI VERIFIED' : '✓ e-KYC VERIFIED'}
+                      <span style="font-family:var(--font-family-mono); font-weight:700;">${member.kyc?.documentNumber || '-'}</span>
+                      <span style="font-size:10px; color:#166534; font-weight:700; background:#ecfdf5; padding:2px 6px; border-radius:3px; border:1px solid #bbf7d0; margin-left:4px; display:inline-flex; align-items:center; gap:3px;">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                        ${member.kyc?.isAadhaarVerified ? 'UIDAI VERIFIED' : 'e-KYC VERIFIED'}
                       </span>
                     </div>
                   </div>
@@ -1769,8 +1774,8 @@ export class ApplyWizard {
                   <div>
                     <div class="doc-field-label">Registered Contacts</div>
                     <div class="doc-field-value" style="font-size:12px;">
-                      Mobile: +91 ${member.mobile} <span style="color:#166534; font-weight:700;">✓</span> • 
-                      Email: ${member.email || '—'} <span style="color:#166534; font-weight:700;">✓</span>
+                      Mobile: +91 ${member.mobile} <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="3" style="display:inline-block; vertical-align:-1px;"><path d="M20 6L9 17l-5-5"/></svg> • 
+                      Email: ${member.email || '-'} <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="3" style="display:inline-block; vertical-align:-1px;"><path d="M20 6L9 17l-5-5"/></svg>
                     </div>
                   </div>
                 </div>
@@ -1830,7 +1835,7 @@ export class ApplyWizard {
 
                 <div>
                   <div class="doc-field-label">24x7 Emergency Contact Phone</div>
-                  <div class="doc-field-value" style="font-family:var(--font-family-mono); font-weight:700;">+91 ${member.emergencyContact?.phone || '—'}</div>
+                  <div class="doc-field-value" style="font-family:var(--font-family-mono); font-weight:700;">+91 ${member.emergencyContact?.phone || '-'}</div>
                 </div>
 
                 <div>

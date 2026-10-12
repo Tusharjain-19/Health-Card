@@ -1,5 +1,5 @@
 /**
- * HealthCard Hospital Portal — Immutable Hospital Audit Explorer
+ * HealthCard Hospital Portal: Immutable Hospital Audit Explorer
  * Implements PRD ADM-02, database.md §8.
  * Real-time clinical logs, break-glass reviews, and DPDP compliance oversight.
  */

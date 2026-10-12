@@ -258,7 +258,8 @@ export class TrackView {
                         <span class="badge badge-teal" style="font-size:10.5px;">Active Stage</span>
                       ` : (isPast ? `
                         <span style="font-size:11px; color:#047857; font-weight:700; display:inline-flex; align-items:center; gap:4px;">
-                          ✓ Completed
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                          Completed
                         </span>
                       ` : `
                         <span style="font-size:11px; color:#94a3b8; font-weight:600;">Upcoming</span>

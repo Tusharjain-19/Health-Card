@@ -1,5 +1,5 @@
 /**
- * HealthCard Hospital Portal — Patient Clinical Workspace & Chart Controller
+ * HealthCard Hospital Portal: Patient Clinical Workspace & Chart Controller
  * Implements:
  * 1. Persistent High-Alert Allergy Strip & Bold Red Blood Group Tag
  * 2. Longitudinal Medical Timeline with Provenance Badges
@@ -52,7 +52,10 @@ export class PatientWorkspace {
           <div class="break-glass-bar">
             <div class="break-glass-left">
               <span class="break-glass-pulse"></span>
-              <span>🚨 ACTIVE EMERGENCY BREAK-GLASS SESSION</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                ACTIVE EMERGENCY BREAK-GLASS SESSION
+              </span>
               <span style="font-weight: 400; opacity: 0.9;">• Clinician: ${activeBreakGlass.clinician} (${activeBreakGlass.department || 'Trauma'})</span>
               <span style="font-weight: 400; opacity: 0.9;">• Reason: "${activeBreakGlass.reason}"</span>
             </div>
@@ -277,7 +280,7 @@ export class PatientWorkspace {
         clinician: `${c.clinician} (${c.regNumber || 'NMC Verified'})`,
         date: c.date,
         details: c.chiefComplaint,
-        badge: 'Provider Verified ✓',
+        badge: 'Provider Verified',
         badgeClass: 'badge-active',
         payload: c
       });
@@ -287,11 +290,11 @@ export class PatientWorkspace {
       events.push({
         type: 'admission',
         title: `Inpatient Admission: ${a.admittingDiagnosis}`,
-        facility: 'AIIMS New Delhi — General Inpatient Wards',
+        facility: 'AIIMS New Delhi: General Inpatient Wards',
         clinician: `Dr. Vikram Sethi (Admitting Consultant)`,
         date: a.admittedAt,
         details: `Stay: ${a.ward} (${a.bedNumber}) • Status: ${a.status}. ${a.courseSummary}`,
-        badge: 'Provider Verified ✓',
+        badge: 'Provider Verified',
         badgeClass: 'badge-active',
         payload: a
       });
@@ -370,7 +373,8 @@ export class PatientWorkspace {
                     <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;">
                       ${ev.payload.uploadedReports.map(rep => `
                         <span class="badge badge-blue" style="font-size: 11px; display: inline-flex; align-items: center; gap: 4px;">
-                          📄 ${rep.name} (${rep.size || 'Attached'})
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                          ${rep.name} (${rep.size || 'Attached'})
                           ${rep.dataUrl ? `<a href="${rep.dataUrl}" target="_blank" style="margin-left: 4px; color: #1d4ed8; font-weight: 700; text-decoration: underline;">Preview</a>` : ''}
                         </span>
                       `).join('')}
@@ -448,7 +452,7 @@ export class PatientWorkspace {
                 <select class="form-select" id="consult-doctor-select" required>
                   ${doctors.map(d => `
                     <option value="${d.id}" data-name="${d.fullName}" data-dept="${d.department}" data-reg="${d.regNumber || ''}" ${d.fullName === staff.fullName ? 'selected' : ''}>
-                      ${d.fullName} — ${d.department} • ${d.specialization || 'Consultant'} (${d.opdRoom || 'OPD'})
+                      ${d.fullName}: ${d.department} • ${d.specialization || 'Consultant'} (${d.opdRoom || 'OPD'})
                     </option>
                   `).join('')}
                 </select>
@@ -530,23 +534,23 @@ export class PatientWorkspace {
           </div>
           <div style="display: flex; gap: 8px; margin-bottom: 12px;">
             <select class="form-select" id="consult-dx-select">
-              <option value="I10|Essential (Primary) Hypertension">I10 — Essential (Primary) Hypertension</option>
-              <option value="E11.9|Type 2 Diabetes Mellitus without complications">E11.9 — Type 2 Diabetes Mellitus without complications</option>
-              <option value="E78.0|Pure Hypercholesterolemia">E78.0 — Pure Hypercholesterolemia</option>
-              <option value="J20.9|Acute Bronchitis, unspecified">J20.9 — Acute Bronchitis, unspecified</option>
-              <option value="J30.1|Allergic Rhinitis due to pollen">J30.1 — Allergic Rhinitis due to pollen</option>
-              <option value="M17.0|Primary Bilateral Osteoarthritis of Knee">M17.0 — Primary Bilateral Osteoarthritis of Knee</option>
-              <option value="K21.9|Gastro-esophageal Reflux Disease (GERD)">K21.9 — Gastro-esophageal Reflux Disease (GERD)</option>
+              <option value="I10|Essential (Primary) Hypertension">I10: Essential (Primary) Hypertension</option>
+              <option value="E11.9|Type 2 Diabetes Mellitus without complications">E11.9: Type 2 Diabetes Mellitus without complications</option>
+              <option value="E78.0|Pure Hypercholesterolemia">E78.0: Pure Hypercholesterolemia</option>
+              <option value="J20.9|Acute Bronchitis, unspecified">J20.9: Acute Bronchitis, unspecified</option>
+              <option value="J30.1|Allergic Rhinitis due to pollen">J30.1: Allergic Rhinitis due to pollen</option>
+              <option value="M17.0|Primary Bilateral Osteoarthritis of Knee">M17.0: Primary Bilateral Osteoarthritis of Knee</option>
+              <option value="K21.9|Gastro-esophageal Reflux Disease (GERD)">K21.9: Gastro-esophageal Reflux Disease (GERD)</option>
             </select>
             <button type="button" class="btn btn-secondary" id="btn-add-dx">Add Diagnosis</button>
           </div>
           <div id="dx-tags-container" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;">
             <span class="badge badge-active" data-code="I10" data-name="Essential (Primary) Hypertension">
-              I10 — Essential (Primary) Hypertension
+              I10: Essential (Primary) Hypertension
               <button type="button" style="border:none; background:none; cursor:pointer; color:#065f46; margin-left:4px;" onclick="this.parentElement.remove()">×</button>
             </span>
             <span class="badge badge-active" data-code="E11.9" data-name="Type 2 Diabetes Mellitus without complications">
-              E11.9 — Type 2 Diabetes Mellitus
+              E11.9: Type 2 Diabetes Mellitus
               <button type="button" style="border:none; background:none; cursor:pointer; color:#065f46; margin-left:4px;" onclick="this.parentElement.remove()">×</button>
             </span>
           </div>
@@ -667,9 +671,11 @@ export class PatientWorkspace {
             <div id="consult-uploaded-chips-list" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
               ${this.pendingUploadedReports.map((file, idx) => `
                 <div style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 6px; font-size: 12px;">
-                  <span>📄 <strong>${file.name}</strong> (${file.size})</span>
+                  <span style="display: inline-flex; align-items: center; gap: 5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><strong>${file.name}</strong> (${file.size})</span>
                   ${file.dataUrl ? `<a href="${file.dataUrl}" target="_blank" style="color: #1d4ed8; font-weight: 600; text-decoration: underline;">Preview</a>` : ''}
-                  <button type="button" style="border: none; background: none; color: #dc2626; cursor: pointer; font-weight: bold;" data-idx="${idx}" class="btn-remove-report">✕</button>
+                  <button type="button" style="border: none; background: none; color: #dc2626; cursor: pointer; display: inline-flex; align-items: center;" data-idx="${idx}" class="btn-remove-report" title="Remove report">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
                 </div>
               `).join('')}
             </div>
@@ -712,9 +718,11 @@ export class PatientWorkspace {
       if (countBadge) countBadge.textContent = `${this.pendingUploadedReports.length} reports attached`;
       chipsList.innerHTML = this.pendingUploadedReports.map((file, idx) => `
         <div style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 6px; font-size: 12px;">
-          <span>📄 <strong>${file.name}</strong> (${file.size})</span>
+          <span style="display: inline-flex; align-items: center; gap: 5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><strong>${file.name}</strong> (${file.size})</span>
           ${file.dataUrl ? `<a href="${file.dataUrl}" target="_blank" style="color: #1d4ed8; font-weight: 600; text-decoration: underline;">Preview</a>` : ''}
-          <button type="button" style="border: none; background: none; color: #dc2626; cursor: pointer; font-weight: bold;" data-idx="${idx}" class="btn-remove-report">✕</button>
+          <button type="button" style="border: none; background: none; color: #dc2626; cursor: pointer; display: inline-flex; align-items: center;" data-idx="${idx}" class="btn-remove-report" title="Remove report">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
       `).join('');
 
@@ -767,7 +775,7 @@ export class PatientWorkspace {
       span.setAttribute('data-code', code);
       span.setAttribute('data-name', name);
       span.innerHTML = `
-        ${code} — ${name}
+        ${code}: ${name}
         <button type="button" style="border:none; background:none; cursor:pointer; color:#065f46; margin-left:4px;" onclick="this.parentElement.remove()">×</button>
       `;
       tagContainer.appendChild(span);
@@ -1109,8 +1117,9 @@ export class PatientWorkspace {
                       <strong style="font-size: 11.5px; color: #0f172a;">Attached Inpatient Test Reports:</strong>
                       <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;">
                         ${d.testReports.map(tr => `
-                          <span class="badge badge-blue" style="font-size: 11.5px; padding: 4px 8px;">
-                            📄 ${tr.name} ${tr.value ? `— <em>${tr.value}</em>` : ''}
+                          <span class="badge badge-blue" style="font-size: 11.5px; padding: 4px 8px; display: inline-flex; align-items: center; gap: 5px;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            ${tr.name} ${tr.value ? `- <em>${tr.value}</em>` : ''}
                           </span>
                         `).join('')}
                       </div>
@@ -1332,8 +1341,8 @@ export class PatientWorkspace {
         <!-- Urgent Red Emergency Banner -->
         <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: var(--radius-lg); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 14px;">
           <div style="display: flex; align-items: center; gap: 14px;">
-            <div style="width: 48px; height: 48px; background: #dc2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 22px; flex-shrink: 0;">
-              🚨
+            <div style="width: 48px; height: 48px; background: #dc2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; flex-shrink: 0;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M2 12h20"/></svg>
             </div>
             <div>
               <h3 style="font-size: 18px; font-weight: 800; color: #991b1b; margin: 0;">EMERGENCY FIRST-RESPONDER TRAUMA PROFILE</h3>
@@ -1412,13 +1421,17 @@ export class PatientWorkspace {
       <div class="modal-dialog">
         <div class="modal-header" style="background: #fef2f2; border-bottom: 1px solid #fecaca;">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 20px;">🚨</span>
+            <span style="color: #dc2626; display: flex; align-items: center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </span>
             <div>
               <h3 style="font-size: 16px; font-weight: 800; color: #991b1b; margin: 0;">Break-Glass Emergency Bypass Protocol</h3>
               <p style="font-size: 11.5px; color: #b91c1c; margin: 2px 0 0 0;">PRD ACC-10 Statutory Clinician Override</p>
             </div>
           </div>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <div class="modal-body">
@@ -1435,7 +1448,7 @@ export class PatientWorkspace {
           <div class="form-group">
             <label class="form-label">Mandatory Clinical Justification / Emergency Reason:</label>
             <select class="form-select" id="bg-reason-select" style="font-weight: 600;">
-              <option value="Unconscious Acute Trauma Victim — Immediate Resuscitation">Unconscious Acute Trauma Victim — Immediate Resuscitation</option>
+              <option value="Unconscious Acute Trauma Victim: Immediate Resuscitation">Unconscious Acute Trauma Victim: Immediate Resuscitation</option>
               <option value="Acute Anaphylactic Shock with Airway Compromise">Acute Anaphylactic Shock with Airway Compromise</option>
               <option value="Severe Cardiac Arrest / Ventricular Fibrillation">Severe Cardiac Arrest / Ventricular Fibrillation</option>
               <option value="Altered Mental Status / Poisoning / Coma Triage">Altered Mental Status / Poisoning / Coma Triage</option>
@@ -1530,7 +1543,9 @@ export class PatientWorkspace {
             <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Inpatient Ward Admission (IPD)</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Assign admitting doctor, ward category, bed and initial orders</p>
           </div>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <form id="modal-admit-form">
@@ -1654,7 +1669,9 @@ export class PatientWorkspace {
             <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Log Ward Round, Procedures & MAR Doses</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Inpatient: ${adm.memberName} • Location: ${adm.ward} (${adm.bedNumber})</p>
           </div>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <form id="modal-round-form">
@@ -1716,7 +1733,7 @@ export class PatientWorkspace {
                   </td>
                   <td><input type="text" class="form-input mar-time" value="09:00 AM" /></td>
                   <td><input type="text" class="form-input mar-nurse" value="Sister Rekha" /></td>
-                  <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">✕</button></td>
+                  <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;" title="Remove dose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></td>
                 </tr>
                 <tr>
                   <td><input type="text" class="form-input mar-drug" value="IV Pantoprazole" /></td>
@@ -1731,7 +1748,7 @@ export class PatientWorkspace {
                   </td>
                   <td><input type="text" class="form-input mar-time" value="09:15 AM" /></td>
                   <td><input type="text" class="form-input mar-nurse" value="Sister Rekha" /></td>
-                  <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">✕</button></td>
+                  <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;" title="Remove dose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></td>
                 </tr>
               </tbody>
             </table>
@@ -1786,7 +1803,7 @@ export class PatientWorkspace {
         </td>
         <td><input type="text" class="form-input mar-time" value="${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}" /></td>
         <td><input type="text" class="form-input mar-nurse" value="Staff Nurse" /></td>
-        <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">✕</button></td>
+        <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;" title="Remove dose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></td>
       `;
       tbody.appendChild(tr);
     });
@@ -1804,8 +1821,11 @@ export class PatientWorkspace {
       }
       ipdChips.innerHTML = roundReports.map((file, idx) => `
         <span class="badge badge-blue" style="display: inline-flex; align-items: center; gap: 6px;">
-          📄 ${file.name} (${file.size})
-          <button type="button" style="border:none; background:none; cursor:pointer; color:#dc2626;" data-idx="${idx}" class="btn-del-ipd-rep">✕</button>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          ${file.name} (${file.size})
+          <button type="button" style="border:none; background:none; cursor:pointer; color:#dc2626; display:inline-flex; align-items:center;" data-idx="${idx}" class="btn-del-ipd-rep" title="Remove attachment">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </span>
       `).join('');
 
@@ -1888,7 +1908,9 @@ export class PatientWorkspace {
             <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Edit Inpatient Stay Details</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Update bed assignment, ward category, attending doctor, and clinical diagnosis</p>
           </div>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <form id="modal-edit-adm-form">
@@ -1920,7 +1942,7 @@ export class PatientWorkspace {
               <select class="form-select" id="edit-adm-doctor" required>
                 ${doctors.map(d => `
                   <option value="${d.id}" data-name="${d.fullName}" ${adm.admittingDoctor === d.fullName ? 'selected' : ''}>
-                    ${d.fullName} — ${d.department}
+                    ${d.fullName}: ${d.department}
                   </option>
                 `).join('')}
               </select>
@@ -1981,7 +2003,9 @@ export class PatientWorkspace {
             <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Edit Consultation Record</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Consultation: ${consult.id} • Attending: ${consult.clinician || consult.doctorName || 'Doctor'}</p>
           </div>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <form id="modal-edit-consult-form">
@@ -2050,8 +2074,11 @@ export class PatientWorkspace {
       }
       editChips.innerHTML = editReports.map((file, idx) => `
         <span class="badge badge-blue" style="display: inline-flex; align-items: center; gap: 6px;">
-          📄 ${file.name} (${file.size || 'Attached'})
-          <button type="button" style="border:none; background:none; cursor:pointer; color:#dc2626;" data-idx="${idx}" class="btn-del-edit-rep">✕</button>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          ${file.name} (${file.size || 'Attached'})
+          <button type="button" style="border:none; background:none; cursor:pointer; color:#dc2626; display:inline-flex; align-items:center;" data-idx="${idx}" class="btn-del-edit-rep" title="Remove attachment">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </span>
       `).join('');
 
@@ -2110,7 +2137,9 @@ export class PatientWorkspace {
       <div class="modal-dialog">
         <div class="modal-header">
           <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Generate Inpatient Discharge Certificate</h3>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <form id="modal-discharge-form">
@@ -2174,7 +2203,9 @@ export class PatientWorkspace {
       <div class="modal-dialog">
         <div class="modal-header">
           <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Enter Diagnostic Investigation Result</h3>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <form id="modal-lab-form">
@@ -2271,7 +2302,9 @@ export class PatientWorkspace {
             <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">${doc.title}</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">${doc.category} • ${doc.orgName} • Author: ${doc.author}</p>
           </div>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <div class="modal-body">
@@ -2307,7 +2340,9 @@ ${doc.previewText || 'Cryptographically verified clinical document content.'}
       <div class="modal-dialog">
         <div class="modal-header">
           <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Archive New Clinical Document</h3>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <form id="modal-upload-form">

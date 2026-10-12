@@ -1,5 +1,5 @@
 /**
- * HealthCard Hospital Portal — Hospital Clinical Services Catalog Management
+ * HealthCard Hospital Portal: Hospital Clinical Services Catalog Management
  * Implements Item 3 & 4: Manage all hospital services, diagnostic tests, bed tariffs, and consultations.
  * Full CRUD (Add, Edit, Update, Delete) synced across workstations.
  */
@@ -54,7 +54,9 @@ export class ServicesView {
           <!-- Search Input -->
           <div style="display: flex; align-items: center; gap: 8px;">
             <input type="text" id="service-search-input" class="form-input form-input-sm" placeholder="Search service name or code..." value="${this.searchQuery}" style="width: 250px;" />
-            ${this.searchQuery ? `<button type="button" class="btn btn-sm btn-ghost" id="btn-clear-search">✕</button>` : ''}
+            ${this.searchQuery ? `<button type="button" class="btn btn-sm btn-ghost" id="btn-clear-search" title="Clear search">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>` : ''}
           </div>
         </div>
 
@@ -120,7 +122,7 @@ export class ServicesView {
                         Edit Fee / Details
                       </button>
                       <button type="button" class="btn btn-sm btn-ghost btn-del-service" data-id="${s.id}" style="color: #dc2626;" title="Remove service">
-                        ✕
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                       </button>
                     </div>
                   </td>
@@ -203,7 +205,9 @@ export class ServicesView {
             <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Add Hospital Clinical Service</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Define tariff, category, and department for clinical orders and billing</p>
           </div>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <form id="modal-add-service-form">
@@ -309,7 +313,9 @@ export class ServicesView {
             <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Edit Clinical Service Details</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Update service code, fee, department or clinical descriptions</p>
           </div>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <form id="modal-edit-service-form">

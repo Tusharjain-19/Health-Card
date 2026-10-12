@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HealthCard Applicant & Citizen Portal — Theme Tokens
+   HealthCard Applicant & Citizen Portal: Theme Tokens
    Strictly aligned with Admin Panel & design.md (Pure Minimal Light Mode)
    ========================================================================== */
 
@@ -10,7 +10,7 @@
   --bg-surface-subtle: #f1f5f9;
   --bg-surface-hover: #f8fafc;
 
-  /* Primary Brand — Institutional Clinical Blue (Clean, Non-AI, Trusted Healthcare) */
+  /* Primary Brand: Institutional Clinical Blue (Clean, Non-AI, Trusted Healthcare) */
   --color-primary: #1d4ed8;
   --color-primary-hover: #1e40af;
   --color-primary-active: #172554;
@@ -47,7 +47,7 @@
   --status-blue-text: #1d4ed8;
   --status-blue-border: #bfdbfe;
 
-  /* Typography — Native System Fonts */
+  /* Typography: Native System Fonts */
   --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-family-heading: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-family-mono: ui-monospace, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;

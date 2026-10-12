@@ -1,13 +1,13 @@
 /**
-2:  * HealthCard Hospital & Clinician Portal — Formatting Utilities
-3:  * Adheres to Indian date formats (DD/MM/YYYY, IST), phone numbers (+91), and masked privacy views.
-4:  */
+ * HealthCard Hospital & Clinician Portal: Formatting Utilities
+ * Adheres to Indian date formats (DD/MM/YYYY, IST), phone numbers (+91), and masked privacy views.
+ */
 
 export function formatDate(dateStr, includeTime = false) {
-  if (!dateStr) return '—';
+  if (!dateStr) return '-';
   try {
     const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return '—';
+    if (isNaN(d.getTime())) return '-';
     
     const day = String(d.getDate()).padStart(2, '0');
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -25,25 +25,25 @@ export function formatDate(dateStr, includeTime = false) {
 
     return `${day} ${month} ${year}, ${hours}:${minutes} ${ampm}`;
   } catch (e) {
-    return '—';
+    return '-';
   }
 }
 
 export function calculateAge(dobStr) {
-  if (!dobStr) return '—';
+  if (!dobStr) return '-';
   const birth = new Date(dobStr);
   const now = new Date();
-  if (isNaN(birth.getTime())) return '—';
+  if (isNaN(birth.getTime())) return '-';
   let age = now.getFullYear() - birth.getFullYear();
   const m = now.getMonth() - birth.getMonth();
   if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) {
     age--;
   }
-  return age >= 0 ? `${age} yrs` : '—';
+  return age >= 0 ? `${age} yrs` : '-';
 }
 
 export function maskMobile(mobile) {
-  if (!mobile) return '—';
+  if (!mobile) return '-';
   const clean = mobile.replace(/\D/g, '');
   if (clean.length < 4) return mobile;
   const last2 = clean.slice(-2);
@@ -51,7 +51,7 @@ export function maskMobile(mobile) {
 }
 
 export function formatMobile(mobile) {
-  if (!mobile) return '—';
+  if (!mobile) return '-';
   const clean = mobile.replace(/\D/g, '');
   if (clean.length === 10) {
     return `+91 ${clean.slice(0, 5)} ${clean.slice(5, 10)}`;

@@ -1,5 +1,5 @@
 /**
- * HealthCard Hospital Portal — Main Dashboard & Rapid Clinical Workbench
+ * HealthCard Hospital Portal: Main Dashboard & Rapid Clinical Workbench
  * Provides fast 1-click access to OPD Prescriptions, physical paper scan uploads,
  * IPD Bed Admissions & MAR trackers, universal search, and document scanning.
  */
@@ -33,7 +33,7 @@ export class HospitalDashboard {
           <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <button type="button" class="btn btn-secondary" id="btn-open-universal-scanner">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-              🖨️ Scan / Upload Document
+              Scan / Upload Document
             </button>
             <a href="#patient?id=7483916251" class="btn btn-primary" id="btn-quick-new-opd">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
@@ -59,8 +59,9 @@ export class HospitalDashboard {
             <button type="submit" class="btn btn-primary" style="padding: 0 20px; white-space: nowrap;">
               Open Chart
             </button>
-            <button type="button" class="btn btn-secondary" id="btn-scan-qr-modal" title="Scan Patient Card QR" style="white-space: nowrap;">
-              📷 Scan QR
+            <button type="button" class="btn btn-secondary" id="btn-scan-qr-modal" title="Scan Patient Card QR" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Scan QR
             </button>
           </form>
         </div>
@@ -85,8 +86,9 @@ export class HospitalDashboard {
               <a href="#patient?id=7483916251" class="btn btn-sm btn-primary">
                 + Write Digital Rx
               </a>
-              <button type="button" class="btn btn-sm btn-secondary btn-fast-scan-opd">
-                🖨️ Upload / Scan Slip
+              <button type="button" class="btn btn-sm btn-secondary btn-fast-scan-opd" style="display: inline-flex; align-items: center; gap: 5px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Upload / Scan Slip
               </button>
             </div>
           </div>
@@ -109,8 +111,9 @@ export class HospitalDashboard {
               <a href="#admissions" class="btn btn-sm btn-primary">
                 + Inpatient Bed Roster
               </a>
-              <button type="button" class="btn btn-sm btn-secondary btn-fast-ipd-mar">
-                💉 Log Daily Procedures & Doses
+              <button type="button" class="btn btn-sm btn-secondary btn-fast-ipd-mar" style="display: inline-flex; align-items: center; gap: 5px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+                Log Procedures & Doses
               </button>
             </div>
           </div>
@@ -130,8 +133,9 @@ export class HospitalDashboard {
             </div>
 
             <div class="fast-card-actions">
-              <button type="button" class="btn btn-sm btn-primary btn-fast-open-scanner">
-                🖨️ Launch Scanner Tool
+              <button type="button" class="btn btn-sm btn-primary btn-fast-open-scanner" style="display: inline-flex; align-items: center; gap: 5px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Launch Scanner Tool
               </button>
             </div>
           </div>
@@ -151,11 +155,13 @@ export class HospitalDashboard {
             </div>
 
             <div class="fast-card-actions">
-              <a href="#staff" class="btn btn-sm btn-primary">
-                👨‍⚕️ Doctors Directory
+              <a href="#staff" class="btn btn-sm btn-primary" style="display: inline-flex; align-items: center; gap: 5px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Doctors Directory
               </a>
-              <a href="#services" class="btn btn-sm btn-secondary">
-                🏷️ Tariffs & Services
+              <a href="#services" class="btn btn-sm btn-secondary" style="display: inline-flex; align-items: center; gap: 5px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                Tariffs & Services
               </a>
             </div>
           </div>
@@ -200,11 +206,13 @@ export class HospitalDashboard {
                     </div>
 
                     <div style="display: flex; align-items: center; gap: 6px;">
-                      <a href="#patient?id=${cleanId}" class="btn btn-sm btn-primary" title="Write Digital OPD Prescription">
-                        📝 OPD Rx
+                      <a href="#patient?id=${cleanId}" class="btn btn-sm btn-primary" title="Write Digital OPD Prescription" style="display: inline-flex; align-items: center; gap: 4px;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        OPD Rx
                       </a>
-                      <button type="button" class="btn btn-sm btn-secondary btn-row-scan-slip" data-patientid="${cleanId}" title="Scan or Upload Scanned Paper Slip for ${p.fullName}">
-                        🖨️ Scan Slip
+                      <button type="button" class="btn btn-sm btn-secondary btn-row-scan-slip" data-patientid="${cleanId}" title="Scan or Upload Scanned Paper Slip for ${p.fullName}" style="display: inline-flex; align-items: center; gap: 4px;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                        Scan Slip
                       </button>
                     </div>
                   </div>
@@ -243,7 +251,7 @@ export class HospitalDashboard {
                     </div>
                     <div style="margin-top: 8px; display: flex; justify-content: flex-end;">
                       <a href="#admissions" class="btn btn-sm btn-secondary" style="font-size: 11.5px; padding: 3px 8px;">
-                        💉 View Procedures & MAR Doses →
+                        View Procedures & MAR Doses →
                       </a>
                     </div>
                   </div>

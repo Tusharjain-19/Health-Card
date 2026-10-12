@@ -1,5 +1,5 @@
 /**
- * HealthCard Hospital Portal — Centralized Diagnostic Labs Board
+ * HealthCard Hospital Portal: Centralized Diagnostic Labs Board
  * Tracks pending investigations, ordered tests, structured lab results, and validation.
  */
 

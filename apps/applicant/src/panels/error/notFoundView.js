@@ -1,5 +1,5 @@
 /**
- * HealthCard Citizen & Applicant Portal — Custom 404 & Service Error View
+ * HealthCard Citizen & Applicant Portal: Custom 404 & Service Error View
  * Clean light mode error recovery interface strictly matching design language
  */
 

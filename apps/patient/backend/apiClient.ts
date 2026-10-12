@@ -1,5 +1,5 @@
 /**
- * HealthCard Patient Portal — Dedicated Backend Client Service
+ * HealthCard Patient Portal: Dedicated Backend Client Service
  * Connects the Citizen Patient Health Records Portal to the Central Medical Server (Port 5000 / LAN IP).
  * Safe local mock fallback preserved per user requirement.
  */

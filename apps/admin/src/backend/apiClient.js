@@ -1,5 +1,5 @@
 /**
- * HealthCard Admin Portal — Dedicated Backend Client Service
+ * HealthCard Admin Portal: Dedicated Backend Client Service
  * Connects the Admin Panel to the Central Medical Server (Port 5000 / LAN IP).
  * Safe local store fallback preserved per user requirement.
  */

@@ -1,5 +1,5 @@
 /**
- * HealthCard Citizen Self-Service Dashboard — Clean Minimal Light Mode
+ * HealthCard Citizen Self-Service Dashboard: Clean Minimal Light Mode
  * Matches Admin Panel design language
  */
 
@@ -347,7 +347,7 @@ export class ApplicantDashboard {
 
               <div class="metric-tile">
                 <div class="metric-tile-label">Application Status & Fee</div>
-                <div class="metric-tile-value" style="color:#0f172a; font-size:14px;">PAID — ₹50.00</div>
+                <div class="metric-tile-value" style="color:#0f172a; font-size:14px;">PAID: ₹50.00</div>
                 <div style="font-size:10.5px; color:#64748b; margin-top:2px;">${this.order?.payment?.mode || 'UPI / BHIM'} • Ref: ${applicationRef}</div>
               </div>
             </div>
@@ -391,9 +391,10 @@ export class ApplicantDashboard {
                       <div class="doc-field-label">Identity Document & e-KYC</div>
                       <div class="doc-field-value">
                         <strong>${this.member.kyc?.documentType || 'Aadhaar Card'}</strong>: 
-                        <span style="font-family:var(--font-family-mono); font-weight:700;">${this.member.kyc?.documentNumber || '—'}</span>
-                        <span style="font-size:10px; color:#166534; font-weight:700; background:#ecfdf5; padding:2px 6px; border-radius:3px; border:1px solid #bbf7d0; margin-left:4px;">
-                          ${this.member.kyc?.isAadhaarVerified ? '✓ UIDAI VERIFIED' : '✓ e-KYC VERIFIED'}
+                        <span style="font-family:var(--font-family-mono); font-weight:700;">${this.member.kyc?.documentNumber || '-'}</span>
+                        <span style="font-size:10px; color:#166534; font-weight:700; background:#ecfdf5; padding:2px 6px; border-radius:3px; border:1px solid #bbf7d0; margin-left:4px; display:inline-flex; align-items:center; gap:3px;">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+                          ${this.member.kyc?.isAadhaarVerified ? 'UIDAI VERIFIED' : 'e-KYC VERIFIED'}
                         </span>
                       </div>
                     </div>
@@ -401,8 +402,8 @@ export class ApplicantDashboard {
                     <div>
                       <div class="doc-field-label">Registered Contacts</div>
                       <div class="doc-field-value" style="font-size:12px;">
-                        Mobile: +91 ${this.member.mobile} <span style="color:#166534; font-weight:700;">✓</span> • 
-                        Email: ${this.member.email || '—'} <span style="color:#166534; font-weight:700;">✓</span>
+                        Mobile: +91 ${this.member.mobile} <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="3" style="display:inline-block; vertical-align:-1px;"><path d="M20 6L9 17l-5-5"/></svg> • 
+                        Email: ${this.member.email || '-'} <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="3" style="display:inline-block; vertical-align:-1px;"><path d="M20 6L9 17l-5-5"/></svg>
                       </div>
                     </div>
                   </div>

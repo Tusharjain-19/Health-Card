@@ -1,10 +1,10 @@
 /* ================================================
-   HealthCard Admin Panel — Design System & Styles
+   HealthCard Admin Panel: Design System & Styles
    ================================================ */
 
 /* ---------- CSS Custom Properties ---------- */
 :root {
-  /* Primary palette — clinical teal/blue gradient */
+  /* Primary palette: clinical teal/blue gradient */
   --primary-50:  #ecfeff;
   --primary-100: #cffafe;
   --primary-200: #a5f3fc;

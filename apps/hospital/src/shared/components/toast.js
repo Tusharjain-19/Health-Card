@@ -1,5 +1,5 @@
 /**
- * HealthCard Hospital Portal — Toast Notifications
+ * HealthCard Hospital Portal: Toast Notifications
  */
 
 export function showToast(message, type = 'info', duration = 3500) {

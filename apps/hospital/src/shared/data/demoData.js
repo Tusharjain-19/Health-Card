@@ -434,7 +434,7 @@ export const DEFAULT_CLINICAL_DATABASE = {
       id: "cns_001",
       healthId: "74839 16251",
       date: "2026-09-28T10:30:00Z",
-      facility: "AIIMS New Delhi — Department of Cardiology",
+      facility: "AIIMS New Delhi: Department of Cardiology",
       clinician: "Dr. Vikram Sethi",
       regNumber: "NMC/MCI-2004/09182",
       kind: "opd",
@@ -680,7 +680,7 @@ export const DEFAULT_CLINICAL_DATABASE = {
     {
       id: "lab_004",
       healthId: "74839 16251",
-      testName: "Lipid Profile — LDL Cholesterol",
+      testName: "Lipid Profile: LDL Cholesterol",
       category: "Lipid Panel",
       collectedAt: "2026-09-28T07:30:00Z",
       reportedAt: "2026-09-28T14:30:00Z",
@@ -751,7 +751,7 @@ export const DEFAULT_CLINICAL_DATABASE = {
       size: "1.4 MB",
       sha256: "8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4",
       verification: "provider_verified",
-      previewText: "RADIOLOGICAL REPORT — CHEST PA\nTrachea central. Bilateral lung fields clear. No focal consolidation, pneumothorax, or pleural effusion. Cardiothoracic ratio within normal limits (<0.5). Both costophrenic angles sharp. Impression: Normal Chest Radiograph."
+      previewText: "RADIOLOGICAL REPORT: CHEST PA\nTrachea central. Bilateral lung fields clear. No focal consolidation, pneumothorax, or pleural effusion. Cardiothoracic ratio within normal limits (<0.5). Both costophrenic angles sharp. Impression: Normal Chest Radiograph."
     },
     {
       id: "doc_rec_03",
@@ -759,7 +759,7 @@ export const DEFAULT_CLINICAL_DATABASE = {
       title: "12-Lead Electrocardiogram (ECG)",
       category: "Cardiology Investigation",
       date: "2026-09-28T10:20:00Z",
-      orgName: "AIIMS New Delhi — Cardiology OPD",
+      orgName: "AIIMS New Delhi: Cardiology OPD",
       author: "Dr. Vikram Sethi",
       mime: "image/jpeg",
       size: "520 KB",

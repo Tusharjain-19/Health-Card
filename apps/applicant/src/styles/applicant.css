@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HealthCard Applicant Portal — World-Class Minimalist Light Theme
+   HealthCard Applicant Portal: World-Class Minimalist Light Theme
    Non-AI colors, authentic typography (IBM Plex Sans, Inter, JetBrains Mono)
    Strictly aligned with Admin Panel design language
    ========================================================================== */
@@ -74,7 +74,7 @@
   letter-spacing: 0.05em;
 }
 
-/* ---------- Navigation — Rectangular buttons behind text with border radius ---------- */
+/* ---------- Navigation: Rectangular buttons behind text with border radius ---------- */
 .header-nav {
   display: flex;
   align-items: center;
@@ -2378,7 +2378,7 @@
   flex-wrap: wrap;
 }
 
-/* ---------- @media print — Official Clean A4 Printout ---------- */
+/* ---------- @media print: Official Clean A4 Printout ---------- */
 @media print {
   body {
     background: #ffffff !important;

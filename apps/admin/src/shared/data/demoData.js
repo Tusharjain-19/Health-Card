@@ -1,5 +1,5 @@
 /**
- * HealthCard — Dedicated Demonstration & Seed Dataset
+ * HealthCard: Dedicated Demonstration & Seed Dataset
  * 
  * This file serves as the single source of truth for mock/demo records,
  * separating demonstration data entirely from application logic and storage routines.

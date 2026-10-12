@@ -377,7 +377,9 @@ export class ApplicantAuth {
                   <div style="font-size:11px; color:var(--text-muted);">Self-Service Account Recovery</div>
                 </div>
               </div>
-              <button type="button" class="btn btn-sm btn-ghost" id="btn-close-forgot-pw" style="color:var(--text-muted); font-size:18px; line-height:1; padding:4px 8px;">✕</button>
+              <button type="button" class="btn btn-sm btn-ghost" id="btn-close-forgot-pw" style="color:var(--text-muted); padding:4px 8px;" title="Close">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
             </div>
 
             <!-- Step 1: Identify Account -->

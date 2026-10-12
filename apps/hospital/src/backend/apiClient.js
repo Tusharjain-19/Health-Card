@@ -1,5 +1,5 @@
 /**
- * HealthCard Hospital Portal — Dedicated Backend Client Service
+ * HealthCard Hospital Portal: Dedicated Backend Client Service
  * Connects the Hospital Panel to the Central Medical Server (Port 5000 / LAN IP).
  * Provides network sync across multiple computers, fallbacks to local store if offline.
  */

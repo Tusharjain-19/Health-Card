@@ -1,5 +1,5 @@
 /**
- * HealthCard Hospital Portal — Physical Document & Prescription Scanner Tool
+ * HealthCard Hospital Portal: Physical Document & Prescription Scanner Tool
  * Allows hospital staff to upload files scanned from office flatbed scanners/printers
  * or capture directly via webcam/scanner hardware feed with high-contrast document enhancement.
  */
@@ -39,7 +39,9 @@ export class DocumentScannerModal {
               <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Upload printer/scanner output or capture paper slips directly into patient HealthCard</p>
             </div>
           </div>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <div class="modal-body">
@@ -60,10 +62,10 @@ export class DocumentScannerModal {
             <div class="form-group" style="margin-bottom: 0;">
               <label class="form-label" style="font-weight: 700;">Document Category:</label>
               <select id="scanner-doc-category" class="form-select">
-                <option value="OPD Doctor Prescription Slip" ${this.defaultCategory.includes('Prescription') ? 'selected' : ''}>📄 OPD Doctor Prescription Slip</option>
-                <option value="Diagnostic Laboratory Test Report" ${this.defaultCategory.includes('Lab') ? 'selected' : ''}>🧪 Diagnostic Lab Test Report</option>
-                <option value="Radiology & Imaging (X-Ray / MRI / USG)" ${this.defaultCategory.includes('Radio') ? 'selected' : ''}>🩻 Radiology (X-Ray / CT / Ultrasound)</option>
-                <option value="Inpatient Ward Procedure & MAR Record" ${this.defaultCategory.includes('IPD') ? 'selected' : ''}>🏥 Inpatient Stay & Nursing Record</option>
+                <option value="OPD Doctor Prescription Slip" ${this.defaultCategory.includes('Prescription') ? 'selected' : ''}>OPD Doctor Prescription Slip</option>
+                <option value="Diagnostic Laboratory Test Report" ${this.defaultCategory.includes('Lab') ? 'selected' : ''}>Diagnostic Lab Test Report</option>
+                <option value="Radiology & Imaging (X-Ray / MRI / USG)" ${this.defaultCategory.includes('Radio') ? 'selected' : ''}>Radiology (X-Ray / CT / Ultrasound)</option>
+                <option value="Inpatient Ward Procedure & MAR Record" ${this.defaultCategory.includes('IPD') ? 'selected' : ''}>Inpatient Stay & Nursing Record</option>
               </select>
             </div>
           </div>
@@ -87,11 +89,13 @@ export class DocumentScannerModal {
 
           <!-- Scanner Source Tabs -->
           <div style="display: flex; gap: 8px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
-            <button type="button" class="btn btn-sm btn-secondary active" id="tab-btn-file" style="font-weight: 700;">
-              📂 Upload Scanned File (PDF / Images)
+            <button type="button" class="btn btn-sm btn-secondary active" id="tab-btn-file" style="font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              Upload Scanned File (PDF / Images)
             </button>
-            <button type="button" class="btn btn-sm btn-ghost" id="tab-btn-camera" style="font-weight: 700;">
-              📷 Direct Scanner / Camera Capture
+            <button type="button" class="btn btn-sm btn-ghost" id="tab-btn-camera" style="font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              Direct Scanner / Camera Capture
             </button>
           </div>
 
@@ -112,7 +116,9 @@ export class DocumentScannerModal {
             <!-- Preview Card -->
             <div id="scanner-file-preview" style="display: none; margin-top: 12px; background: #ffffff; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; align-items: center; justify-content: space-between;">
               <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-size: 24px;">📄</div>
+                <div style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--color-primary);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
                 <div>
                   <div id="preview-file-name" style="font-size: 13px; font-weight: 700; color: var(--text-main);"></div>
                   <div id="preview-file-meta" style="font-size: 11.5px; color: var(--text-muted);"></div>
@@ -129,7 +135,9 @@ export class DocumentScannerModal {
               <canvas id="scanner-capture-canvas" style="max-width: 100%; max-height: 100%; display: none; border-radius: 6px;"></canvas>
               
               <div id="scanner-camera-placeholder" style="text-align: center; padding: 20px;">
-                <div style="font-size: 32px; margin-bottom: 8px;">📷</div>
+                <div style="margin-bottom: 8px; display: flex; justify-content: center; opacity: 0.85;">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                </div>
                 <div style="font-weight: 700; font-size: 14px;">Optical Document Capture Station</div>
                 <div style="font-size: 11.5px; opacity: 0.8; margin-top: 4px;">Connect desktop document camera or use live webcam</div>
                 <button type="button" class="btn btn-sm btn-primary" id="btn-start-camera" style="margin-top: 12px;">
@@ -149,7 +157,7 @@ export class DocumentScannerModal {
               </div>
 
               <button type="button" class="btn btn-sm btn-primary" id="btn-snap-photo" style="display: none;">
-                📸 Capture Scan Snapshot
+                Capture Scan Snapshot
               </button>
             </div>
           </div>
@@ -277,14 +285,14 @@ export class DocumentScannerModal {
         video.style.display = 'none';
         canvas.style.display = 'block';
         guideOverlay.style.display = 'none';
-        snapBtn.textContent = '🔄 Retake Scan';
+        snapBtn.textContent = 'Retake Scan';
         showToast('Document snapshot captured & enhanced!', 'success');
       } else {
         // Retake
         video.style.display = 'block';
         canvas.style.display = 'none';
         guideOverlay.style.display = 'flex';
-        snapBtn.textContent = '📸 Capture Scan Snapshot';
+        snapBtn.textContent = 'Capture Scan Snapshot';
       }
     });
 
@@ -372,9 +380,9 @@ export class DocumentScannerModal {
 
     ctx.font = '14px sans-serif';
     ctx.fillStyle = '#1e293b';
-    ctx.fillText('1. Tab. Telmisartan 40mg — 1 tab once daily in morning (PO)', 50, 180);
-    ctx.fillText('2. Tab. Metformin 500mg SR — 1 tab twice daily after meals', 50, 215);
-    ctx.fillText('3. Tab. Atorvastatin 10mg — 1 tab at bedtime (PO)', 50, 250);
+    ctx.fillText('1. Tab. Telmisartan 40mg - 1 tab once daily in morning (PO)', 50, 180);
+    ctx.fillText('2. Tab. Metformin 500mg SR - 1 tab twice daily after meals', 50, 215);
+    ctx.fillText('3. Tab. Atorvastatin 10mg - 1 tab at bedtime (PO)', 50, 250);
     ctx.fillText('Advice: Low sodium diet, 45 mins brisk walking daily, follow-up after 4 weeks.', 50, 310);
 
     ctx.font = 'italic 14px serif';
@@ -476,7 +484,7 @@ export class DocumentScannerModal {
       hospitalStore.addConsultation(patientId, consultationPayload);
       hospitalStore.logAudit('SCANNER_DOCUMENT_UPLOADED', `Uploaded ${documentRecord.name} for patient ${patientId} by ${doctor}`);
 
-      showToast(`✓ Successfully attached ${documentRecord.name} to patient HealthCard!`, 'success');
+      showToast(`Successfully attached ${documentRecord.name} to patient HealthCard!`, 'success');
       this.stopCamera(overlay);
       overlay.remove();
 

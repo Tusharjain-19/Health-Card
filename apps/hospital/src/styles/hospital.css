@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HealthCard Hospital & Clinician Portal — Layout & Component Styles
+   HealthCard Hospital & Clinician Portal: Layout & Component Styles
    Adheres to Institutional Healthcare Standards (Pure Minimal Light Mode, Clinical Blue #1d4ed8, Red #dc2626)
    ========================================================================== */
 
@@ -13,7 +13,7 @@
 
 /* ==========================================================================
 /* ==========================================================================
-   Header & Institutional Navigation — Clean, Uncluttered & Non-Squishing
+   Header & Institutional Navigation: Clean, Uncluttered & Non-Squishing
    ========================================================================== */
 .hospital-header {
   min-height: 64px;
@@ -70,7 +70,7 @@
   line-height: 1.2;
 }
 
-/* Main Clinical Navigation Bar — Clean Rectangular Buttons with Border Radius */
+/* Main Clinical Navigation Bar: Clean Rectangular Buttons with Border Radius */
 .header-nav {
   display: flex;
   align-items: center;
@@ -754,7 +754,7 @@
 }
 
 /* ==========================================================================
-   Home Page — Fast Clinical Action Grid (OPD / IPD / Scanner)
+   Home Page: Fast Clinical Action Grid (OPD / IPD / Scanner)
    ========================================================================== */
 .fast-action-grid {
   display: grid;

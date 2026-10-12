@@ -1,5 +1,5 @@
 /**
- * HealthCard Citizen & Applicant Portal — Main Application Shell & Hash Router
+ * HealthCard Citizen & Applicant Portal: Main Application Shell & Hash Router
  * Minimal Light Mode architecture strictly matching Admin Panel
  */
 

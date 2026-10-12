@@ -1,5 +1,5 @@
 /**
- * HealthCard Diagnostic Laboratory Portal — Dedicated Backend Client Service
+ * HealthCard Diagnostic Laboratory Portal: Dedicated Backend Client Service
  * Connects the Laboratory & Pathology Portal to the Central Medical Server (Port 5000 / LAN IP).
  * Safe local mock fallback preserved per user requirement.
  */

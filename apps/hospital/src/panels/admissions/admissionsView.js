@@ -1,5 +1,5 @@
 /**
- * HealthCard Hospital Portal — Inpatient Ward & Admissions Overview (IPD)
+ * HealthCard Hospital Portal: Inpatient Ward & Admissions Overview (IPD)
  * Displays active admissions across ICU, CCU, General Wards, and provides 1-click round access.
  */
 

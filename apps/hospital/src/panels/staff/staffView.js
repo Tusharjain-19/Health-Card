@@ -1,5 +1,5 @@
 /**
- * HealthCard Hospital Portal — Hospital Doctors & Clinical Personnel Administration
+ * HealthCard Hospital Portal: Hospital Doctors & Clinical Personnel Administration
  * Implements Item 3 & Item 4: Full Doctor Management (Add, Edit, Update, Schedule, OPD Room, NMC License)
  * Multi-computer synchronised with central backend and local store fallback.
  */
@@ -277,7 +277,9 @@ export class StaffView {
             <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Register Hospital Doctor</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Add attending clinician for OPD prescriptions, diagnostics, and inpatient care</p>
           </div>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <form id="modal-add-doc-form">
@@ -405,7 +407,9 @@ export class StaffView {
             <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Edit Doctor Details & Schedule</h3>
             <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Update clinical assignments, OPD room, timings, and fees</p>
           </div>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <form id="modal-edit-doc-form">
@@ -520,7 +524,9 @@ export class StaffView {
       <div class="modal-dialog">
         <div class="modal-header">
           <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Onboard Healthcare Professional</h3>
-          <button type="button" class="btn btn-sm btn-ghost modal-close">✕</button>
+          <button type="button" class="btn btn-sm btn-ghost modal-close" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
 
         <form id="modal-staff-form">

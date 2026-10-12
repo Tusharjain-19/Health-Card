@@ -170,7 +170,9 @@ export class EmergencyView {
                 class="patient-avatar-img"
                 onerror="this.src='https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(this.member.fullName)}'"
               />
-              <span class="verified-avatar-badge" title="Government Verified Identity">✓</span>
+              <span class="verified-avatar-badge" title="Government Verified Identity">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5"><path d="M20 6L9 17l-5-5"/></svg>
+              </span>
             </div>
 
             <div class="patient-meta-box">
@@ -273,7 +275,9 @@ export class EmergencyView {
               <div class="clinical-box-body">
                 ${isOrganDonor ? `
                   <div class="organ-donor-badge">
-                    <span class="donor-tick">✓</span>
+                    <span class="donor-tick">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5"><path d="M20 6L9 17l-5-5"/></svg>
+                    </span>
                     <div>
                       <strong>Registered Organ Donor (YES)</strong>
                       <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Consent verified under NOTTO National Transplant Framework</div>

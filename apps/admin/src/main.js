@@ -1,5 +1,5 @@
 /**
- * HealthCard — Admin & Card Issuing Portal Entry Point
+ * HealthCard: Admin & Card Issuing Portal Entry Point
  * Exclusively focused on Admin & Card Issuing Management.
  */
 

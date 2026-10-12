@@ -1,5 +1,5 @@
 /**
- * HealthCard Citizen & Applicant Portal — Hero Overview & Landing View (PRD HOME-01)
+ * HealthCard Citizen & Applicant Portal: Hero Overview & Landing View (PRD HOME-01)
  * High-impact hero section with interactive 3D parallax physical card, 4-action grid,
  * "About the HealthCard" deep dive, how it works pipeline, and live trust metrics.
  */
@@ -317,7 +317,10 @@ export class HomeView {
                 </div>
 
                 <div class="spec-footer-badge">
-                  <span>✓ Ministry of Health & Family Welfare Approved</span>
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Ministry of Health & Family Welfare Approved
+                  </span>
                 </div>
               </div>
             </div>

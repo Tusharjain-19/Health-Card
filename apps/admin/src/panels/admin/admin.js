@@ -1868,7 +1868,7 @@ function openRegisterMemberModal(container, onSuccess) {
             <!-- SECTION 4: Contact & Verification (Private / Encrypted) -->
             <div class="modal-section-title">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              <span>4. Verification Contact (Encrypted — Never Publicly Displayed)</span>
+              <span>4. Verification Contact (Encrypted: Never Publicly Displayed)</span>
             </div>
 
             <div class="form-grid">
@@ -2006,7 +2006,7 @@ function openRegisterMemberModal(container, onSuccess) {
       warningBox.innerHTML = `
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         <div>
-          <strong>ID-03 Potential Duplicate Detected:</strong> Existing member found matching ${mob === match.mobile ? 'Mobile Number' : 'Name & DOB'} — 
+          <strong>ID-03 Potential Duplicate Detected:</strong> Existing member found matching ${mob === match.mobile ? 'Mobile Number' : 'Name & DOB'}: 
           <strong>${match.fullName} (${match.healthId})</strong>. Per PRD, duplicates must not be auto-merged.
         </div>
       `;
@@ -2344,7 +2344,7 @@ function openEditMemberModal(member, container, onSuccess) {
         <div class="modal-header">
           <h3 class="modal-title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-            <span>Edit Member & Cardholder Details — ${member.fullName}</span>
+            <span>Edit Member & Cardholder Details: ${member.fullName}</span>
           </h3>
           <button class="modal-close" id="btn-close-edit-member-modal" title="Close Dialog">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -2979,7 +2979,7 @@ function openEditCardModal(card, container, onSuccess) {
         <div class="modal-header">
           <h3 class="modal-title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-            <span>Edit Physical Card Details — ${card.healthId}</span>
+            <span>Edit Physical Card Details: ${card.healthId}</span>
           </h3>
           <button class="modal-close" id="btn-close-edit-card-modal">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -3099,7 +3099,7 @@ function openDeleteCardModal(cardId, container, onSuccess) {
         <div class="modal-header" style="border-bottom: 2px solid #ef4444;">
           <h3 class="modal-title" style="color: #dc2626;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            <span>Delete Physical Card — ${card.healthId}</span>
+            <span>Delete Physical Card: ${card.healthId}</span>
           </h3>
           <button class="modal-close" id="btn-close-delete-card-modal">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -3186,7 +3186,7 @@ function openCardPreviewModal(card, member, container, onUpdate) {
         <div class="modal-header">
           <h3 class="modal-title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-            <span>Physical Card Inspection — ${card.healthId}</span>
+            <span>Physical Card Inspection: ${card.healthId}</span>
           </h3>
           <button class="modal-close" id="btn-close-card-modal" title="Close Preview">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -3335,7 +3335,7 @@ function openBlockCardModal(cardId, container, onSuccess) {
     <div class="modal-backdrop" id="block-card-backdrop">
       <div class="modal">
         <div class="modal-header">
-          <h3 class="modal-title" style="color: #dc2626;">Block Physical Card — ${card.healthId}</h3>
+          <h3 class="modal-title" style="color: #dc2626;">Block Physical Card: ${card.healthId}</h3>
           <button class="modal-close" id="btn-close-block-modal">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
@@ -3400,7 +3400,7 @@ function openEditOrderModal(order, container) {
     <div class="modal-backdrop" id="edit-order-backdrop">
       <div class="modal">
         <div class="modal-header">
-          <h3 class="modal-title">Fulfillment Order — ${order.id}</h3>
+          <h3 class="modal-title">Fulfillment Order: ${order.id}</h3>
           <button class="modal-close" id="btn-close-order-modal">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>

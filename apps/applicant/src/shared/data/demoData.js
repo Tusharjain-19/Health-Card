@@ -1,5 +1,5 @@
 /**
- * HealthCard Citizen & Applicant Portal — Master Demo & Seed Data
+ * HealthCard Citizen & Applicant Portal: Master Demo & Seed Data
  * Centralized dummy dataset for testing, initial seeding, and quick authentication
  */
 

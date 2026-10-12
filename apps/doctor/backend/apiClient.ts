@@ -1,5 +1,5 @@
 /**
- * HealthCard Doctor Portal — Dedicated Backend Client Service
+ * HealthCard Doctor Portal: Dedicated Backend Client Service
  * Connects the Clinician Portal to the Central Medical Server (Port 5000 / LAN IP).
  * Safe local mock fallback preserved per user requirement.
  */
