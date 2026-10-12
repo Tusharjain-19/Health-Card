@@ -218,7 +218,7 @@ export const DEMO_GOOGLE_ACCOUNTS = [
     name: "Tushar Sharma",
     email: "tushar.sharma.in@gmail.com",
     avatarInitial: "T",
-    avatarBg: "#0f766e",
+    avatarBg: "#1d4ed8",
     avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Tushar",
     badgeText: "Recommended",
     badgeClass: "badge-teal"

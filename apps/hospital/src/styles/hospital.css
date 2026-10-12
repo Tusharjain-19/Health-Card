@@ -1,6 +1,6 @@
 /* ==========================================================================
    HealthCard Hospital & Clinician Portal — Layout & Component Styles
-   Adheres to design.md (Pure Minimal Light Mode, Teal #0f766e, Red #dc2626)
+   Adheres to Institutional Healthcare Standards (Pure Minimal Light Mode, Clinical Blue #1d4ed8, Red #dc2626)
    ========================================================================== */
 
 /* Main Layout Structure */
@@ -52,7 +52,7 @@
   justify-content: center;
   color: #ffffff;
   flex-shrink: 0;
-  box-shadow: 0 2px 4px rgba(15, 118, 110, 0.2);
+  box-shadow: 0 2px 4px rgba(29, 78, 216, 0.2);
 }
 
 .brand-title {
@@ -66,7 +66,7 @@
 .brand-subtitle {
   font-size: 11px;
   font-weight: 600;
-  color: #0f766e;
+  color: #1d4ed8;
   line-height: 1.2;
 }
 
@@ -109,10 +109,10 @@
 
 .nav-link.active {
   background-color: #ffffff;
-  color: #0f766e;
-  border: 1px solid #0f766e;
+  color: #1d4ed8;
+  border: 1px solid #1d4ed8;
   font-weight: 700;
-  box-shadow: 0 1px 3px rgba(15, 118, 110, 0.12);
+  box-shadow: 0 1px 3px rgba(29, 78, 216, 0.12);
 }
 
 .header-actions {
@@ -128,9 +128,9 @@
   gap: 6px;
   font-size: 12px;
   font-weight: 700;
-  color: #0f766e;
-  background: #f0fdfa;
-  border: 1px solid #99f6e4;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
@@ -140,15 +140,15 @@
 }
 
 .network-sync-pill:hover {
-  background: #ccfbf1;
-  border-color: #5eead4;
+  background: #dbeafe;
+  border-color: #93c5fd;
 }
 
 .live-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #0f766e;
+  background: #1d4ed8;
   display: inline-block;
   flex-shrink: 0;
 }
@@ -166,7 +166,6 @@
   position: relative;
   white-space: nowrap;
   flex-shrink: 0;
-}
   transition: all var(--transition-speed) ease;
 }
 
@@ -378,7 +377,7 @@
   position: absolute;
   width: 180px;
   height: 180px;
-  border: 2px dashed #14b8a6;
+  border: 2px dashed #1d4ed8;
   border-radius: var(--radius-md);
   box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.45);
   pointer-events: none;
@@ -388,8 +387,8 @@
   position: absolute;
   width: 100%;
   height: 2px;
-  background: #14b8a6;
-  box-shadow: 0 0 8px #14b8a6;
+  background: #2563eb;
+  box-shadow: 0 0 6px #2563eb;
   top: 0;
   animation: laser-scan 2s ease-in-out infinite alternate;
 }
@@ -702,7 +701,7 @@
   .printable-rx-container {
     display: block !important;
     padding: 20px;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-family-sans);
   }
 }
 
@@ -780,24 +779,8 @@
 
 .fast-action-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.08);
-  border-color: #99f6e4;
-}
-
-.fast-action-card.card-opd {
-  border-top: 4px solid #0f766e;
-}
-
-.fast-action-card.card-ipd {
-  border-top: 4px solid #0284c7;
-}
-
-.fast-action-card.card-scan {
-  border-top: 4px solid #d97706;
-}
-
-.fast-action-card.card-staff {
-  border-top: 4px solid #6366f1;
+  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.08);
+  border-color: #bfdbfe;
 }
 
 .fast-card-header {
@@ -808,19 +791,17 @@
 }
 
 .fast-card-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #dbeafe;
 }
-
-.fast-card-icon.opd { background: #f0fdfa; color: #0f766e; }
-.fast-card-icon.ipd { background: #f0f9ff; color: #0284c7; }
-.fast-card-icon.scan { background: #fffbeb; color: #d97706; }
-.fast-card-icon.staff { background: #eef2ff; color: #6366f1; }
 
 .fast-card-title {
   font-size: 15.5px;
@@ -902,8 +883,8 @@
 }
 
 .scan-filter-btn.active {
-  background: #0f766e;
+  background: #1d4ed8;
   color: #ffffff;
-  border-color: #0f766e;
+  border-color: #1d4ed8;
 }
 

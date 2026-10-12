@@ -10,13 +10,13 @@
   --bg-surface-subtle: #f1f5f9;
   --bg-surface-hover: #f8fafc;
 
-  /* Primary Brand — Deep Clinical Teal */
-  --color-primary: #0f766e;
-  --color-primary-hover: #115e59;
-  --color-primary-active: #134e4a;
-  --color-primary-light: #f0fdfa;
-  --color-primary-border: #99f6e4;
-  --color-primary-text: #0f766e;
+  /* Primary Brand — Institutional Clinical Blue (Clean, Non-AI, Trusted Healthcare) */
+  --color-primary: #1d4ed8;
+  --color-primary-hover: #1e40af;
+  --color-primary-active: #172554;
+  --color-primary-light: #eff6ff;
+  --color-primary-border: #bfdbfe;
+  --color-primary-text: #1d4ed8;
 
   /* Text & Contrast */
   --text-main: #0f172a;       /* Slate 900 */
@@ -47,10 +47,10 @@
   --status-blue-text: #1d4ed8;
   --status-blue-border: #bfdbfe;
 
-  /* Typography */
-  --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-family-heading: 'IBM Plex Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-family-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  /* Typography — Native System Fonts */
+  --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-heading: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: ui-monospace, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
 
   /* Elevation */
   --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
@@ -214,9 +214,9 @@ button, input, select, textarea {
   line-height: 1.35;
 }
 .badge-teal {
-  background-color: #f0fdfa;
-  color: #0f766e;
-  border-color: #99f6e4;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
 }
 .badge-green {
   background-color: #ecfdf5;

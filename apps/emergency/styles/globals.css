@@ -1,12 +1,19 @@
-/* Standalone CSS for Emergency Responder Portal — No shared UI coupling */
+/* Standalone CSS for Emergency Responder Portal — Native System Typography & Clinical Light Palette */
 :root {
-  --primary: #0f766e;
+  --primary: #1d4ed8;
+  --primary-hover: #1e40af;
+  --emergency: #dc2626;
   --bg: #f8fafc;
+  --surface: #ffffff;
+  --border: #e2e8f0;
   --text: #0f172a;
+  --text-muted: #64748b;
 }
+
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   background-color: var(--bg);
   color: var(--text);
+  -webkit-font-smoothing: antialiased;
 }

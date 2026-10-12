@@ -853,24 +853,24 @@ export class ApplicantDashboard {
         grad.addColorStop(0.6, '#1e40af');
         grad.addColorStop(1, '#3b82f6');
       } else {
-        grad.addColorStop(0, '#064e47');
-        grad.addColorStop(0.6, '#0f766e');
-        grad.addColorStop(1, '#14b8a6');
+        grad.addColorStop(0, '#1e3a8a');
+        grad.addColorStop(0.6, '#1d4ed8');
+        grad.addColorStop(1, '#2563eb');
       }
       drawRoundRect(30, 30, 450, 300, 16, grad);
 
       // Front Header
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 12px "IBM Plex Sans", sans-serif';
+      ctx.font = 'bold 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText('NATIONAL HEALTH REGISTRY', 60, 65);
-      ctx.font = '9px "Inter", sans-serif';
+      ctx.font = '9px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillStyle = 'rgba(255,255,255,0.8)';
       ctx.fillText('MINISTRY OF HEALTH & FAMILY WELFARE', 60, 80);
 
       // CR80 PVC badge
       drawRoundRect(400, 50, 60, 20, 4, 'rgba(255,255,255,0.2)');
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 9px "Inter", sans-serif';
+      ctx.font = 'bold 9px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText('CR80 PVC', 408, 64);
 
       // Photo Box (x=60, y=105, w=70, h=88)
@@ -878,10 +878,10 @@ export class ApplicantDashboard {
 
       // Citizen Details
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 16px "IBM Plex Sans", sans-serif';
+      ctx.font = 'bold 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText(this.member.fullName.toUpperCase(), 145, 125);
 
-      ctx.font = '11.5px "Inter", sans-serif';
+      ctx.font = '11.5px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillStyle = 'rgba(255,255,255,0.9)';
       ctx.fillText(`DOB: ${this.member.dob} | ${this.member.gender}`, 145, 145);
 
@@ -889,16 +889,16 @@ export class ApplicantDashboard {
       ctx.fillText('Blood Group:', 145, 168);
       drawRoundRect(225, 154, 46, 20, 4, '#dc2626');
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 12px "Inter", sans-serif';
+      ctx.font = 'bold 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText(this.member.bloodGroup || 'O+', 235, 169);
 
       // 10-Digit National Health ID Block
       drawRoundRect(145, 190, 200, 36, 6, 'rgba(0,0,0,0.3)');
       ctx.fillStyle = 'rgba(255,255,255,0.8)';
-      ctx.font = '8px "Inter", sans-serif';
+      ctx.font = '8px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText('NATIONAL HEALTH ID', 155, 203);
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 16px "JetBrains Mono", monospace';
+      ctx.font = 'bold 16px ui-monospace, "SF Mono", Consolas, monospace';
       ctx.fillText(this.member.healthId, 155, 220);
 
       // Front Footer
@@ -909,7 +909,7 @@ export class ApplicantDashboard {
       ctx.stroke();
 
       ctx.fillStyle = 'rgba(255,255,255,0.85)';
-      ctx.font = '9px "Inter", sans-serif';
+      ctx.font = '9px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText('Encrypted Dynamic Token • ISO/IEC 7810 Standard', 60, 310);
       ctx.fillText('OFFICIAL CITIZEN CARD', 330, 310);
 
@@ -933,13 +933,13 @@ export class ApplicantDashboard {
 
       // Address & Emergency Info
       ctx.fillStyle = 'rgba(255,255,255,0.9)';
-      ctx.font = '10px "Inter", sans-serif';
+      ctx.font = '10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.fillText(`Address: ${this.member.address?.street || ''}, ${this.member.address?.city || ''}`, 650, 145);
       ctx.fillText(`${this.member.address?.state || ''} - ${this.member.address?.pinCode || ''}`, 650, 160);
 
       ctx.fillText(`Emergency: ${this.member.emergencyContact?.name || ''} (${this.member.emergencyContact?.relation || 'Family'})`, 650, 185);
       ctx.fillStyle = '#38bdf8';
-      ctx.font = 'bold 11px "JetBrains Mono", monospace';
+      ctx.font = 'bold 11px ui-monospace, "SF Mono", Consolas, monospace';
       ctx.fillText(`+91 ${this.member.emergencyContact?.phone || ''}`, 650, 202);
 
       ctx.fillStyle = 'rgba(255,255,255,0.7)';

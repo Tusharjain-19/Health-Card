@@ -108,11 +108,11 @@
 }
 
 .nav-link.active {
-  background-color: #f0fdfa;
-  border-color: #99f6e4;
-  color: var(--color-primary);
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
   font-weight: 600;
-  box-shadow: 0 1px 2px rgba(15, 118, 110, 0.08);
+  box-shadow: 0 1px 2px rgba(29, 78, 216, 0.08);
 }
 
 .nav-link svg {
@@ -534,7 +534,7 @@
 .card-serial-text {
   font-family: var(--font-family-mono);
   font-weight: 600;
-  color: #0f766e;
+  color: #1d4ed8;
   font-size: 12.5px;
   background: transparent !important;
   border: none !important;
@@ -643,9 +643,9 @@
 }
 
 .kyc-badge-aadhaar {
-  background-color: #f0fdfa;
-  color: #0f766e;
-  border: 1px solid #99f6e4;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
 }
 
 .kyc-badge-dl {
@@ -827,7 +827,7 @@
 
 .scanner-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #0f766e, #14b8a6);
+  background: #1d4ed8;
   width: 0%;
   transition: width 0.3s ease;
 }
@@ -853,7 +853,7 @@
 .dob-select-grid select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
 }
 
 .preview-media-card {
@@ -861,8 +861,8 @@
   align-items: center;
   gap: 14px;
   padding: 12px 16px;
-  background-color: #f0fdfa;
-  border: 1px solid #99f6e4;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
   border-radius: var(--radius-md);
   margin-top: 10px;
   overflow: hidden;
@@ -1132,9 +1132,9 @@ body.modal-open {
 }
 
 .alert-info {
-  background-color: #f0fdfa;
-  border: 1px solid #99f6e4;
-  color: #0f766e;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
 }
 
 .alert-danger {
@@ -1179,11 +1179,11 @@ body.modal-open {
   user-select: none;
 }
 
-/* Template 1: Classic Clinical Teal */
+/* Template 1: Classic Clinical Blue */
 .template-teal {
-  background: linear-gradient(135deg, #0f766e 0%, #064e3b 100%);
+  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
   color: #ffffff;
-  border: 1px solid #042f2e;
+  border: 1px solid #1e3a8a;
 }
 
 /* Template 2: Slate Enterprise */
@@ -1332,7 +1332,7 @@ body.modal-open {
 
 .card-helpline {
   font-weight: 600;
-  color: #0f766e;
+  color: #1d4ed8;
 }
 
 /* Kanban Fulfillment Board */

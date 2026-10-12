@@ -39,14 +39,14 @@ export function showToast(message, type = 'info', duration = 3500) {
     transition: all 0.2s ease;
     transform: translateY(20px);
     opacity: 0;
-    border-left: 4px solid #0f766e;
+    border-left: 4px solid #1d4ed8;
     border-top: 1px solid #e2e8f0;
     border-right: 1px solid #e2e8f0;
     border-bottom: 1px solid #e2e8f0;
   `;
 
   let icon = `
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2">
       <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
     </svg>
   `;

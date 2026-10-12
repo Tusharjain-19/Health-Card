@@ -89,7 +89,7 @@ export class ServicesView {
               ` : services.map(s => `
                 <tr>
                   <td>
-                    <span style="font-family: monospace; font-weight: 700; font-size: 11.5px; color: #0f766e; background: #f0fdfa; border: 1px solid #99f6e4; padding: 3px 8px; border-radius: 4px;">
+                    <span style="font-family: monospace; font-weight: 700; font-size: 11.5px; color: #1d4ed8; background: #eff6ff; border: 1px solid #bfdbfe; padding: 3px 8px; border-radius: 4px;">
                       ${s.code}
                     </span>
                   </td>

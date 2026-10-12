@@ -236,7 +236,7 @@
 }
 
 .template-teal {
-  background: linear-gradient(135deg, #064e47 0%, #0f766e 60%, #14b8a6 100%);
+  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #3b82f6 100%);
 }
 .template-slate {
   background: linear-gradient(135deg, #020617 0%, #0f172a 60%, #1e293b 100%);
@@ -397,7 +397,7 @@
   box-shadow: 0 0 0 2px var(--color-primary);
   transform: scale(1.1);
 }
-.theme-pill-teal { background: #0f766e; }
+.theme-pill-teal { background: #1d4ed8; }
 .theme-pill-slate { background: #0f172a; }
 .theme-pill-blue { background: #1d4ed8; }
 
@@ -765,8 +765,8 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #0f766e;
-  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.25);
+  background: #1d4ed8;
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.2);
   animation: pulse-ring 1.8s infinite ease-in-out;
 }
 
@@ -778,10 +778,10 @@
 }
 
 .stepper-node.current .node-icon-circle {
-  background: #f0fdfa;
-  border-color: #0f766e;
-  color: #0f766e;
-  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.15);
+  background: #eff6ff;
+  border-color: #1d4ed8;
+  color: #1d4ed8;
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.12);
 }
 
 .stepper-node .node-title {
@@ -795,7 +795,7 @@
   color: #065f46;
 }
 .stepper-node.current .node-title {
-  color: #0f766e;
+  color: #1d4ed8;
 }
 .stepper-node.upcoming .node-title {
   color: #94a3b8;
@@ -814,8 +814,8 @@
   color: #047857;
 }
 .stepper-node.current .node-status-tag {
-  background: #ccfbf1;
-  color: #0f766e;
+  background: #dbeafe;
+  color: #1d4ed8;
 }
 .stepper-node.upcoming .node-status-tag {
   background: #f1f5f9;
@@ -844,7 +844,7 @@
 }
 
 .stepper-arrow-connector.active .arrow-line-track {
-  background: linear-gradient(90deg, #10b981, #0f766e);
+  background: linear-gradient(90deg, #10b981, #1d4ed8);
 }
 
 .arrow-pointer {
@@ -862,7 +862,7 @@
   color: #10b981;
 }
 .stepper-arrow-connector.active .arrow-pointer {
-  color: #0f766e;
+  color: #1d4ed8;
 }
 
 /* 2. Detailed Vertical Milestone Timeline with Connected Arrow Lines */
@@ -928,10 +928,10 @@
 }
 
 .vertical-step-row.current .vertical-step-node {
-  background: #f0fdfa;
-  border-color: #0f766e;
-  color: #0f766e;
-  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.15);
+  background: #eff6ff;
+  border-color: #1d4ed8;
+  color: #1d4ed8;
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.12);
 }
 
 .vertical-step-card {
@@ -944,8 +944,8 @@
 }
 
 .vertical-step-row.current .vertical-step-card {
-  border-color: #99f6e4;
-  background: #f0fdfa;
+  border-color: #bfdbfe;
+  background: #eff6ff;
 }
 
 /* 3. Logistics & Details Grid */
@@ -1090,7 +1090,7 @@
   width: 44px;
   height: 44px;
   border-radius: 8px;
-  background: #0f766e;
+  background: #1d4ed8;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1122,7 +1122,7 @@
   font-family: var(--font-family-heading);
   font-size: 12.5px;
   font-weight: 800;
-  color: #0f766e;
+  color: #1d4ed8;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -2970,10 +2970,7 @@
 }
 
 .hero-title-highlight {
-  color: var(--color-primary);
-  background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #1d4ed8;
 }
 
 .hero-subtitle {
@@ -3107,7 +3104,7 @@
 }
 
 .hero-physical-card.card-front {
-  background: linear-gradient(135deg, #064e47 0%, #0f766e 65%, #14b8a6 100%);
+  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 65%, #2563eb 100%);
 }
 
 .hero-physical-card.card-back {

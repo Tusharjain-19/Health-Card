@@ -153,9 +153,9 @@ export class HospitalApp {
                 <div style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; font-size: 12.5px;">
                   <div>
                     <span style="font-weight: 700; color: var(--text-main);">${u.name}:</span>
-                    <code style="font-family: monospace; color: #0f766e; margin-left: 6px; font-weight: 700;">${u.hospitalUrl}</code>
+                    <code style="font-family: monospace; color: #1d4ed8; margin-left: 6px; font-weight: 700;">${u.hospitalUrl}</code>
                   </div>
-                  <button type="button" class="btn btn-sm btn-ghost btn-copy-url" data-url="${u.hospitalUrl}" style="color: #0f766e;">Copy</button>
+                  <button type="button" class="btn btn-sm btn-ghost btn-copy-url" data-url="${u.hospitalUrl}" style="color: #1d4ed8;">Copy</button>
                 </div>
               `).join('') : `
                 <div style="background: #f8fafc; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; font-size: 12.5px;">

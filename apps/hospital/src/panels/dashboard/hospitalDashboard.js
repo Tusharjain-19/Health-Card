@@ -130,7 +130,7 @@ export class HospitalDashboard {
             </div>
 
             <div class="fast-card-actions">
-              <button type="button" class="btn btn-sm btn-primary btn-fast-open-scanner" style="background: #d97706; border-color: #d97706;">
+              <button type="button" class="btn btn-sm btn-primary btn-fast-open-scanner">
                 🖨️ Launch Scanner Tool
               </button>
             </div>

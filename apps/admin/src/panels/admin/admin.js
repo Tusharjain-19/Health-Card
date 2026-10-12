@@ -368,7 +368,7 @@ function renderDashboardView(target, container) {
       <div class="stat-card">
         <div class="stat-header">
           <span class="stat-label">Total Registered Members</span>
-          <div class="stat-icon" style="color: #0f766e; background-color: #f0fdfa;">
+          <div class="stat-icon" style="color: #1d4ed8; background-color: #eff6ff;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
           </div>
         </div>
@@ -1627,7 +1627,7 @@ function openRegisterMemberModal(container, onSuccess) {
               <div class="form-group form-dob-group">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                   <label style="font-weight: 600; font-size: 13px; color: var(--text-main); margin-bottom: 0;">Date of Birth *</label>
-                  <span id="mem-dob-age-badge" style="font-size: 11px; font-weight: 600; color: #0f766e; background: #ccfbf1; padding: 1px 8px; border-radius: 12px; display: none;">Age: --</span>
+                  <span id="mem-dob-age-badge" style="font-size: 11px; font-weight: 600; color: #1d4ed8; background: #eff6ff; border: 1px solid #bfdbfe; padding: 1px 8px; border-radius: 12px; display: none;">Age: --</span>
                 </div>
                 <div class="dob-select-grid">
                   <select id="mem-dob-day" class="form-control" required>
@@ -2422,7 +2422,7 @@ function openEditMemberModal(member, container, onSuccess) {
               <div class="form-group form-dob-group">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                   <label style="font-weight: 600; font-size: 13px; color: var(--text-main); margin-bottom: 0;">Date of Birth *</label>
-                  <span id="edit-mem-dob-age-badge" style="font-size: 11px; font-weight: 600; color: #0f766e; background: #ccfbf1; padding: 1px 8px; border-radius: 12px;">Age: ${calculateAge(member.dob)} yrs</span>
+                  <span id="edit-mem-dob-age-badge" style="font-size: 11px; font-weight: 600; color: #1d4ed8; background: #eff6ff; border: 1px solid #bfdbfe; padding: 1px 8px; border-radius: 12px;">Age: ${calculateAge(member.dob)} yrs</span>
                 </div>
                 <div class="dob-select-grid">
                   <select id="edit-mem-dob-day" class="form-control" required>

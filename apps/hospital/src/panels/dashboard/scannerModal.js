@@ -31,7 +31,7 @@ export class DocumentScannerModal {
       <div class="modal-dialog" style="max-width: 680px;">
         <div class="modal-header">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="width: 34px; height: 34px; border-radius: 8px; background: #fffbeb; color: #d97706; display: flex; align-items: center; justify-content: center;">
+            <div style="width: 34px; height: 34px; border-radius: 8px; background: #eff6ff; color: #1d4ed8; display: flex; align-items: center; justify-content: center;">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
             </div>
             <div>
@@ -202,8 +202,8 @@ export class DocumentScannerModal {
 
     dropzone.addEventListener('dragover', (e) => {
       e.preventDefault();
-      dropzone.style.borderColor = '#0f766e';
-      dropzone.style.background = '#f0fdfa';
+      dropzone.style.borderColor = '#1d4ed8';
+      dropzone.style.background = '#eff6ff';
     });
 
     dropzone.addEventListener('dragleave', () => {
@@ -346,7 +346,7 @@ export class DocumentScannerModal {
     // Draw simulated scanned paper document
     ctx.fillStyle = '#f8fafc';
     ctx.fillRect(0, 0, 800, 500);
-    ctx.strokeStyle = '#0f766e';
+    ctx.strokeStyle = '#1d4ed8';
     ctx.lineWidth = 3;
     ctx.strokeRect(20, 20, 760, 460);
 
@@ -367,7 +367,7 @@ export class DocumentScannerModal {
     ctx.stroke();
 
     ctx.font = 'bold 16px sans-serif';
-    ctx.fillStyle = '#0f766e';
+    ctx.fillStyle = '#1d4ed8';
     ctx.fillText('Rx (Medical Prescription & Advice):', 40, 140);
 
     ctx.font = '14px sans-serif';
@@ -378,7 +378,7 @@ export class DocumentScannerModal {
     ctx.fillText('Advice: Low sodium diet, 45 mins brisk walking daily, follow-up after 4 weeks.', 50, 310);
 
     ctx.font = 'italic 14px serif';
-    ctx.fillStyle = '#0f766e';
+    ctx.fillStyle = '#1d4ed8';
     ctx.fillText('Signed: Dr. Vikram Sethi, MD, DM (Cardiology), NMC-2004/09182', 360, 430);
 
     canvas.style.display = 'block';

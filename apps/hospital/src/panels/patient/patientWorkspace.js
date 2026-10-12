@@ -371,7 +371,7 @@ export class PatientWorkspace {
                       ${ev.payload.uploadedReports.map(rep => `
                         <span class="badge badge-blue" style="font-size: 11px; display: inline-flex; align-items: center; gap: 4px;">
                           📄 ${rep.name} (${rep.size || 'Attached'})
-                          ${rep.dataUrl ? `<a href="${rep.dataUrl}" target="_blank" style="margin-left: 4px; color: #0f766e; font-weight: 700; text-decoration: underline;">Preview</a>` : ''}
+                          ${rep.dataUrl ? `<a href="${rep.dataUrl}" target="_blank" style="margin-left: 4px; color: #1d4ed8; font-weight: 700; text-decoration: underline;">Preview</a>` : ''}
                         </span>
                       `).join('')}
                     </div>
@@ -662,13 +662,13 @@ export class PatientWorkspace {
               <div style="font-size: 12.5px; color: var(--text-secondary);">
                 Attach paper prescription scans, prior records, ECG traces, or lab result PDFs to this e-prescription.
               </div>
-              <span style="font-size: 11.5px; color: #0f766e; font-weight: 700;" id="consult-file-count-badge">${this.pendingUploadedReports.length} reports attached</span>
+              <span style="font-size: 11.5px; color: #1d4ed8; font-weight: 700;" id="consult-file-count-badge">${this.pendingUploadedReports.length} reports attached</span>
             </div>
             <div id="consult-uploaded-chips-list" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
               ${this.pendingUploadedReports.map((file, idx) => `
                 <div style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 6px; font-size: 12px;">
                   <span>📄 <strong>${file.name}</strong> (${file.size})</span>
-                  ${file.dataUrl ? `<a href="${file.dataUrl}" target="_blank" style="color: #0f766e; font-weight: 600; text-decoration: underline;">Preview</a>` : ''}
+                  ${file.dataUrl ? `<a href="${file.dataUrl}" target="_blank" style="color: #1d4ed8; font-weight: 600; text-decoration: underline;">Preview</a>` : ''}
                   <button type="button" style="border: none; background: none; color: #dc2626; cursor: pointer; font-weight: bold;" data-idx="${idx}" class="btn-remove-report">✕</button>
                 </div>
               `).join('')}
@@ -713,7 +713,7 @@ export class PatientWorkspace {
       chipsList.innerHTML = this.pendingUploadedReports.map((file, idx) => `
         <div style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 6px; font-size: 12px;">
           <span>📄 <strong>${file.name}</strong> (${file.size})</span>
-          ${file.dataUrl ? `<a href="${file.dataUrl}" target="_blank" style="color: #0f766e; font-weight: 600; text-decoration: underline;">Preview</a>` : ''}
+          ${file.dataUrl ? `<a href="${file.dataUrl}" target="_blank" style="color: #1d4ed8; font-weight: 600; text-decoration: underline;">Preview</a>` : ''}
           <button type="button" style="border: none; background: none; color: #dc2626; cursor: pointer; font-weight: bold;" data-idx="${idx}" class="btn-remove-report">✕</button>
         </div>
       `).join('');
@@ -888,18 +888,18 @@ export class PatientWorkspace {
     if (!slot) return;
 
     slot.innerHTML = `
-      <div style="max-width: 800px; margin: 0 auto; border: 2px solid #0f766e; padding: 24px; border-radius: 8px;">
+      <div style="max-width: 800px; margin: 0 auto; border: 2px solid #1d4ed8; padding: 24px; border-radius: 8px;">
         <!-- Letterhead Header -->
-        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #0f766e; padding-bottom: 16px; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #1d4ed8; padding-bottom: 16px; margin-bottom: 16px;">
           <div>
-            <h1 style="font-size: 22px; font-weight: 800; color: #0f766e; margin: 0;">ALL INDIA INSTITUTE OF MEDICAL SCIENCES</h1>
+            <h1 style="font-size: 22px; font-weight: 800; color: #1d4ed8; margin: 0;">ALL INDIA INSTITUTE OF MEDICAL SCIENCES</h1>
             <p style="font-size: 13px; color: #334155; margin: 2px 0 0 0;">Ansari Nagar, New Delhi - 110029 • Outpatient Clinical Services</p>
             <p style="font-size: 11px; color: #64748b; margin: 2px 0 0 0;">Clinical Establishment Registration: HOSP-DL-00192 • NABH Accredited</p>
           </div>
           <div style="text-align: right;">
             <div style="font-size: 14px; font-weight: 700; color: #0f172a;">${staff.fullName}</div>
             <div style="font-size: 12px; color: #64748b;">${staff.title}</div>
-            <div style="font-size: 11px; font-family: monospace; color: #0f766e; font-weight: 700;">Reg No: ${staff.regNumber || 'NMC-2004/09182'}</div>
+            <div style="font-size: 11px; font-family: monospace; color: #1d4ed8; font-weight: 700;">Reg No: ${staff.regNumber || 'NMC-2004/09182'}</div>
           </div>
         </div>
 
@@ -912,7 +912,7 @@ export class PatientWorkspace {
         </div>
 
         <!-- Rx Symbol -->
-        <div style="font-size: 28px; font-weight: 800; font-family: serif; color: #0f766e; margin-bottom: 10px;">℞</div>
+        <div style="font-size: 28px; font-weight: 800; font-family: serif; color: #1d4ed8; margin-bottom: 10px;">℞</div>
 
         <!-- Medicines Table -->
         <table style="width: 100%; border-collapse: collapse; font-size: 13.5px; margin-bottom: 24px;">
@@ -1200,16 +1200,16 @@ export class PatientWorkspace {
             <line x1="0" y1="90" x2="600" y2="90" stroke="#a7f3d0" stroke-dasharray="3 3" />
             
             <!-- Trend line -->
-            <polyline fill="none" stroke="#0f766e" stroke-width="3" points="50,20 200,42 380,50 540,60" />
+            <polyline fill="none" stroke="#1d4ed8" stroke-width="3" points="50,20 200,42 380,50 540,60" />
 
             <!-- Data points -->
-            <circle cx="50" cy="20" r="5" fill="#0f766e" />
+            <circle cx="50" cy="20" r="5" fill="#1d4ed8" />
             <text x="50" y="10" font-size="11" font-weight="700" text-anchor="middle" fill="#0f172a">7.8% (2024)</text>
 
-            <circle cx="200" cy="42" r="5" fill="#0f766e" />
+            <circle cx="200" cy="42" r="5" fill="#1d4ed8" />
             <text x="200" y="32" font-size="11" font-weight="700" text-anchor="middle" fill="#0f172a">7.1% (Feb '25)</text>
 
-            <circle cx="380" cy="50" r="5" fill="#0f766e" />
+            <circle cx="380" cy="50" r="5" fill="#1d4ed8" />
             <text x="380" y="40" font-size="11" font-weight="700" text-anchor="middle" fill="#0f172a">6.8% (Oct '25)</text>
 
             <circle cx="540" cy="60" r="6" fill="#15803d" stroke="#ffffff" stroke-width="2" />
@@ -2275,7 +2275,7 @@ export class PatientWorkspace {
         </div>
 
         <div class="modal-body">
-          <div style="background: #0f172a; border-radius: var(--radius-lg); padding: 24px; color: #f8fafc; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.6; white-space: pre-wrap; max-height: 380px; overflow-y: auto;">
+          <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; color: var(--text-main); font-family: var(--font-family-sans); font-size: 13px; line-height: 1.6; white-space: pre-wrap; max-height: 380px; overflow-y: auto; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);">
 ${doc.previewText || 'Cryptographically verified clinical document content.'}
           </div>
 
