@@ -58,7 +58,8 @@ export const DEFAULT_SEED_CARDS = [
     token: "tok_7483916251",
     status: "Active",
     template: "teal",
-    qrCodeUrl: "https://hc.national.gov.in/c/7483916251"
+    qrCodeUrl: "https://hc.national.gov.in/c/7483916251",
+    qrPayload: "https://hc.national.gov.in/c/7483916251?tok=tok_7483916251"
   },
   {
     id: "card_002",
@@ -68,7 +69,8 @@ export const DEFAULT_SEED_CARDS = [
     token: "tok_8192034719",
     status: "Active",
     template: "slate",
-    qrCodeUrl: "https://hc.national.gov.in/c/8192034719"
+    qrCodeUrl: "https://hc.national.gov.in/c/8192034719",
+    qrPayload: "https://hc.national.gov.in/c/8192034719?tok=tok_8192034719"
   },
   {
     id: "card_004",
@@ -78,7 +80,8 @@ export const DEFAULT_SEED_CARDS = [
     token: "tok_9021854310",
     status: "Active",
     template: "teal",
-    qrCodeUrl: "https://hc.national.gov.in/c/9021854310"
+    qrCodeUrl: "https://hc.national.gov.in/c/9021854310",
+    qrPayload: "https://hc.national.gov.in/c/9021854310?tok=tok_9021854310"
   }
 ];
 

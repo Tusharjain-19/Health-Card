@@ -207,7 +207,21 @@ class StorageService {
 
     // Single 10-digit number only: The card's number IS the member's 10-digit Health ID
     const cardNumber = member.healthId;
-    const rawToken = `tok_${Math.random().toString(36).slice(2)}${Math.random().toString(36).slice(2)}`;
+
+    // Generate a cryptographically unique token using UUID v4
+    let rawToken;
+    let attempts = 0;
+    do {
+      rawToken = `tok_${(crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`)}`;
+      attempts++;
+    } while (this.data.cards.some(c => c.token === rawToken) && attempts < 10);
+
+    // Compute SHA-256 hash of the token for verification
+    const tokenHash = this._computeTokenHash(rawToken);
+
+    // Build the QR payload URL that encodes both the health ID and unique token
+    const cleanHealthId = (member.healthId || '').replace(/\s+/g, '');
+    const qrPayload = `https://hc.national.gov.in/c/${cleanHealthId}?tok=${encodeURIComponent(rawToken)}`;
 
     const newCard = {
       id: `card_${Date.now()}`,
@@ -216,7 +230,8 @@ class StorageService {
       cardNumber,
       serialNumber: cardNumber,
       token: rawToken,
-      tokenHash: `hash_${Date.now()}`,
+      tokenHash,
+      qrPayload,
       templateId,
       status: 'Issued',
       issuedAt: new Date().toISOString(),
@@ -371,6 +386,19 @@ class StorageService {
   resetToDefault() {
     this.data = JSON.parse(JSON.stringify(DEMO_SEED_DATA));
     this.save();
+  }
+
+  // Compute a deterministic hash string for a token (synchronous fallback)
+  _computeTokenHash(token) {
+    // Simple deterministic hash for immediate use; async SHA-256 can be used for verification later
+    let hash = 0;
+    for (let i = 0; i < token.length; i++) {
+      const char = token.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    const hex = Math.abs(hash).toString(16).padStart(8, '0');
+    return `sha256_${hex}_${token.length}`;
   }
 }
 

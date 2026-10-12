@@ -337,6 +337,119 @@ class HospitalStorageService {
     return (this.centralData.members || []).find(m => (m.mobile || '').replace(/\D/g, '') === clean) || null;
   }
 
+  // Fast Hospital Registration for Walk-in / New Patients
+  registerPatient(patientData) {
+    this.refresh();
+    if (!patientData.fullName) throw new Error('Patient name is required');
+
+    // Generate or format 10-digit Health ID
+    let rawHealthId = (patientData.healthId || '').replace(/\D/g, '');
+    if (rawHealthId.length !== 10) {
+      // Auto-generate fresh 10-digit number
+      let candidate = '';
+      let isUnique = false;
+      while (!isUnique) {
+        candidate = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+        const existing = (this.centralData.members || []).find(m => (m.healthId || '').replace(/\s+/g, '') === candidate);
+        if (!existing) isUnique = true;
+      }
+      rawHealthId = candidate;
+    }
+
+    const formattedHealthId = `${rawHealthId.slice(0, 5)} ${rawHealthId.slice(5, 10)}`;
+    const cleanId = rawHealthId;
+    const memberId = `mem_${Date.now()}`;
+
+    // Avatar by gender
+    const defaultAvatar = patientData.gender === 'Female'
+      ? 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80'
+      : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80';
+
+    // Calculate DOB from age if needed
+    let dob = patientData.dob;
+    if (!dob && patientData.age) {
+      const birthYear = new Date().getFullYear() - parseInt(patientData.age, 10);
+      dob = `${birthYear}-01-01`;
+    } else if (!dob) {
+      dob = '1995-01-01';
+    }
+
+    const newMember = {
+      id: memberId,
+      fullName: patientData.fullName.trim(),
+      healthId: formattedHealthId,
+      dob: dob,
+      gender: patientData.gender || 'Male',
+      mobile: patientData.mobile ? patientData.mobile.replace(/\D/g, '').slice(-10) : '9876543210',
+      bloodGroup: patientData.bloodGroup || 'O+',
+      guardianName: patientData.guardianName || '',
+      address: patientData.address || 'Civil Lines',
+      city: patientData.city || 'New Delhi',
+      state: patientData.state || 'Delhi',
+      pincode: patientData.pincode || '110001',
+      photoUrl: patientData.photoUrl || defaultAvatar,
+      emergencyContact: {
+        name: patientData.guardianName || 'Relative',
+        phone: patientData.mobile ? `+91 ${patientData.mobile}` : '+91 9876543210'
+      },
+      kyc: {
+        status: "Verified",
+        documentType: "Aadhaar / Health ID (Hospital Counter)",
+        verifiedAt: new Date().toISOString()
+      },
+      registeredAt: new Date().toISOString()
+    };
+
+    // Linked Card Object
+    const cardToken = `tok_${cleanId}`;
+    const qrPayload = `https://hc.national.gov.in/c/${cleanId}`;
+    const newCard = {
+      id: `card_${Date.now()}`,
+      memberId: memberId,
+      healthId: formattedHealthId,
+      serialNumber: formattedHealthId,
+      token: cardToken,
+      qrPayload: qrPayload,
+      status: "Active",
+      template: "teal",
+      issuedAt: new Date().toISOString(),
+      qrCodeUrl: `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrPayload)}`
+    };
+
+    if (!this.centralData.members) this.centralData.members = [];
+    if (!this.centralData.cards) this.centralData.cards = [];
+
+    this.centralData.members.unshift(newMember);
+    this.centralData.cards.unshift(newCard);
+    this.saveCentral();
+
+    // Mark verified in session
+    sessionStorage.setItem(`id_confirmed_${cleanId}`, 'true');
+
+    // Initialize vitals if provided
+    if (patientData.vitals) {
+      if (!this.clinicalData.vitals) this.clinicalData.vitals = {};
+      this.clinicalData.vitals[cleanId] = {
+        ...patientData.vitals,
+        recordedAt: new Date().toISOString(),
+        recordedBy: this.getCurrentStaff().fullName
+      };
+      this.saveClinical();
+    }
+
+    this.logAudit({
+      action: "PATIENT_REGISTERED",
+      target: `${newMember.fullName} (${formattedHealthId})`,
+      details: `New patient registered at hospital counter by ${this.getCurrentStaff().fullName}. Assigned Health ID ${formattedHealthId}`
+    });
+
+    return {
+      success: true,
+      patient: newMember,
+      card: newCard
+    };
+  }
+
   // Card & QR Resolution (PRD ACC-01)
   resolveCardToken(tokenOrHealthId) {
     this.refresh();
@@ -838,6 +951,79 @@ class HospitalStorageService {
     });
 
     this.saveClinical();
+    return adm;
+  }
+
+  // Standard Indian Hospital Wards & Bed Configurations
+  getStandardWards() {
+    return [
+      { id: "casualty", name: "Emergency / Casualty (आपातकालीन)", beds: ["EM-01", "EM-02", "EM-03", "EM-04", "EM-05", "EM-06"] },
+      { id: "icu", name: "Intensive Care Unit (ICU)", beds: ["ICU-01", "ICU-02", "ICU-03", "ICU-04", "ICU-05", "ICU-06"] },
+      { id: "hdu", name: "High Dependency Unit (HDU)", beds: ["HDU-01", "HDU-02", "HDU-03", "HDU-04"] },
+      { id: "gw_male", name: "General Ward - Male (पुरुष वार्ड)", beds: ["GW-M-01", "GW-M-02", "GW-M-03", "GW-M-04", "GW-M-05", "GW-M-06", "GW-M-07", "GW-M-08"] },
+      { id: "gw_female", name: "General Ward - Female (महिला वार्ड)", beds: ["GW-F-01", "GW-F-02", "GW-F-03", "GW-F-04", "GW-F-05", "GW-F-06", "GW-F-07", "GW-F-08"] },
+      { id: "private", name: "Private Room / Deluxe (प्राइवेट)", beds: ["PVT-101", "PVT-102", "PVT-103", "PVT-104", "PVT-105"] }
+    ];
+  }
+
+  // Inpatient Ward & Bed Transfer (e.g. Casualty -> ICU -> General Ward)
+  transferWard({ admissionId, toWard, toBed, reason = 'Clinical Transfer', doctorNote = '' }) {
+    this.refresh();
+    const adm = (this.clinicalData.admissions || []).find(a => a.id === admissionId);
+    if (!adm) return null;
+
+    const staff = this.getCurrentStaff();
+    const prevWard = adm.ward;
+    const prevBed = adm.bedNumber;
+
+    adm.ward = toWard;
+    adm.bedNumber = toBed;
+
+    if (!adm.transferHistory) adm.transferHistory = [];
+    const transferEvent = {
+      id: `trf_${Date.now()}`,
+      transferredAt: new Date().toISOString(),
+      fromWard: prevWard,
+      fromBed: prevBed,
+      toWard: toWard,
+      toBed: toBed,
+      reason: reason,
+      doctorNote: doctorNote,
+      authorizedBy: staff.fullName
+    };
+    adm.transferHistory.push(transferEvent);
+
+    // Append transfer note into clinical days record
+    const today = new Date().toISOString().slice(0, 10);
+    let dayRecord = (adm.days || []).find(d => d.date === today);
+    const logText = `[Ward Transfer] Shifted from ${prevWard} (${prevBed}) to ${toWard} (${toBed}). Reason: ${reason}`;
+    if (dayRecord) {
+      dayRecord.doctorNote = dayRecord.doctorNote ? `${dayRecord.doctorNote}\n${logText}` : logText;
+    } else {
+      if (!adm.days) adm.days = [];
+      adm.days.push({
+        dayNo: adm.days.length + 1,
+        date: today,
+        doctorNote: logText,
+        nurseNote: `Patient bed transfer verified by ward nursing team. Handover completed to ${toWard}.`,
+        medsAdministered: []
+      });
+    }
+
+    this.logAudit({
+      action: "WARD_TRANSFER_EXECUTED",
+      target: `${adm.memberName} (${adm.healthId})`,
+      details: `Bed changed from ${prevWard} (${prevBed}) -> ${toWard} (${toBed}) by ${staff.fullName}. Reason: ${reason}`
+    });
+
+    this.saveClinical();
+    hospitalBackend.updateAdmission(admissionId, {
+      ward: toWard,
+      bedNumber: toBed,
+      transferHistory: adm.transferHistory,
+      days: adm.days
+    }).catch(err => console.warn('[BackendSync] Transfer sync:', err));
+
     return adm;
   }
 

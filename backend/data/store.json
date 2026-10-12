@@ -300,6 +300,76 @@
   ],
   "consultations": [
     {
+      "id": "cns_1791789722864",
+      "healthId": "4022947988",
+      "doctorId": "doc_01",
+      "doctorName": "Dr. Vikram Sethi",
+      "department": "Cardiology",
+      "facility": "All India Institute of Medical Sciences (AIIMS)",
+      "date": "2026-10-12T07:22:02.864Z",
+      "chiefComplaint": "Review of hypertension and glycemic control. Mild headache.",
+      "duration": "1 week",
+      "examination": "Conscious, oriented. S1 S2 heard normal. Bilateral air entry clear. Per abdomen soft, non-tender. Bilateral pedal edema absent.\nDrink plenty of water and rest.",
+      "vitals": {
+        "bpSys": 128,
+        "bpDia": 82,
+        "pulse": 74,
+        "spo2": 98,
+        "temp": 98.4,
+        "weight": 76.5
+      },
+      "diagnoses": [
+        {
+          "code": "I10",
+          "name": "Essential (Primary) Hypertension"
+        },
+        {
+          "code": "E11.9",
+          "name": "Type 2 Diabetes Mellitus without complications"
+        }
+      ],
+      "prescriptions": [
+        {
+          "drug": "Telmisartan",
+          "dosage": "40 mg",
+          "frequency": "1-0-0",
+          "timing": "खाने के बाद (After food)",
+          "days": 30
+        },
+        {
+          "drug": "Metformin SR",
+          "dosage": "500 mg",
+          "frequency": "1-0-1",
+          "timing": "भोजन के साथ (With meals)",
+          "days": 30
+        },
+        {
+          "drug": "Atorvastatin",
+          "dosage": "10 mg",
+          "frequency": "0-0-1",
+          "timing": "सोते समय (Bedtime)",
+          "days": 30
+        },
+        {
+          "drug": "Paracetamol",
+          "dosage": "500 mg",
+          "frequency": "1-0-1",
+          "timing": "5",
+          "days": 5
+        }
+      ],
+      "investigationsOrdered": [
+        "HbA1c",
+        "Lipid Profile",
+        "Serum Creatinine",
+        "Urine Microalbumin"
+      ],
+      "uploadedReports": [],
+      "advice": "Diet: Low salt (<5g/day), refined sugar restricted. 30 minutes daily walking. Self-monitor blood pressure twice weekly.\nDrink plenty of water and rest.",
+      "followUpDate": "2026-10-28",
+      "verification": "provider_verified"
+    },
+    {
       "id": "cns_001",
       "healthId": "74839 16251",
       "doctorId": "doc_01",
@@ -476,6 +546,16 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "aud_1791789722864",
+      "timestamp": "2026-10-12T07:22:02.864Z",
+      "actor": "Dr. Vikram Sethi",
+      "role": "Doctor",
+      "action": "OPD_CONSULTATION_SAVED",
+      "target": "Patient 4022947988",
+      "details": "Consultation recorded with 4 prescribed drugs and 0 reports attached.",
+      "status": "Success"
+    },
     {
       "id": "aud_1791781832254",
       "timestamp": "2026-10-12T05:10:32.254Z",

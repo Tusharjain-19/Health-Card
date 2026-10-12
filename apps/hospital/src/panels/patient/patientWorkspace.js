@@ -14,12 +14,15 @@ import { hospitalStore } from '../../shared/storage.js';
 import { formatHealthId } from '../../shared/utils/healthId.js';
 import { formatDate, calculateAge, maskMobile } from '../../shared/utils/formatters.js';
 import { showToast } from '../../shared/components/toast.js';
+import { DocumentScannerModal } from '../dashboard/scannerModal.js';
 
 export class PatientWorkspace {
   constructor(container, healthId) {
     this.container = container;
     this.healthId = (healthId || '').replace(/\s+/g, '');
-    this.activeTab = 'summary';
+    const hash = window.location.hash || '';
+    const tabMatch = hash.match(/[?&]tab=([^&]+)/);
+    this.activeTab = tabMatch ? tabMatch[1] : 'summary';
     this.timelineFilter = 'all';
     this.activeBreakGlassTimer = null;
     this.pendingUploadedReports = [];
@@ -583,14 +586,15 @@ export class PatientWorkspace {
                 <td><input type="text" class="form-input rx-dose" value="40 mg" /></td>
                 <td>
                   <select class="form-select rx-freq">
-                    <option value="OD" selected>OD (Once Daily)</option>
-                    <option value="BD">BD (Twice Daily)</option>
-                    <option value="TDS">TDS (Thrice Daily)</option>
-                    <option value="SOS">SOS (As Needed)</option>
+                    <option value="1-0-0" selected>1-0-0 (सुबह / Morning)</option>
+                    <option value="1-0-1">1-0-1 (सुबह-शाम / Twice Daily)</option>
+                    <option value="0-0-1">0-0-1 (रात / Night)</option>
+                    <option value="1-1-1">1-1-1 (दिन में तीन बार / Thrice)</option>
+                    <option value="SOS">SOS (जरूरत पड़ने पर / As needed)</option>
                   </select>
                 </td>
-                <td><input type="text" class="form-input rx-timing" value="Morning after food" /></td>
-                <td><input type="number" class="form-input rx-days" value="90" /></td>
+                <td><input type="text" class="form-input rx-timing" value="खाने के बाद (After food)" /></td>
+                <td><input type="number" class="form-input rx-days" value="30" /></td>
                 <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">×</button></td>
               </tr>
               <tr>
@@ -598,14 +602,15 @@ export class PatientWorkspace {
                 <td><input type="text" class="form-input rx-dose" value="500 mg" /></td>
                 <td>
                   <select class="form-select rx-freq">
-                    <option value="OD">OD (Once Daily)</option>
-                    <option value="BD" selected>BD (Twice Daily)</option>
-                    <option value="TDS">TDS (Thrice Daily)</option>
-                    <option value="SOS">SOS (As Needed)</option>
+                    <option value="1-0-1" selected>1-0-1 (सुबह-शाम / Twice Daily)</option>
+                    <option value="1-0-0">1-0-0 (सुबह / Morning)</option>
+                    <option value="0-0-1">0-0-1 (रात / Night)</option>
+                    <option value="1-1-1">1-1-1 (दिन में तीन बार / Thrice)</option>
+                    <option value="SOS">SOS (जरूरत पड़ने पर / As needed)</option>
                   </select>
                 </td>
-                <td><input type="text" class="form-input rx-timing" value="After lunch & dinner" /></td>
-                <td><input type="number" class="form-input rx-days" value="90" /></td>
+                <td><input type="text" class="form-input rx-timing" value="भोजन के साथ (With meals)" /></td>
+                <td><input type="number" class="form-input rx-days" value="30" /></td>
                 <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">×</button></td>
               </tr>
               <tr>
@@ -613,12 +618,14 @@ export class PatientWorkspace {
                 <td><input type="text" class="form-input rx-dose" value="10 mg" /></td>
                 <td>
                   <select class="form-select rx-freq">
-                    <option value="OD" selected>OD (Once Daily)</option>
-                    <option value="BD">BD (Twice Daily)</option>
+                    <option value="0-0-1" selected>0-0-1 (रात / Night)</option>
+                    <option value="1-0-0">1-0-0 (सुबह / Morning)</option>
+                    <option value="1-0-1">1-0-1 (सुबह-शाम / Twice Daily)</option>
+                    <option value="SOS">SOS (जरूरत पड़ने पर / As needed)</option>
                   </select>
                 </td>
-                <td><input type="text" class="form-input rx-timing" value="At bedtime" /></td>
-                <td><input type="number" class="form-input rx-days" value="90" /></td>
+                <td><input type="text" class="form-input rx-timing" value="सोते समय (Bedtime)" /></td>
+                <td><input type="number" class="form-input rx-days" value="30" /></td>
                 <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">×</button></td>
               </tr>
             </tbody>
@@ -791,14 +798,15 @@ export class PatientWorkspace {
         <td><input type="text" class="form-input rx-dose" placeholder="e.g. 500 mg" /></td>
         <td>
           <select class="form-select rx-freq">
-            <option value="OD">OD (Once Daily)</option>
-            <option value="BD">BD (Twice Daily)</option>
-            <option value="TDS">TDS (Thrice Daily)</option>
-            <option value="SOS">SOS (As Needed)</option>
+            <option value="1-0-1" selected>1-0-1 (सुबह-शाम / Twice Daily)</option>
+            <option value="1-0-0">1-0-0 (सुबह / Morning)</option>
+            <option value="0-0-1">0-0-1 (रात / Night)</option>
+            <option value="1-1-1">1-1-1 (दिन में तीन बार / Thrice)</option>
+            <option value="SOS">SOS (जरूरत पड़ने पर / As needed)</option>
           </select>
         </td>
-        <td><input type="text" class="form-input rx-timing" value="After food" /></td>
-        <td><input type="number" class="form-input rx-days" value="30" /></td>
+        <td><input type="text" class="form-input rx-timing" value="खाने के बाद (After food)" /></td>
+        <td><input type="number" class="form-input rx-days" value="15" /></td>
         <td><button type="button" class="btn btn-sm btn-ghost" onclick="this.closest('tr').remove()" style="color: #dc2626;">×</button></td>
       `;
       tbody.appendChild(tr);

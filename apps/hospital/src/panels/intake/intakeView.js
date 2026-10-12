@@ -1,458 +1,806 @@
 /**
- * HealthCard Hospital Portal: Patient Intake, Scanner & Mandatory Identity Gate
- * Implements PRD ACC-01, ACC-02, ACC-03, ACC-04, ACC-05.
- * 1. Resolves opaque card token to masked identity
- * 2. Mandates physical in-person identity verification
- * 3. Configures purpose, duration, and multi-channel consent
+ * HealthCard Hospital Portal: Patient Desk & Registration (मरीज पंजीकरण एवं कार्ड डेस्क)
+ * Clean, accessible Indian hospital reception and clinical intake workflow:
+ * 1. Fast lookup via real camera QR scan or 10-digit Health ID / Mobile
+ * 2. 1-Minute walk-in patient registration with auto-issued 10-digit Health ID
+ * 3. Immediate 4-way action hub: Write OPD Rx, Upload paper slip, Admit to IPD, or Open chart
  */
 
+import jsQR from 'jsqr';
 import { hospitalStore } from '../../shared/storage.js';
-import { formatHealthId, validateHealthId } from '../../shared/utils/healthId.js';
+import { formatHealthId } from '../../shared/utils/healthId.js';
 import { calculateAge, maskMobile } from '../../shared/utils/formatters.js';
 import { showToast } from '../../shared/components/toast.js';
+import { DocumentScannerModal } from '../dashboard/scannerModal.js';
 
 export class IntakeView {
   constructor(container) {
     this.container = container;
-    this.resolvedResult = null;
+    this.activeTab = 'search'; // 'search' or 'register'
+    this.resolvedPatient = null;
     this.stream = null;
-    this.activeConsentMethod = 'app';
-    this.selectedDuration = 24;
+    this.scanningAnimFrame = null;
+    this.videoEl = null;
+    this.canvasEl = null;
+    this.canvasCtx = null;
   }
 
   render() {
-    // Check if URL has query parameter (e.g. #intake?q=7483916251)
+    // Check if query params exist (e.g. #intake?q=7483916251 or #intake?tab=register)
     const hash = window.location.hash || '';
-    const queryMatch = hash.match(/\?q=([^&]+)/);
+    const queryMatch = hash.match(/[?&]q=([^&]+)/);
     const initialQuery = queryMatch ? decodeURIComponent(queryMatch[1]) : '';
+    const tabMatch = hash.match(/[?&]tab=([^&]+)/);
+    if (tabMatch && tabMatch[1] === 'register') {
+      this.activeTab = 'register';
+    }
 
     this.container.innerHTML = `
-      <div class="intake-container">
-        <div class="page-header">
+      <div class="intake-container" style="max-width: 1040px; margin: 0 auto; padding-bottom: 40px;">
+        <!-- Header Strip -->
+        <div class="page-header" style="margin-bottom: 20px;">
           <div>
-            <h1 class="page-title">Patient Intake & Card Verification</h1>
-            <p class="page-subtitle">Scan physical HealthCard QR/NFC or search 10-digit Health ID</p>
+            <h1 class="page-title" style="display: flex; align-items: center; gap: 8px;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Patient Reception & HealthCard Desk (मरीज पंजीकरण)
+            </h1>
+            <p class="page-subtitle">Verify HealthCard with live camera QR scan, search existing citizens, or register new walk-in patients</p>
           </div>
-          <a href="#dashboard" class="btn btn-outline">
+          <a href="#dashboard" class="btn btn-outline" style="display: inline-flex; align-items: center; gap: 6px;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-            Back to Dashboard
+            Dashboard
           </a>
         </div>
 
-        <div class="intake-layout">
-          <!-- Left: Camera & QR Scanner -->
-          <div class="scanner-box">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
-              <div style="font-weight: 700; font-size: 15px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                Live Camera QR Scanner
-              </div>
-              <span class="badge badge-active">Camera Ready</span>
-            </div>
-
-            <!-- Video Scanning Viewport -->
-            <div class="video-container" id="camera-viewport">
-              <video id="scanner-video" playsinline autoplay muted></video>
-              <div class="scan-crosshair">
-                <div class="scan-laser-line"></div>
-              </div>
-              <div id="camera-placeholder" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0f172a; color: #94a3b8; padding: 20px; text-align: center;">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="1.8" style="margin-bottom: 12px;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="7" x2="7.01" y2="7"/><line x1="17" y1="7" x2="17.01" y2="7"/><line x1="7" y1="17" x2="7.01" y2="17"/><path d="M14 14h3v3"/></svg>
-                <div style="color: #ffffff; font-weight: 600; font-size: 13.5px;">Present HealthCard QR to Camera</div>
-                <div style="font-size: 11.5px; margin-top: 4px;">Hold card steady within frame for instant resolution</div>
-                <button type="button" class="btn btn-sm btn-primary" id="btn-start-camera" style="margin-top: 14px;">
-                  Enable Camera Stream
-                </button>
-              </div>
-            </div>
-
-            <!-- Demo Card Quick Scanners -->
-            <div style="margin-top: 16px;">
-              <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">
-                Instant Demo Card Scanners (Simulate QR Scan):
-              </div>
-              <div class="demo-pills-list">
-                <button type="button" class="btn btn-sm btn-secondary btn-demo-card" data-hid="74839 16251">
-                  Rahul Sharma (74839 16251)
-                </button>
-                <button type="button" class="btn btn-sm btn-secondary btn-demo-card" data-hid="81920 34719">
-                  Ananya Deshmukh (81920 34719)
-                </button>
-                <button type="button" class="btn btn-sm btn-secondary btn-demo-card" data-hid="90218 54310">
-                  Sunita Patel (90218 54310)
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right: Manual Lookup & Resolution Gate -->
-          <div style="display: flex; flex-direction: column; gap: 20px;">
-            <!-- Manual Search Form -->
-            <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow-sm);">
-              <div style="font-weight: 700; font-size: 15px; color: var(--text-main); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                Manual Card Identifier Lookup
-              </div>
-
-              <form id="intake-lookup-form">
-                <div class="form-group">
-                  <label class="form-label">10-Digit Health ID or Patient Mobile Number</label>
-                  <input type="text" id="intake-query-input" class="form-input font-mono" placeholder="e.g. 74839 16251 or 9876543210" value="${initialQuery}" style="font-size: 15px; font-weight: 600;" required />
-                  <div class="form-hint">Format: 5-5 grouped digits. Space is added automatically.</div>
-                </div>
-
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
-                  Resolve Card Token (PRD ACC-01)
-                </button>
-              </form>
-            </div>
-
-            <!-- Dynamic Identity Gate Mount Point -->
-            <div id="identity-gate-mount"></div>
-          </div>
+        <!-- Mode Tabs -->
+        <div style="display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border-color); padding-bottom: 2px;">
+          <button type="button" class="intake-tab-btn ${this.activeTab === 'search' ? 'active' : ''}" id="tab-btn-search" style="padding: 10px 20px; font-size: 14px; font-weight: 700; border: none; background: transparent; cursor: pointer; color: ${this.activeTab === 'search' ? 'var(--color-primary)' : 'var(--text-muted)'}; border-bottom: 3px solid ${this.activeTab === 'search' ? 'var(--color-primary)' : 'transparent'}; margin-bottom: -4px; display: inline-flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            1. Find Patient / Scan HealthCard (मौजूदा मरीज)
+          </button>
+          <button type="button" class="intake-tab-btn ${this.activeTab === 'register' ? 'active' : ''}" id="tab-btn-register" style="padding: 10px 20px; font-size: 14px; font-weight: 700; border: none; background: transparent; cursor: pointer; color: ${this.activeTab === 'register' ? 'var(--color-primary)' : 'var(--text-muted)'}; border-bottom: 3px solid ${this.activeTab === 'register' ? 'var(--color-primary)' : 'transparent'}; margin-bottom: -4px; display: inline-flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            2. Register New Patient (नया मरीज पंजीकरण)
+          </button>
         </div>
+
+        <!-- Dynamic Content Body -->
+        <div id="intake-main-content">
+          ${this.activeTab === 'search' ? this.renderSearchView(initialQuery) : this.renderRegisterView()}
+        </div>
+
+        <!-- Dynamic Patient Action Hub (Mount Point) -->
+        <div id="patient-action-hub-mount" style="margin-top: 24px;"></div>
       </div>
     `;
 
     this.bindEvents();
 
-    if (initialQuery) {
+    if (initialQuery && this.activeTab === 'search') {
       this.handleLookup(initialQuery);
     }
   }
 
+  // ==========================================
+  // VIEW 1: SEARCH & LIVE QR SCANNER
+  // ==========================================
+  renderSearchView(initialQuery = '') {
+    return `
+      <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px;">
+        <!-- Left: Live Camera QR Scanner -->
+        <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <div style="font-weight: 700; font-size: 14.5px; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              Live Camera QR Scanner
+            </div>
+            <span class="badge" id="camera-status-badge" style="background: #eff6ff; color: #1d4ed8; font-size: 11px;">Real-Time</span>
+          </div>
+
+          <!-- Video Camera Viewport -->
+          <div style="position: relative; width: 100%; aspect-ratio: 4/3; background: #0f172a; border-radius: var(--radius-lg); overflow: hidden; display: flex; align-items: center; justify-content: center;">
+            <video id="intake-video" playsinline autoplay muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+            <canvas id="intake-canvas" style="display: none;"></canvas>
+
+            <!-- Scanning overlay / reticle -->
+            <div id="intake-scanner-overlay" style="position: absolute; inset: 0; pointer-events: none; display: flex; align-items: center; justify-content: center;">
+              <div style="width: 180px; height: 180px; border: 2px solid rgba(20, 184, 166, 0.85); border-radius: 12px; position: relative; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);">
+                <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: #14b8a6; animation: scanLaser 2s infinite ease-in-out; box-shadow: 0 0 8px #14b8a6;"></div>
+              </div>
+            </div>
+
+            <!-- Placeholder overlay if camera not yet started -->
+            <div id="intake-cam-placeholder" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0f172a; color: #94a3b8; padding: 20px; text-align: center;">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="1.8" style="margin-bottom: 12px;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="7" x2="7.01" y2="7"/><line x1="17" y1="7" x2="17.01" y2="7"/><line x1="7" y1="17" x2="7.01" y2="17"/><path d="M14 14h3v3"/></svg>
+              <div style="color: #ffffff; font-weight: 700; font-size: 14px;">Present Physical HealthCard to Camera</div>
+              <div style="font-size: 12px; margin-top: 4px; color: #94a3b8;">Scanner only resolves genuine HealthCard QR tokens</div>
+              <button type="button" class="btn btn-sm btn-primary" id="btn-start-intake-camera" style="margin-top: 14px; display: inline-flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                Enable Camera Scanner
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Test Demo Patients -->
+          <div style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+            <div style="font-size: 11.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">
+              Quick Demo Health Cards (Simulate Scan):
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <button type="button" class="btn btn-sm btn-secondary btn-quick-select" data-hid="74839 16251" style="justify-content: space-between; text-align: left; padding: 7px 12px;">
+                <span><strong>Rahul Sharma</strong> (31y, M)</span>
+                <span class="font-mono" style="color: var(--color-primary); font-size: 11px;">74839 16251</span>
+              </button>
+              <button type="button" class="btn btn-sm btn-secondary btn-quick-select" data-hid="81920 34719" style="justify-content: space-between; text-align: left; padding: 7px 12px;">
+                <span><strong>Ananya Deshmukh</strong> (28y, F)</span>
+                <span class="font-mono" style="color: var(--color-primary); font-size: 11px;">81920 34719</span>
+              </button>
+              <button type="button" class="btn btn-sm btn-secondary btn-quick-select" data-hid="90218 54310" style="justify-content: space-between; text-align: left; padding: 7px 12px;">
+                <span><strong>Sunita Patel</strong> (54y, F)</span>
+                <span class="font-mono" style="color: var(--color-primary); font-size: 11px;">90218 54310</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Manual Search Form -->
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 22px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
+            <div style="font-weight: 700; font-size: 15px; color: var(--text-main); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              Manual Patient Search
+            </div>
+
+            <form id="intake-search-form">
+              <div class="form-group" style="margin-bottom: 14px;">
+                <label class="form-label" style="font-weight: 600;">10-Digit Health ID or Mobile Number</label>
+                <input type="text" id="intake-search-input" class="form-input font-mono" placeholder="e.g. 74839 16251 or 9876543210" value="${initialQuery}" style="font-size: 15px; font-weight: 700; padding: 10px 14px;" required />
+                <div class="form-hint" style="font-size: 11.5px; margin-top: 4px; color: var(--text-muted);">Auto-groups 10 digits as 5-5 format. Press Enter to search.</div>
+              </div>
+
+              <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn btn-primary" style="flex: 1; padding: 10px 16px; font-weight: 700;">
+                  Find Patient
+                </button>
+                <button type="button" class="btn btn-secondary" id="btn-switch-to-register" style="padding: 10px 16px; white-space: nowrap;">
+                  + New Walk-In
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Helpful Counter Tips -->
+          <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 16px; font-size: 12px; color: var(--text-secondary);">
+            <div style="font-weight: 700; color: var(--text-main); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Hospital Reception Desk Guide
+            </div>
+            <ul style="margin: 0; padding-left: 18px; line-height: 1.5; color: var(--text-muted);">
+              <li>If the patient holds a physical card, point their QR code to the scanner.</li>
+              <li>For returning patients without card, enter registered 10-digit mobile number.</li>
+              <li>For brand-new patients, click <strong>"+ New Walk-In"</strong> to issue an active 10-digit Health ID in under 60 seconds.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ==========================================
+  // VIEW 2: REGISTER NEW PATIENT
+  // ==========================================
+  renderRegisterView() {
+    return `
+      <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 26px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border-color);">
+          <div>
+            <h2 style="font-size: 17px; font-weight: 700; color: var(--text-main); margin: 0;">New Patient Registration (नया मरीज पंजीकरण)</h2>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 3px 0 0 0;">Fill basic patient details to immediately issue an active HealthCard and assign 10-digit Health ID</p>
+          </div>
+          <span class="badge badge-active">Instant Registration</span>
+        </div>
+
+        <form id="new-patient-form">
+          <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600;">Full Patient Name (पूरा नाम) *</label>
+              <input type="text" id="reg-name" class="form-input" placeholder="e.g. Ramesh Kumar Gupta" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600;">Age in Years (उम्र) *</label>
+              <input type="number" id="reg-age" class="form-input" placeholder="e.g. 42" min="1" max="120" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600;">Gender (लिंग) *</label>
+              <select id="reg-gender" class="form-select" required>
+                <option value="Male">Male (पुरुष)</option>
+                <option value="Female">Female (महिला)</option>
+                <option value="Other">Other (अन्य)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1.5fr 1fr 1.5fr; gap: 16px; margin-bottom: 16px;">
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600;">Mobile Number (मोबाइल नंबर) *</label>
+              <input type="tel" id="reg-mobile" class="form-input font-mono" placeholder="10-digit mobile (e.g. 9811223344)" maxlength="10" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600;">Blood Group (रक्त समूह)</label>
+              <select id="reg-blood" class="form-select">
+                <option value="O+">O+</option>
+                <option value="A+">A+</option>
+                <option value="B+">B+</option>
+                <option value="AB+">AB+</option>
+                <option value="O-">O-</option>
+                <option value="A-">A-</option>
+                <option value="B-">B-</option>
+                <option value="AB-">AB-</option>
+                <option value="Unknown">Unknown</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600;">Father / Spouse / Guardian Name</label>
+              <input type="text" id="reg-guardian" class="form-input" placeholder="e.g. Suresh Gupta" />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600;">Residential Address (स्थानीय पता)</label>
+              <input type="text" id="reg-address" class="form-input" placeholder="Street / Colony / Ward" value="Civil Lines" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600;">City (शहर)</label>
+              <input type="text" id="reg-city" class="form-input" placeholder="City" value="New Delhi" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600;">Pincode (पिन कोड)</label>
+              <input type="text" id="reg-pincode" class="form-input font-mono" placeholder="Pincode" value="110029" maxlength="6" />
+            </div>
+          </div>
+
+          <!-- Card Option -->
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-lg); padding: 14px 18px; margin-bottom: 22px;">
+            <div style="font-weight: 700; color: #166534; font-size: 13.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              HealthCard 10-Digit ID Configuration
+            </div>
+            <div style="font-size: 12px; color: #15803d; margin-bottom: 8px;">
+              The system will automatically allocate a unique 10-digit Health ID (e.g. 5-5 grouped format) and generate a verified QR code token.
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <label style="font-size: 12.5px; font-weight: 600; color: #166534; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="radio" name="card-mode" value="auto" checked />
+                Auto-generate fresh 10-digit Health ID
+              </label>
+              <label style="font-size: 12.5px; font-weight: 600; color: #166534; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="radio" name="card-mode" value="manual" id="radio-manual-card" />
+                Assign specific 10-digit card number
+              </label>
+            </div>
+            <input type="text" id="reg-custom-hid" class="form-input font-mono" placeholder="Enter 10 digits (e.g. 61234 56789)" style="display: none; margin-top: 8px; max-width: 280px;" />
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 12px;">
+            <button type="button" class="btn btn-secondary" id="btn-cancel-register">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" style="padding: 11px 24px; font-weight: 700;">
+              Register Patient & Open Action Options →
+            </button>
+          </div>
+        </form>
+      </div>
+    `;
+  }
+
+  // ==========================================
+  // PATIENT ACTION HUB (INSTANT ACTIONS)
+  // ==========================================
+  renderActionHub(patient) {
+    const mount = this.container.querySelector('#patient-action-hub-mount');
+    if (!mount) return;
+
+    const cleanId = (patient.healthId || '').replace(/\s+/g, '');
+
+    mount.innerHTML = `
+      <div style="background: #ffffff; border: 2px solid var(--color-primary); border-radius: var(--radius-xl); padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); animation: fadeIn 0.2s ease;">
+        <!-- Verified Patient Header -->
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1.5px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <img src="${patient.photoUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'}" style="width: 56px; height: 56px; border-radius: 12px; object-fit: cover; border: 2px solid var(--color-primary);" alt="${patient.fullName}" />
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <h3 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0;">${patient.fullName}</h3>
+                <span class="blood-group-tag" style="font-size: 12px; padding: 2px 7px;">${patient.bloodGroup || 'O+'}</span>
+                <span class="badge badge-active" style="font-size: 11px;">Verified HealthCard</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--text-secondary); margin-top: 4px;">
+                <span class="font-mono" style="font-weight: 700; color: var(--color-primary);">${formatHealthId(patient.healthId)}</span>
+                <span>•</span>
+                <span>${calculateAge(patient.dob)}</span>
+                <span>•</span>
+                <span>${patient.gender || 'Male'}</span>
+                <span>•</span>
+                <span>Mobile: ${maskMobile(patient.mobile)}</span>
+                <span>•</span>
+                <span>${patient.city || 'New Delhi'}</span>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-sm btn-outline" id="btn-reset-intake" style="display: inline-flex; align-items: center; gap: 6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Select Another Patient
+          </button>
+        </div>
+
+        <!-- 4-Way Action Title -->
+        <div style="margin-bottom: 14px;">
+          <div style="font-weight: 700; font-size: 14.5px; color: var(--text-main);">Select Action for ${patient.fullName}:</div>
+          <div style="font-size: 12px; color: var(--text-muted);">Choose outpatient consultation, paper slip upload, inpatient ward admission, or complete clinical chart</div>
+        </div>
+
+        <!-- 4 Big Task-Focused Action Tiles -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+          <!-- 1. Write OPD Rx -->
+          <button type="button" class="intake-action-card" id="btn-action-opd" style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: var(--radius-lg); padding: 18px 16px; text-align: left; cursor: pointer; transition: all 0.15s ease; display: flex; flex-direction: column; gap: 8px;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: #dbeafe; color: #1d4ed8; display: flex; align-items: center; justify-content: center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div>
+              <div style="font-weight: 800; font-size: 14px; color: #1e40af;">Write OPD Rx</div>
+              <div style="font-size: 11.5px; color: #3b82f6; margin-top: 2px;">ओपीडी पर्ची बनाएं (1-0-1 dosage, advice)</div>
+            </div>
+          </button>
+
+          <!-- 2. Upload / Scan Paper Slip -->
+          <button type="button" class="intake-action-card" id="btn-action-upload" style="background: #fef3c7; border: 1.5px solid #fde68a; border-radius: var(--radius-lg); padding: 18px 16px; text-align: left; cursor: pointer; transition: all 0.15s ease; display: flex; flex-direction: column; gap: 8px;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <div>
+              <div style="font-weight: 800; font-size: 14px; color: #92400e;">Upload / Scan Slip</div>
+              <div style="font-size: 11.5px; color: #d97706; margin-top: 2px;">कागजी पर्ची / रिपोर्ट फोटो अपलोड</div>
+            </div>
+          </button>
+
+          <!-- 3. Admit to IPD -->
+          <button type="button" class="intake-action-card" id="btn-action-admit" style="background: #ecfdf5; border: 1.5px solid #a7f3d0; border-radius: var(--radius-lg); padding: 18px 16px; text-align: left; cursor: pointer; transition: all 0.15s ease; display: flex; flex-direction: column; gap: 8px;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: #d1fae5; color: #047857; display: flex; align-items: center; justify-content: center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h10"/><path d="M12 9v6"/></svg>
+            </div>
+            <div>
+              <div style="font-weight: 800; font-size: 14px; color: #065f46;">Admit to IPD Ward</div>
+              <div style="font-size: 11.5px; color: #059669; margin-top: 2px;">अस्पताल में भर्ती (ICU / General Ward)</div>
+            </div>
+          </button>
+
+          <!-- 4. Open Complete Chart -->
+          <button type="button" class="intake-action-card" id="btn-action-chart" style="background: #f5f3ff; border: 1.5px solid #ddd6fe; border-radius: var(--radius-lg); padding: 18px 16px; text-align: left; cursor: pointer; transition: all 0.15s ease; display: flex; flex-direction: column; gap: 8px;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: #ede9fe; color: #6d28d9; display: flex; align-items: center; justify-content: center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <div>
+              <div style="font-weight: 800; font-size: 14px; color: #5b21b6;">View Medical Chart</div>
+              <div style="font-size: 11.5px; color: #7c3aed; margin-top: 2px;">संपूर्ण मेडिकल रिकॉर्ड एवं इतिहास</div>
+            </div>
+          </button>
+        </div>
+      </div>
+    `;
+
+    // Bind Hub Action Buttons
+    mount.querySelector('#btn-reset-intake')?.addEventListener('click', () => {
+      this.resolvedPatient = null;
+      mount.innerHTML = '';
+      showToast('Desk reset. Ready for next patient.', 'info');
+    });
+
+    mount.querySelector('#btn-action-opd')?.addEventListener('click', () => {
+      window.location.hash = `#patient?id=${cleanId}&tab=consultation`;
+    });
+
+    mount.querySelector('#btn-action-upload')?.addEventListener('click', () => {
+      new DocumentScannerModal({
+        patientId: cleanId,
+        category: 'OPD Doctor Prescription Slip'
+      }).open();
+    });
+
+    mount.querySelector('#btn-action-admit')?.addEventListener('click', () => {
+      this.openQuickAdmitModal(patient);
+    });
+
+    mount.querySelector('#btn-action-chart')?.addEventListener('click', () => {
+      window.location.hash = `#patient?id=${cleanId}`;
+    });
+
+    // Scroll to action hub smoothly
+    mount.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ==========================================
+  // QUICK ADMIT MODAL (IPD BHARTI)
+  // ==========================================
+  openQuickAdmitModal(patient) {
+    const wards = hospitalStore.getStandardWards();
+    const doctors = hospitalStore.getDoctors();
+    const currentStaff = hospitalStore.getCurrentStaff();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal-dialog" style="max-width: 580px;">
+        <div class="modal-header">
+          <div>
+            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Inpatient Ward Admission (मरीज भर्ती)</h3>
+            <p style="font-size: 11.5px; color: var(--text-muted); margin: 2px 0 0 0;">Admit ${patient.fullName} (${formatHealthId(patient.healthId)})</p>
+          </div>
+          <button type="button" class="btn btn-sm btn-ghost modal-close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <form id="quick-admit-form">
+          <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-group">
+                <label class="form-label" style="font-weight: 600;">Admission Ward (वार्ड) *</label>
+                <select id="admit-ward-select" class="form-select" required>
+                  ${wards.map(w => `<option value="${w.name}">${w.name}</option>`).join('')}
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" style="font-weight: 600;">Bed Number (बेड नंबर) *</label>
+                <select id="admit-bed-select" class="form-select" required>
+                  ${wards[0].beds.map(b => `<option value="${b}">${b}</option>`).join('')}
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600;">Attending Doctor (सलाहकार डॉक्टर) *</label>
+              <select id="admit-doctor-select" class="form-select" required>
+                ${doctors.map(d => `<option value="${d.name}">${d.name} (${d.department})</option>`).join('')}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600;">Admitting Diagnosis / Chief Complaints (प्रारंभिक निदान) *</label>
+              <input type="text" id="admit-diagnosis" class="form-input" placeholder="e.g. Acute Gastroenteritis with severe dehydration" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600;">Initial Doctor Intake Note (प्रारंभिक निर्देश)</label>
+              <textarea id="admit-initial-note" class="form-textarea" rows="2" placeholder="Start IV fluids, maintain intake/output chart, urgent CBC & serum electrolytes."></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button type="button" class="btn btn-secondary modal-close">Cancel</button>
+            <button type="submit" class="btn btn-primary" style="font-weight: 700;">Confirm Ward Admission →</button>
+          </div>
+        </form>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    // Update beds when ward changes
+    const wardSelect = overlay.querySelector('#admit-ward-select');
+    const bedSelect = overlay.querySelector('#admit-bed-select');
+    wardSelect.addEventListener('change', () => {
+      const selectedWard = wards.find(w => w.name === wardSelect.value) || wards[0];
+      bedSelect.innerHTML = selectedWard.beds.map(b => `<option value="${b}">${b}</option>`).join('');
+    });
+
+    // Close buttons
+    overlay.querySelectorAll('.modal-close').forEach(btn => {
+      btn.addEventListener('click', () => overlay.remove());
+    });
+
+    // Submit admission
+    overlay.querySelector('#quick-admit-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const ward = wardSelect.value;
+      const bed = bedSelect.value;
+      const doctor = overlay.querySelector('#admit-doctor-select').value;
+      const diagnosis = overlay.querySelector('#admit-diagnosis').value;
+      const initialNote = overlay.querySelector('#admit-initial-note').value;
+
+      hospitalStore.addAdmission({
+        healthId: patient.healthId,
+        memberName: patient.fullName,
+        ward: ward,
+        bedNumber: bed,
+        admittingDoctor: doctor,
+        admittingDiagnosis: diagnosis,
+        initialDoctorNote: initialNote
+      });
+
+      overlay.remove();
+      showToast(`${patient.fullName} admitted to ${ward} (${bed}) successfully!`, 'success');
+      window.location.hash = '#admissions';
+    });
+  }
+
+  // ==========================================
+  // EVENT BINDINGS
+  // ==========================================
   bindEvents() {
-    // Form submission
-    const form = this.container.querySelector('#intake-lookup-form');
-    if (form) {
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const input = this.container.querySelector('#intake-query-input');
-        if (input && input.value) {
-          this.handleLookup(input.value);
-        }
-      });
-    }
+    // Mode Tab Buttons
+    this.container.querySelector('#tab-btn-search')?.addEventListener('click', () => {
+      this.activeTab = 'search';
+      this.render();
+    });
 
-    // Auto format 5-5 Health ID while typing
-    const queryInput = this.container.querySelector('#intake-query-input');
-    if (queryInput) {
-      queryInput.addEventListener('input', (e) => {
-        const raw = e.target.value.replace(/\D/g, '');
-        if (raw.length <= 10) {
-          if (raw.length > 5) {
-            e.target.value = `${raw.slice(0, 5)} ${raw.slice(5, 10)}`;
-          } else {
-            e.target.value = raw;
-          }
-        }
-      });
-    }
+    this.container.querySelector('#tab-btn-register')?.addEventListener('click', () => {
+      this.activeTab = 'register';
+      this.render();
+    });
 
-    // Demo card buttons
-    const demoButtons = this.container.querySelectorAll('.btn-demo-card');
-    demoButtons.forEach(btn => {
+    this.container.querySelector('#btn-switch-to-register')?.addEventListener('click', () => {
+      this.activeTab = 'register';
+      this.render();
+    });
+
+    // Search Form Submit
+    const searchForm = this.container.querySelector('#intake-search-form');
+    searchForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = this.container.querySelector('#intake-search-input');
+      if (input && input.value) {
+        this.handleLookup(input.value);
+      }
+    });
+
+    // 10-digit auto-grouping on search input
+    const searchInput = this.container.querySelector('#intake-search-input');
+    searchInput?.addEventListener('input', (e) => {
+      const raw = e.target.value.replace(/\D/g, '');
+      if (raw.length <= 10 && /^\d+$/.test(e.target.value.replace(/\s/g, ''))) {
+        e.target.value = raw.length > 5 ? `${raw.slice(0, 5)} ${raw.slice(5, 10)}` : raw;
+      }
+    });
+
+    // Quick select buttons
+    this.container.querySelectorAll('.btn-quick-select').forEach(btn => {
       btn.addEventListener('click', () => {
         const hid = btn.getAttribute('data-hid');
-        const input = this.container.querySelector('#intake-query-input');
+        const input = this.container.querySelector('#intake-search-input');
         if (input) input.value = hid;
         this.handleLookup(hid);
       });
     });
 
-    // Start camera button
-    const cameraBtn = this.container.querySelector('#btn-start-camera');
-    if (cameraBtn) {
-      cameraBtn.addEventListener('click', () => this.startCamera());
-    }
+    // Start Camera Button
+    this.container.querySelector('#btn-start-intake-camera')?.addEventListener('click', () => {
+      this.startCamera();
+    });
+
+    // Register Form: Custom HID toggle
+    const radioManual = this.container.querySelector('#radio-manual-card');
+    const customHidInput = this.container.querySelector('#reg-custom-hid');
+    this.container.querySelectorAll('input[name="card-mode"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (customHidInput) {
+          customHidInput.style.display = radioManual?.checked ? 'block' : 'none';
+        }
+      });
+    });
+
+    // Register Form: Auto-group custom HID
+    customHidInput?.addEventListener('input', (e) => {
+      const raw = e.target.value.replace(/\D/g, '');
+      if (raw.length <= 10) {
+        e.target.value = raw.length > 5 ? `${raw.slice(0, 5)} ${raw.slice(5, 10)}` : raw;
+      }
+    });
+
+    // Cancel Registration
+    this.container.querySelector('#btn-cancel-register')?.addEventListener('click', () => {
+      this.activeTab = 'search';
+      this.render();
+    });
+
+    // Register Form Submit
+    const regForm = this.container.querySelector('#new-patient-form');
+    regForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      this.handleRegister();
+    });
   }
 
+  // ==========================================
+  // REAL CAMERA QR SCANNER (jsQR Engine)
+  // ==========================================
   async startCamera() {
-    const video = this.container.querySelector('#scanner-video');
-    const placeholder = this.container.querySelector('#camera-placeholder');
+    this.videoEl = this.container.querySelector('#intake-video');
+    this.canvasEl = this.container.querySelector('#intake-canvas');
+    const placeholder = this.container.querySelector('#intake-cam-placeholder');
+    const statusBadge = this.container.querySelector('#camera-status-badge');
+
+    if (!this.canvasEl) return;
+    this.canvasCtx = this.canvasEl.getContext('2d', { willReadFrequently: true });
 
     try {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        this.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-        if (video) {
-          video.srcObject = this.stream;
-          video.play();
-          if (placeholder) placeholder.style.display = 'none';
-          showToast('Camera stream active. Point towards HealthCard QR.', 'info');
+      this.stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+      });
 
-          // Simulate QR decode after 2.5s for demonstration
-          setTimeout(() => {
-            showToast('QR Code detected! Resolving card token...', 'success');
-            this.handleLookup('74839 16251');
-          }, 2500);
+      if (this.videoEl) {
+        this.videoEl.srcObject = this.stream;
+        this.videoEl.setAttribute('playsinline', 'true');
+        await this.videoEl.play();
+
+        if (placeholder) placeholder.style.display = 'none';
+        if (statusBadge) {
+          statusBadge.textContent = 'Camera Active';
+          statusBadge.style.background = '#dcfce7';
+          statusBadge.style.color = '#15803d';
         }
-      } else {
-        showToast('Camera access not supported on this browser profile.', 'warning');
+
+        showToast('Camera active. Point towards HealthCard QR code.', 'info');
+        this.scanVideoFrame();
       }
-    } catch (e) {
-      console.warn('Camera error:', e);
-      showToast('Camera stream simulated for local workstation.', 'info');
+    } catch (err) {
+      console.warn('Camera stream error:', err);
+      showToast('Camera unavailable. Use manual search or demo cards.', 'warning');
       if (placeholder) {
         placeholder.innerHTML = `
-          <div style="color: #14b8a6; font-weight: 700; margin-bottom: 6px;">Camera Simulator Active</div>
-          <div style="font-size: 11.5px; color: #94a3b8; margin-bottom: 12px;">Webcam not connected. Use demo card buttons below.</div>
-          <button type="button" class="btn btn-sm btn-primary" onclick="document.querySelector('.btn-demo-card').click()">
+          <div style="color: #ef4444; font-weight: 700; margin-bottom: 6px;">Camera Access Denied / Unavailable</div>
+          <div style="font-size: 11.5px; color: #94a3b8; margin-bottom: 12px;">Webcam not connected or permission blocked.</div>
+          <button type="button" class="btn btn-sm btn-primary" id="btn-fallback-rahul">
             Simulate Scan (Rahul Sharma)
           </button>
         `;
+        placeholder.querySelector('#btn-fallback-rahul')?.addEventListener('click', () => {
+          this.handleLookup('74839 16251');
+        });
       }
     }
   }
 
+  scanVideoFrame() {
+    if (!this.videoEl || this.videoEl.readyState !== this.videoEl.HAVE_ENOUGH_DATA) {
+      this.scanningAnimFrame = requestAnimationFrame(() => this.scanVideoFrame());
+      return;
+    }
+
+    this.canvasEl.width = this.videoEl.videoWidth;
+    this.canvasEl.height = this.videoEl.videoHeight;
+    this.canvasCtx.drawImage(this.videoEl.video, 0, 0, this.canvasEl.width, this.canvasEl.height);
+
+    const imageData = this.canvasCtx.getImageData(0, 0, this.canvasEl.width, this.canvasEl.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+      inversionAttempts: 'dontInvert'
+    });
+
+    if (code && code.data) {
+      const parsedQuery = this.extractHealthIdFromQR(code.data);
+      if (parsedQuery) {
+        this.stopCamera();
+        showToast('Valid HealthCard QR detected!', 'success');
+        this.handleLookup(parsedQuery);
+        return;
+      }
+    }
+
+    this.scanningAnimFrame = requestAnimationFrame(() => this.scanVideoFrame());
+  }
+
+  extractHealthIdFromQR(rawValue) {
+    if (!rawValue) return null;
+    const str = rawValue.trim();
+
+    // 1. URL pattern: https://hc.national.gov.in/c/{healthId}
+    const urlMatch = str.match(/hc\.national\.gov\.in\/c\/([A-Za-z0-9_]+)/i);
+    if (urlMatch) return urlMatch[1];
+
+    // 2. Token pattern: tok_{token}
+    if (str.startsWith('tok_')) return str;
+
+    // 3. 10-digit number
+    const digitsOnly = str.replace(/\D/g, '');
+    if (digitsOnly.length === 10) return digitsOnly;
+
+    return null;
+  }
+
+  stopCamera() {
+    if (this.scanningAnimFrame) {
+      cancelAnimationFrame(this.scanningAnimFrame);
+      this.scanningAnimFrame = null;
+    }
+    if (this.stream) {
+      this.stream.getTracks().forEach(t => t.stop());
+      this.stream = null;
+    }
+  }
+
+  // ==========================================
+  // PATIENT LOOKUP HANDLER
+  // ==========================================
   handleLookup(query) {
     const res = hospitalStore.resolveCardToken(query);
-    const mount = this.container.querySelector('#identity-gate-mount');
+    const mount = this.container.querySelector('#patient-action-hub-mount');
     if (!mount) return;
 
-    if (!res || !res.found) {
+    if (!res || !res.found || !res.patient) {
       mount.innerHTML = `
-        <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: var(--radius-xl); padding: 20px; text-align: center; color: #991b1b;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" style="margin-bottom: 8px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-          <div style="font-weight: 700; font-size: 14px;">Card Token Not Found</div>
-          <div style="font-size: 12px; margin-top: 4px; color: #7f1d1d;">No registered active HealthCard matches identifier "${query}". Verify 10-digit Health ID or check with card issuer.</div>
+        <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: var(--radius-xl); padding: 22px; text-align: center; color: #991b1b; animation: fadeIn 0.2s ease;">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" style="margin-bottom: 8px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          <div style="font-weight: 700; font-size: 15px;">No Patient Found for "${query}"</div>
+          <div style="font-size: 12.5px; margin-top: 4px; color: #7f1d1d; max-width: 480px; margin-left: auto; margin-right: auto;">
+            This identifier is not registered yet. You can register them as a walk-in patient in under 60 seconds.
+          </div>
+          <button type="button" class="btn btn-primary" id="btn-goto-register-unfound" style="margin-top: 14px;">
+            + Register New Walk-In Patient Now
+          </button>
         </div>
       `;
+
+      mount.querySelector('#btn-goto-register-unfound')?.addEventListener('click', () => {
+        this.activeTab = 'register';
+        this.render();
+      });
+
       showToast('Patient not found in registry', 'error');
       return;
     }
 
-    this.resolvedResult = res;
-    this.renderIdentityGate(mount);
-    showToast('Card token resolved. In-person identity check required.', 'info');
+    this.resolvedPatient = res.patient;
+    this.renderActionHub(res.patient);
+    showToast(`Found patient: ${res.patient.fullName}`, 'success');
   }
 
-  renderIdentityGate(container) {
-    const { patient, maskedIdentity } = this.resolvedResult;
+  // ==========================================
+  // NEW PATIENT REGISTRATION HANDLER
+  // ==========================================
+  handleRegister() {
+    const name = this.container.querySelector('#reg-name').value.trim();
+    const age = this.container.querySelector('#reg-age').value.trim();
+    const gender = this.container.querySelector('#reg-gender').value;
+    const mobile = this.container.querySelector('#reg-mobile').value.trim();
+    const bloodGroup = this.container.querySelector('#reg-blood').value;
+    const guardian = this.container.querySelector('#reg-guardian').value.trim();
+    const address = this.container.querySelector('#reg-address').value.trim();
+    const city = this.container.querySelector('#reg-city').value.trim();
+    const pincode = this.container.querySelector('#reg-pincode').value.trim();
 
-    container.innerHTML = `
-      <div class="identity-gate-card">
-        <div class="gate-badge-banner">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <div>
-            <strong>Mandatory Identity Confirmation Gate (PRD ACC-01 / ACC-02)</strong>
-            <div style="font-size: 11.5px; opacity: 0.9;">Verify cardholder's physical presence before requesting longitudinal clinical access.</div>
-          </div>
-        </div>
+    const isManual = this.container.querySelector('#radio-manual-card')?.checked;
+    const customHid = isManual ? this.container.querySelector('#reg-custom-hid').value.trim() : null;
 
-        <div class="masked-profile-box">
-          <img src="${maskedIdentity.photoUrl}" class="masked-avatar" alt="${maskedIdentity.fullName}" />
-          <div class="masked-details">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <div class="masked-name">${maskedIdentity.fullName}</div>
-              <span class="blood-group-tag">${maskedIdentity.bloodGroup}</span>
-            </div>
-            <div class="masked-row">
-              <span class="mono-health-id">${formatHealthId(maskedIdentity.healthId)}</span>
-              <span>•</span>
-              <span>${calculateAge(maskedIdentity.age)}</span>
-              <span>•</span>
-              <span>${maskedIdentity.gender}</span>
-            </div>
-            <div style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
-              <span>Registered Mobile:</span>
-              <strong style="color: var(--text-secondary);">${maskedIdentity.mobileMasked}</strong>
-              <span class="badge badge-active" style="margin-left: 8px;">KYC ${maskedIdentity.kycStatus}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Identity Confirmation Checkbox -->
-        <div style="background: #fafbfc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 20px;">
-          <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-main);">
-            <input type="checkbox" id="chk-confirm-presence" style="width: 18px; height: 18px; accent-color: var(--color-primary); margin-top: 1px;" />
-            <span>I confirm that the patient is physically present at the clinical desk and their identity matches the presenting HealthCard.</span>
-          </label>
-        </div>
-
-        <button type="button" class="btn btn-primary" id="btn-confirm-identity" style="width: 100%;" disabled>
-          Confirm In-Person Identity & Configure Consent →
-        </button>
-      </div>
-    `;
-
-    const chk = container.querySelector('#chk-confirm-presence');
-    const btn = container.querySelector('#btn-confirm-identity');
-
-    chk.addEventListener('change', () => {
-      btn.disabled = !chk.checked;
-    });
-
-    btn.addEventListener('click', () => {
-      hospitalStore.confirmIdentity(patient.healthId);
-      this.renderConsentDrawer(container);
-    });
-  }
-
-  renderConsentDrawer(container) {
-    const { patient, maskedIdentity } = this.resolvedResult;
-    const staff = hospitalStore.getCurrentStaff();
-
-    container.innerHTML = `
-      <div class="identity-gate-card">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
-          <div>
-            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">Access Request & Consent Center</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0 0;">Patient: ${maskedIdentity.fullName} (${formatHealthId(maskedIdentity.healthId)})</p>
-          </div>
-          <span class="badge badge-active">Identity Confirmed</span>
-        </div>
-
-        <!-- Clinical Scopes Selector -->
-        <div style="margin-bottom: 16px;">
-          <label class="form-label">Clinical Data Scopes Requested (PRD ACC-03):</label>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
-            <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" class="scope-cb" value="demographics" checked /> Demographics
-            </label>
-            <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" class="scope-cb" value="allergies" checked /> Allergies & Alerts
-            </label>
-            <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" class="scope-cb" value="conditions" checked /> Active Conditions
-            </label>
-            <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" class="scope-cb" value="medications" checked /> Current Medications
-            </label>
-            <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" class="scope-cb" value="encounters" checked /> Clinical Consultations
-            </label>
-            <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" class="scope-cb" value="labs" checked /> Diagnostics & Labs
-            </label>
-            <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" class="scope-cb" value="hospitalizations" checked /> Inpatient Stays (IPD)
-            </label>
-            <label style="font-size: 12.5px; display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" class="scope-cb" value="documents" checked /> Clinical Documents
-            </label>
-          </div>
-
-          <!-- Sensitive Scopes Notice -->
-          <div style="margin-top: 10px; padding: 8px 12px; background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius-md); font-size: 12px; color: #92400e;">
-            <div style="font-weight: 600; margin-bottom: 2px;">Statutory Sensitive Scopes (PRD ACC-07):</div>
-            <div style="display: flex; gap: 14px; margin-top: 4px;">
-              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                <input type="checkbox" class="scope-cb" value="mental_health" /> Mental Health
-              </label>
-              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                <input type="checkbox" class="scope-cb" value="reproductive_health" /> Reproductive Health
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Purpose & Duration Grid -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
-          <div>
-            <label class="form-label">Purpose of Care:</label>
-            <select class="form-select" id="sel-consent-purpose">
-              <option value="opd">Outpatient Consultation (OPD)</option>
-              <option value="emergency">Emergency Trauma Evaluation</option>
-              <option value="admission">Inpatient Ward Admission (IPD)</option>
-              <option value="lab_order">Diagnostic Laboratory Testing</option>
-            </select>
-          </div>
-          <div>
-            <label class="form-label">Authorization Duration:</label>
-            <div style="display: flex; gap: 6px; margin-top: 4px;">
-              <button type="button" class="btn btn-sm btn-outline duration-chip active" data-hours="24">24 Hours</button>
-              <button type="button" class="btn btn-sm btn-outline duration-chip" data-hours="1">1 Hour</button>
-              <button type="button" class="btn btn-sm btn-outline duration-chip" data-hours="168">7 Days</button>
-              <button type="button" class="btn btn-sm btn-outline duration-chip" data-hours="720">30 Days</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Multi-Channel Consent Method Selector (PRD ACC-05) -->
-        <div style="margin-bottom: 20px;">
-          <label class="form-label">Patient Consent Channel:</label>
-          <div style="display: flex; gap: 8px; margin-top: 6px;">
-            <button type="button" class="btn btn-sm btn-outline consent-tab active" data-method="app" style="flex: 1;">
-              Citizen App Push
-            </button>
-            <button type="button" class="btn btn-sm btn-outline consent-tab" data-method="otp" style="flex: 1;">
-              Mobile SMS OTP
-            </button>
-            <button type="button" class="btn btn-sm btn-outline consent-tab" data-method="assisted" style="flex: 1;">
-              Assisted In-Person
-            </button>
-          </div>
-
-          <!-- Dynamic Method Container -->
-          <div id="consent-method-body" style="margin-top: 12px; padding: 12px; background: var(--bg-surface-subtle); border-radius: var(--radius-md); border: 1px solid var(--border-color); font-size: 12.5px;">
-            <div id="method-app-view">
-              <div style="font-weight: 600; color: var(--color-primary);">Realtime Push Notification Broadcast</div>
-              <div style="color: var(--text-muted); margin-top: 2px;">Patient will receive an instant approval request in their Citizen Portal dashboard. (Auto-approved in demo)</div>
-            </div>
-            <div id="method-otp-view" style="display: none;">
-              <div style="font-weight: 600; color: var(--text-main); margin-bottom: 6px;">SMS OTP to ${maskedIdentity.mobileMasked}</div>
-              <div style="display: flex; gap: 8px; align-items: center;">
-                <input type="text" class="form-input font-mono" id="otp-input" value="482019" maxlength="6" style="width: 140px; font-weight: 700; letter-spacing: 0.1em;" />
-                <span style="font-size: 11.5px; color: #15803d; font-weight: 600;">Code verified (Demo)</span>
-              </div>
-            </div>
-            <div id="method-assisted-view" style="display: none;">
-              <div style="font-weight: 600; color: var(--text-main); margin-bottom: 4px;">Assisted Statutory Flow (No Smartphone)</div>
-              <div style="color: var(--text-muted); margin-bottom: 6px;">Captures clinician + witness staff ID for patient consent attribution.</div>
-              <input type="text" class="form-input" id="witness-input" placeholder="Witness Staff ID (e.g. REC-104 Priya Nair)" value="REC-104 Priya Nair" />
-            </div>
-          </div>
-        </div>
-
-        <button type="button" class="btn btn-primary" id="btn-grant-and-open" style="width: 100%;">
-          Authorize Consent & Open Patient Chart →
-        </button>
-      </div>
-    `;
-
-    // Duration chips handler
-    const durationChips = container.querySelectorAll('.duration-chip');
-    durationChips.forEach(chip => {
-      chip.addEventListener('click', () => {
-        durationChips.forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        this.selectedDuration = parseInt(chip.getAttribute('data-hours'), 10) || 24;
-      });
-    });
-
-    // Consent method tabs handler
-    const methodTabs = container.querySelectorAll('.consent-tab');
-    methodTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        methodTabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        const method = tab.getAttribute('data-method');
-        this.activeConsentMethod = method;
-
-        container.querySelector('#method-app-view').style.display = method === 'app' ? 'block' : 'none';
-        container.querySelector('#method-otp-view').style.display = method === 'otp' ? 'block' : 'none';
-        container.querySelector('#method-assisted-view').style.display = method === 'assisted' ? 'block' : 'none';
-      });
-    });
-
-    // Final grant & navigate
-    const grantBtn = container.querySelector('#btn-grant-and-open');
-    grantBtn.addEventListener('click', () => {
-      const selectedScopes = Array.from(container.querySelectorAll('.scope-cb:checked')).map(cb => cb.value);
-      const purpose = container.querySelector('#sel-consent-purpose').value;
-
-      hospitalStore.requestAccess({
-        healthId: patient.healthId,
-        scopes: selectedScopes,
-        purpose,
-        durationHours: this.selectedDuration,
-        method: this.activeConsentMethod
+    try {
+      const result = hospitalStore.registerPatient({
+        fullName: name,
+        age: age,
+        gender: gender,
+        mobile: mobile,
+        bloodGroup: bloodGroup,
+        guardianName: guardian,
+        address: address,
+        city: city,
+        pincode: pincode,
+        healthId: customHid
       });
 
-      showToast(`Access granted for ${maskedIdentity.fullName}. Opening chart...`, 'success');
-      setTimeout(() => {
-        window.location.hash = `#patient?id=${(patient.healthId || '').replace(/\s+/g, '')}`;
-      }, 400);
-    });
+      if (result && result.patient) {
+        showToast(`Registered successfully! Health ID: ${result.patient.healthId}`, 'success');
+        this.resolvedPatient = result.patient;
+        this.renderActionHub(result.patient);
+      }
+    } catch (err) {
+      showToast(err.message || 'Registration failed', 'error');
+    }
   }
 }
