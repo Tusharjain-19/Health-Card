@@ -1,0 +1,17 @@
+{
+  "name": "@healthcard/hospital",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 3004",
+    "build": "vite build",
+    "preview": "vite preview --port 3004"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "vite": "^8.3.0"
+  }
+}

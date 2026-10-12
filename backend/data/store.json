@@ -1,0 +1,501 @@
+{
+  "hospitalProfile": {
+    "id": "hosp_aiims_01",
+    "name": "All India Institute of Medical Sciences (AIIMS)",
+    "registrationNo": "HOSP-DL-00192",
+    "accreditation": "NABH Accredited Tertiary Care Center",
+    "address": "Ansari Nagar East, Gautam Nagar, New Delhi, Delhi 110029",
+    "phone": "+91 11 2658 8500",
+    "email": "clinical.services@aiims.gov.in",
+    "emergencyHelpline": "108 / 112",
+    "totalBeds": 2478,
+    "icuBeds": 280,
+    "activeDepartments": 28
+  },
+  "doctors": [
+    {
+      "id": "doc_01",
+      "fullName": "Dr. Vikram Sethi",
+      "department": "Cardiology",
+      "specialization": "Interventional Cardiology & Cardiac Critical Care",
+      "qualification": "MBBS, MD (Medicine), DM (Cardiology), FACC",
+      "regNumber": "NMC/MCI-2004/09182",
+      "email": "dr.vikram@aiims.gov.in",
+      "phone": "+91 97234 56789",
+      "opdRoom": "OPD Room 204 (Cardiology Wing)",
+      "opdSchedule": "Mon, Wed, Fri (09:00 AM – 01:00 PM)",
+      "consultationFee": 0,
+      "avatar": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80",
+      "status": "Active",
+      "createdAt": "2026-08-01T00:00:00Z"
+    },
+    {
+      "id": "doc_02",
+      "fullName": "Dr. Neha Kapoor",
+      "department": "Internal Medicine",
+      "specialization": "General Medicine, Diabetology & Metabolic Health",
+      "qualification": "MBBS, MD (Internal Medicine)",
+      "regNumber": "DMC-2011/48102",
+      "email": "dr.neha@aiims.gov.in",
+      "phone": "+91 98111 22334",
+      "opdRoom": "OPD Room 112 (General Medicine)",
+      "opdSchedule": "Tue, Thu, Sat (09:00 AM – 02:00 PM)",
+      "consultationFee": 0,
+      "avatar": "https://images.unsplash.com/photo-1594824813590-4890c5f242e2?w=150&auto=format&fit=crop&q=80",
+      "status": "Active",
+      "createdAt": "2026-08-05T00:00:00Z"
+    },
+    {
+      "id": "doc_03",
+      "fullName": "Dr. Amit Verma",
+      "department": "Emergency & Trauma",
+      "specialization": "Emergency Medicine, Resuscitation & Trauma Surgery",
+      "qualification": "MBBS, MS (General Surgery), FACEM",
+      "regNumber": "MMC-2015/38192",
+      "email": "dr.amit@aiims.gov.in",
+      "phone": "+91 98222 33445",
+      "opdRoom": "Emergency Trauma Bay 01",
+      "opdSchedule": "24x7 Emergency Shifts",
+      "consultationFee": 0,
+      "avatar": "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=150&auto=format&fit=crop&q=80",
+      "status": "Active",
+      "createdAt": "2026-08-10T00:00:00Z"
+    },
+    {
+      "id": "doc_04",
+      "fullName": "Dr. Sunita Rao",
+      "department": "Pulmonology",
+      "specialization": "Respiratory & Critical Care Medicine",
+      "qualification": "MBBS, MD (Pulmonary Medicine)",
+      "regNumber": "KMC-2012/10492",
+      "email": "dr.sunita.rao@aiims.gov.in",
+      "phone": "+91 98451 22339",
+      "opdRoom": "OPD Room 310 (Chest Clinic)",
+      "opdSchedule": "Mon, Thu (10:00 AM – 02:00 PM)",
+      "consultationFee": 0,
+      "avatar": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&auto=format&fit=crop&q=80",
+      "status": "Active",
+      "createdAt": "2026-08-20T00:00:00Z"
+    },
+    {
+      "id": "doc_1791781832254",
+      "fullName": "Dr. Rajesh Sharma",
+      "department": "Neurology",
+      "specialization": "Neuro-critical Care & Stroke",
+      "qualification": "MBBS, MD, DM (Neurology)",
+      "regNumber": "NMC-2016/55441",
+      "email": "dr.rajesh.sharma@aiims.gov.in",
+      "phone": "+91 98111 22334",
+      "opdRoom": "OPD Room 402 (Neuro Wing)",
+      "opdSchedule": "Mon, Wed, Fri (11:00 AM - 03:00 PM)",
+      "consultationFee": 100,
+      "avatar": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150&auto=format&fit=crop&q=80",
+      "status": "Active",
+      "createdAt": "2026-10-12T05:10:32.254Z"
+    }
+  ],
+  "services": [
+    {
+      "id": "srv_01",
+      "code": "OPD-CONSULT",
+      "name": "Outpatient Clinical Consultation",
+      "department": "General Medicine / Specialty",
+      "category": "Consultation",
+      "standardFee": 50,
+      "description": "Comprehensive physical examination, history review, provisional diagnosis, and e-prescription issuance."
+    },
+    {
+      "id": "srv_02",
+      "code": "EMERG-RESUS",
+      "name": "Emergency Resuscitation & Trauma Stabilization",
+      "department": "Emergency & Trauma",
+      "category": "Emergency",
+      "standardFee": 250,
+      "description": "Immediate advanced life support, trauma airway management, rapid triage, and hemodynamic resuscitation."
+    },
+    {
+      "id": "srv_03",
+      "code": "IPD-GEN-BED",
+      "name": "Inpatient General Ward Bed & Nursing Care (Per Day)",
+      "department": "Inpatient Wards",
+      "category": "Inpatient",
+      "standardFee": 500,
+      "description": "Routine ward accommodation, daily resident physician rounds, 24/7 nursing vitals, and medication administration."
+    },
+    {
+      "id": "srv_04",
+      "code": "IPD-ICU-BED",
+      "name": "Intensive Care Unit (ICU) Critical Bed (Per Day)",
+      "department": "Critical Care",
+      "category": "Inpatient",
+      "standardFee": 2500,
+      "description": "Dedicated intensive care bed with continuous multi-channel cardiac telemetry, invasive arterial monitoring, and 1:1 nursing."
+    },
+    {
+      "id": "srv_05",
+      "code": "DIAG-ECG-12",
+      "name": "12-Lead Resting Electrocardiogram (ECG)",
+      "department": "Cardiology",
+      "category": "Diagnostics",
+      "standardFee": 150,
+      "description": "High-resolution computerized 12-lead resting cardiac rhythm and ST-segment evaluation."
+    },
+    {
+      "id": "srv_06",
+      "code": "RAD-CHEST-PA",
+      "name": "Digital Chest Radiograph (X-Ray PA View)",
+      "department": "Radiology",
+      "category": "Imaging",
+      "standardFee": 200,
+      "description": "Digital radiographic evaluation of pulmonary parenchyma, pleural spaces, and cardiothoracic silhouette."
+    },
+    {
+      "id": "srv_07",
+      "code": "LAB-HBA1C",
+      "name": "HbA1c (Glycated Hemoglobin HPLC Test)",
+      "department": "Biochemistry",
+      "category": "Laboratory",
+      "standardFee": 300,
+      "description": "Standardized gold-standard HPLC automated estimation of 3-month glycemic control."
+    },
+    {
+      "id": "srv_08",
+      "code": "LAB-LIPID",
+      "name": "Complete Lipid Profile (Cholesterol, LDL, HDL, Triglycerides)",
+      "department": "Biochemistry",
+      "category": "Laboratory",
+      "standardFee": 350,
+      "description": "Fractionated automated lipid analysis for cardiovascular risk stratification."
+    }
+  ],
+  "members": [
+    {
+      "id": "mem_001",
+      "applicationRef": "APP-20260915-1082",
+      "healthId": "74839 16251",
+      "fullName": "Rahul Sharma",
+      "dob": "1988-04-12",
+      "gender": "Male",
+      "mobile": "9876543210",
+      "email": "rahul.sharma@example.com",
+      "bloodGroup": "O+",
+      "address": {
+        "street": "42, Green Park Avenue",
+        "city": "New Delhi",
+        "state": "Delhi",
+        "pinCode": "110016"
+      },
+      "emergencyContact": {
+        "name": "Pooja Sharma",
+        "relation": "Spouse",
+        "phone": "9876543211"
+      },
+      "status": "Active",
+      "photoUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+      "kyc": {
+        "documentType": "Aadhaar Card",
+        "documentNumber": "5829 4018 9201",
+        "status": "Verified"
+      },
+      "createdAt": "2026-09-15T10:30:00Z"
+    },
+    {
+      "id": "mem_002",
+      "applicationRef": "APP-20260918-3491",
+      "healthId": "81920 34719",
+      "fullName": "Ananya Deshmukh",
+      "dob": "1994-11-28",
+      "gender": "Female",
+      "mobile": "9812345678",
+      "email": "ananya.d@example.com",
+      "bloodGroup": "B+",
+      "address": {
+        "street": "12B, Bandra West",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "pinCode": "400050"
+      },
+      "emergencyContact": {
+        "name": "Sanjay Deshmukh",
+        "relation": "Father",
+        "phone": "9812345679"
+      },
+      "status": "Active",
+      "photoUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80",
+      "kyc": {
+        "documentType": "Voter ID",
+        "documentNumber": "EPIC9482014",
+        "status": "Verified"
+      },
+      "createdAt": "2026-09-18T14:15:00Z"
+    },
+    {
+      "id": "mem_004",
+      "applicationRef": "APP-20260925-8812",
+      "healthId": "90218 54310",
+      "fullName": "Sunita Patel",
+      "dob": "1962-01-19",
+      "gender": "Female",
+      "mobile": "9654321098",
+      "email": "sunita.patel@example.com",
+      "bloodGroup": "AB+",
+      "address": {
+        "street": "15, Navrangpura",
+        "city": "Ahmedabad",
+        "state": "Gujarat",
+        "pinCode": "380009"
+      },
+      "emergencyContact": {
+        "name": "Amit Patel",
+        "relation": "Son",
+        "phone": "9654321099"
+      },
+      "status": "Active",
+      "photoUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80",
+      "kyc": {
+        "documentType": "Driving License",
+        "documentNumber": "DL-042011001928",
+        "status": "Verified"
+      },
+      "createdAt": "2026-09-25T11:45:00Z"
+    }
+  ],
+  "cards": [
+    {
+      "id": "card_001",
+      "memberId": "mem_001",
+      "healthId": "74839 16251",
+      "serialNumber": "74839 16251",
+      "token": "tok_7483916251",
+      "tokenHash": "hash_7483916251",
+      "templateId": "teal_standard",
+      "status": "Active",
+      "issuedAt": "2026-09-15T11:00:00Z",
+      "activatedAt": "2026-09-16T09:20:00Z"
+    },
+    {
+      "id": "card_002",
+      "memberId": "mem_002",
+      "healthId": "81920 34719",
+      "serialNumber": "81920 34719",
+      "token": "tok_8192034719",
+      "tokenHash": "hash_8192034719",
+      "templateId": "slate_enterprise",
+      "status": "Active",
+      "issuedAt": "2026-09-18T14:30:00Z",
+      "activatedAt": "2026-09-19T10:15:00Z"
+    },
+    {
+      "id": "card_004",
+      "memberId": "mem_004",
+      "healthId": "90218 54310",
+      "serialNumber": "90218 54310",
+      "token": "tok_9021854310",
+      "tokenHash": "hash_9021854310",
+      "templateId": "teal_standard",
+      "status": "Active",
+      "issuedAt": "2026-09-25T12:00:00Z",
+      "activatedAt": "2026-09-26T09:00:00Z"
+    }
+  ],
+  "consultations": [
+    {
+      "id": "cns_001",
+      "healthId": "74839 16251",
+      "doctorId": "doc_01",
+      "doctorName": "Dr. Vikram Sethi",
+      "department": "Cardiology",
+      "facility": "AIIMS New Delhi — Cardiology OPD",
+      "date": "2026-09-28T10:30:00Z",
+      "chiefComplaint": "Routine 6-month cardiovascular and diabetic review. Occasional mild fatigue.",
+      "duration": "3 weeks",
+      "examination": "Well oriented, conscious. S1, S2 heard normal. Chest clear bilaterally. Per abdomen soft. Pedal pulses palpable.",
+      "vitals": {
+        "bpSys": 126,
+        "bpDia": 82,
+        "pulse": 74,
+        "spo2": 98,
+        "temp": 98.4,
+        "weight": 76.2
+      },
+      "diagnoses": [
+        {
+          "code": "I10",
+          "name": "Essential (Primary) Hypertension"
+        },
+        {
+          "code": "E11.9",
+          "name": "Type 2 Diabetes Mellitus"
+        }
+      ],
+      "prescriptions": [
+        {
+          "drug": "Telmisartan",
+          "dosage": "40 mg",
+          "frequency": "OD",
+          "timing": "Morning after food",
+          "days": 90
+        },
+        {
+          "drug": "Metformin SR",
+          "dosage": "500 mg",
+          "frequency": "BD",
+          "timing": "After meals",
+          "days": 90
+        },
+        {
+          "drug": "Atorvastatin",
+          "dosage": "10 mg",
+          "frequency": "OD (HS)",
+          "timing": "At bedtime",
+          "days": 90
+        }
+      ],
+      "investigationsOrdered": [
+        "HbA1c",
+        "Lipid Profile",
+        "Serum Creatinine"
+      ],
+      "uploadedReports": [
+        {
+          "name": "Prior_Lipid_Profile_Report.pdf",
+          "size": "240 KB",
+          "uploadedAt": "2026-09-28T10:35:00Z"
+        }
+      ],
+      "advice": "Maintain low sodium diet (<5g/day). 30 mins brisk walk daily. Review with reports in 2 weeks.",
+      "followUpDate": "2026-10-15",
+      "verification": "provider_verified"
+    }
+  ],
+  "admissions": [
+    {
+      "id": "adm_001",
+      "healthId": "74839 16251",
+      "memberName": "Rahul Sharma",
+      "bloodGroup": "O+",
+      "ward": "General Medical Ward",
+      "bedNumber": "Bed GW-14",
+      "admittingDoctorId": "doc_01",
+      "admittingDoctor": "Dr. Vikram Sethi",
+      "admittedAt": "2026-08-12T09:30:00Z",
+      "dischargedAt": "2026-08-15T15:00:00Z",
+      "status": "Discharged",
+      "admittingDiagnosis": "Acute Viral Gastroenteritis with Dehydration",
+      "finalDiagnosis": "Acute Infective Gastroenteritis (Resolved), Hypokalemia (Corrected)",
+      "courseSummary": "Patient managed with IV fluid rehydration, antiemetics, and electrolyte correction. Discharged stable.",
+      "days": [
+        {
+          "dayNo": 1,
+          "date": "2026-08-12",
+          "doctorNote": "Patient arrived with vomiting and loose stools. IV access established. IV fluids initiated. Electrolytes sent.",
+          "nurseNote": "Vitals: BP 106/70, Pulse 98. Output 450ml in 6h. Infusion running smoothly.",
+          "proceduresDone": "Peripheral IV Cannulation 20G left forearm, Intravenous Rehydration therapy, Stool analysis collection.",
+          "medsDoses": [
+            {
+              "drug": "IV Ondansetron",
+              "dose": "4 mg",
+              "route": "IV",
+              "time": "10:00 AM",
+              "status": "Given",
+              "nurse": "Sister Rekha"
+            },
+            {
+              "drug": "IV Pantoprazole",
+              "dose": "40 mg",
+              "route": "IV",
+              "time": "10:15 AM",
+              "status": "Given",
+              "nurse": "Sister Rekha"
+            },
+            {
+              "drug": "IV Ringer Lactate",
+              "dose": "1000 mL",
+              "route": "IV Infusion",
+              "time": "11:00 AM",
+              "status": "Given",
+              "nurse": "Sister Rekha"
+            }
+          ],
+          "testReports": [
+            {
+              "name": "Serum_Electrolytes_Day1.pdf",
+              "value": "Na: 136, K: 3.4 mEq/L (Low)",
+              "uploadedAt": "2026-08-12T13:00:00Z"
+            }
+          ]
+        },
+        {
+          "dayNo": 2,
+          "date": "2026-08-13",
+          "doctorNote": "Vomiting subsided. Diarrhea controlled. Potassium normalized to 3.9 mEq/L. Shifted to oral fluids.",
+          "nurseNote": "Vitals: BP 118/76, Pulse 82. Tolerating soft diet well. Ambulated comfortably.",
+          "proceduresDone": "Electrolyte review, dietary advancement to oral fluids, discontinuation of IV fluids.",
+          "medsDoses": [
+            {
+              "drug": "Oral Probiotic Spores",
+              "dose": "2 Billion",
+              "route": "Oral",
+              "time": "08:30 AM",
+              "status": "Given",
+              "nurse": "Nurse Sunita"
+            },
+            {
+              "drug": "Oral ORS Fluid",
+              "dose": "1000 mL",
+              "route": "Oral",
+              "time": "12:00 PM",
+              "status": "Given",
+              "nurse": "Nurse Sunita"
+            }
+          ],
+          "testReports": [
+            {
+              "name": "Serum_Electrolytes_Day2_Normal.pdf",
+              "value": "K: 3.9 mEq/L (Normal)",
+              "uploadedAt": "2026-08-13T11:00:00Z"
+            }
+          ]
+        }
+      ],
+      "dischargeMeds": [
+        {
+          "drug": "Oral Probiotic Spores",
+          "dosage": "2 Billion Spores",
+          "frequency": "BD",
+          "days": 5
+        },
+        {
+          "drug": "Oral Zinc Gluconate",
+          "dosage": "20 mg",
+          "frequency": "OD",
+          "days": 7
+        }
+      ],
+      "dischargeAdvice": "Avoid outside food for 10 days. Continue boiled water. Resume routine Telmisartan."
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "aud_1791781832254",
+      "timestamp": "2026-10-12T05:10:32.254Z",
+      "actor": "Dr. Vikram Sethi",
+      "role": "Admin",
+      "action": "DOCTOR_ONBOARDED",
+      "target": "Dr. Rajesh Sharma (NMC-2016/55441)",
+      "details": "Added to Neurology. OPD: OPD Room 402 (Neuro Wing)",
+      "status": "Success"
+    },
+    {
+      "id": "aud_001",
+      "timestamp": "2026-10-12T04:41:57.943Z",
+      "actor": "Dr. Vikram Sethi (Cardiology)",
+      "role": "Doctor",
+      "action": "OPD_CONSULTATION_SAVED",
+      "target": "Rahul Sharma (74839 16251)",
+      "details": "Authored consultation cns_001 with 3 Rx items and 3 lab orders",
+      "status": "Success",
+      "ipAddress": "127.0.0.1"
+    }
+  ]
+}

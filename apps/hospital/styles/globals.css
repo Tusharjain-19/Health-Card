@@ -1,0 +1,12 @@
+/* Standalone CSS for Hospital Administration Portal — No shared UI coupling */
+:root {
+  --primary: #0f766e;
+  --bg: #f8fafc;
+  --text: #0f172a;
+}
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+}

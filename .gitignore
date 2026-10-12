@@ -1,0 +1,31 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Testing
+coverage
+
+# Next.js / Vite build output
+.next/
+dist/
+out/
+build/
+
+# Misc
+.DS_Store
+*.pem
+
+# Local env files
+.env*.local
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+turbo.log
+
+# Temporary storage
+storage/generated-files/*
+!storage/generated-files/.gitkeep

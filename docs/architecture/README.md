@@ -1,0 +1,1 @@
+# HealthCard — ARCHITECTURE Documentation

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="HealthCard Issuer Admin Panel — National Health Record Infrastructure" />
+  <title>HealthCard — Issuer Admin Portal</title>
+  
+  <!-- Non-AI Professional Fonts (Inter & IBM Plex Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Shared Theme & Admin Styles -->
+  <link rel="stylesheet" href="../../shared/styles/theme.css" />
+  <link rel="stylesheet" href="./admin.css" />
+</head>
+<body>
+  <div id="admin-app-root"></div>
+
+  <script type="module">
+    import { initAdminPanel } from './admin.js';
+    const root = document.getElementById('admin-app-root');
+    initAdminPanel(root);
+  </script>
+</body>
+</html>

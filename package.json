@@ -1,0 +1,32 @@
+{
+  "name": "healthcard-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "backend",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm --prefix apps/admin run dev",
+    "dev:admin": "npm --prefix apps/admin run dev",
+    "dev:applicant": "npm --prefix apps/applicant run dev",
+    "dev:doctor": "npm --prefix apps/doctor run dev",
+    "dev:emergency": "npm --prefix apps/emergency run dev",
+    "dev:hospital": "npm --prefix apps/hospital run dev",
+    "dev:laboratory": "npm --prefix apps/laboratory run dev",
+    "dev:patient": "npm --prefix apps/patient run dev",
+    "dev:backend": "node backend/server.js",
+    "build:admin": "npm --prefix apps/admin run build",
+    "build:applicant": "npm --prefix apps/applicant run build",
+    "build:hospital": "npm --prefix apps/hospital run build",
+    "lint": "echo 'Linting portals...'"
+  },
+  "devDependencies": {
+    "vite": "^8.3.0"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
+}
