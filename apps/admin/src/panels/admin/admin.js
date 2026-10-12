@@ -82,8 +82,15 @@ function renderLoginView(container) {
       <div class="login-box" style="width: 100%; max-width: 440px; background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 32px; box-shadow: var(--shadow-md);">
         
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-          <div style="width: 40px; height: 40px; background: var(--color-primary); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: #ffffff;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          <div style="width: 44px; height: 44px; background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); border-radius: 11px; display: flex; align-items: center; justify-content: center; color: #ffffff; box-shadow: 0 4px 10px rgba(29, 78, 216, 0.3);">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2.5L27 6.8V15.5C27 22.8 22.3 28.1 16 30C9.7 28.1 5 22.8 5 15.5V6.8L16 2.5Z" fill="#1d4ed8"/>
+              <path d="M16 4.3L25.2 7.9V15.5C25.2 21.6 21.2 26.2 16 28C10.8 26.2 6.8 21.6 6.8 15.5V7.9L16 4.3Z" stroke="#93c5fd" stroke-width="0.9" stroke-opacity="0.7"/>
+              <path d="M16 9V23M9 16H23" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
+              <path d="M7 16H11.5L13.5 12.5L16 20.5L18.5 13.5L20.5 16H25" stroke="#a7f3d0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="16" cy="16" r="2.2" fill="#10b981"/>
+              <circle cx="16" cy="16" r="1.1" fill="#ffffff"/>
+            </svg>
           </div>
           <div>
             <h1 style="font-size: 18px; font-weight: 700; color: var(--text-main); margin: 0; line-height: 1.2;">HealthCard</h1>
@@ -170,8 +177,15 @@ function renderAppShell(container) {
       <!-- Sidebar -->
       <aside class="admin-sidebar" id="admin-sidebar">
         <div class="sidebar-brand">
-          <div class="brand-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          <div class="brand-icon" style="overflow: hidden; width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); box-shadow: 0 2px 6px rgba(29, 78, 216, 0.25);">
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2.5L27 6.8V15.5C27 22.8 22.3 28.1 16 30C9.7 28.1 5 22.8 5 15.5V6.8L16 2.5Z" fill="#1d4ed8"/>
+              <path d="M16 4.3L25.2 7.9V15.5C25.2 21.6 21.2 26.2 16 28C10.8 26.2 6.8 21.6 6.8 15.5V7.9L16 4.3Z" stroke="#93c5fd" stroke-width="0.9" stroke-opacity="0.7"/>
+              <path d="M16 9V23M9 16H23" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
+              <path d="M7 16H11.5L13.5 12.5L16 20.5L18.5 13.5L20.5 16H25" stroke="#a7f3d0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="16" cy="16" r="2.2" fill="#10b981"/>
+              <circle cx="16" cy="16" r="1.1" fill="#ffffff"/>
+            </svg>
           </div>
           <div class="brand-text">
             <span class="brand-title">HealthCard</span>

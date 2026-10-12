@@ -1,7 +1,7 @@
 /**
  * HealthCard Hospital Portal: Institutional Healthcare Gateway & Auth View
  * Sleek Left-Right layout with punchy taglines, minimal text, Indian Govt multi-document licensing,
- * custom branding logo uploads, and 1-line concise messaging.
+ * custom branding logo uploads, zero emojis, and sharp SVG vector icons throughout.
  */
 
 import { hospitalStore } from '../../shared/storage.js';
@@ -25,68 +25,84 @@ export class HospitalAuthView {
 
   render() {
     this.container.innerHTML = `
-      <div class="auth-gateway-container" style="min-height: calc(100vh - 80px); display: flex; align-items: center; justify-content: center; padding: 24px 20px; background: #f8fafc;">
+      <div class="auth-gateway-container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 32px 20px; background: #f8fafc;">
         
-        <div style="max-width: 1040px; width: 100%; display: grid; grid-template-columns: 1fr 1.15fr; gap: 32px; align-items: center;">
+        <div style="max-width: 1060px; width: 100%; display: grid; grid-template-columns: 1fr 1.15fr; gap: 36px; align-items: center;">
           
           <!-- LEFT COLUMN: BRANDING, LOGO & PUNCHY TAGLINES -->
           <div class="auth-left-banner" style="padding: 12px 16px;">
             <!-- Official HealthCard Emblem -->
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-              <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #ffffff; box-shadow: 0 8px 16px -4px rgba(29, 78, 216, 0.35);">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                  <path d="M12 8v8M8 12h8" stroke-width="2.6"/>
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 22px;">
+              <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); border-radius: 13px; display: flex; align-items: center; justify-content: center; color: #ffffff; box-shadow: 0 8px 18px -4px rgba(29, 78, 216, 0.4);">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                  <path d="M16 2.5L27 6.8V15.5C27 22.8 22.3 28.1 16 30C9.7 28.1 5 22.8 5 15.5V6.8L16 2.5Z" fill="#1d4ed8"/>
+                  <path d="M16 4.3L25.2 7.9V15.5C25.2 21.6 21.2 26.2 16 28C10.8 26.2 6.8 21.6 6.8 15.5V7.9L16 4.3Z" stroke="#93c5fd" stroke-width="0.9" stroke-opacity="0.7"/>
+                  <path d="M16 9V23M9 16H23" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
+                  <path d="M7 16H11.5L13.5 12.5L16 20.5L18.5 13.5L20.5 16H25" stroke="#a7f3d0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="16" cy="16" r="2.2" fill="#10b981"/>
+                  <circle cx="16" cy="16" r="1.1" fill="#ffffff"/>
                 </svg>
               </div>
               <div>
-                <div style="font-size: 19px; font-weight: 800; color: #0f172a; line-height: 1.1; letter-spacing: -0.3px;">HealthCard</div>
+                <div style="font-size: 20px; font-weight: 800; color: #0f172a; line-height: 1.1; letter-spacing: -0.3px;">HealthCard</div>
                 <div style="font-size: 11.5px; font-weight: 700; color: #1d4ed8; text-transform: uppercase; letter-spacing: 0.05em;">Institutional Hospital Gateway</div>
               </div>
             </div>
 
             <!-- Big Punchy Taglines (1-2 Lines Max) -->
-            <h1 style="font-size: 30px; font-weight: 800; color: #0f172a; line-height: 1.2; margin: 0 0 8px 0; letter-spacing: -0.5px;">
+            <h1 style="font-size: 32px; font-weight: 800; color: #0f172a; line-height: 1.15; margin: 0 0 10px 0; letter-spacing: -0.5px;">
               Instant Care.<br /><span style="color: #1d4ed8;">Zero Paperwork.</span>
             </h1>
-            <p style="font-size: 14px; color: #475569; margin: 0 0 22px 0; line-height: 1.4; font-weight: 500;">
+            <p style="font-size: 14px; color: #475569; margin: 0 0 24px 0; line-height: 1.45; font-weight: 500;">
               The digital clinical operating system for India's hospitals, trauma centers & doctors.
             </p>
 
-            <!-- 1-Liner Feature Tiles -->
+            <!-- 1-Liner Feature Tiles (Pure SVG, Zero Emojis) -->
             <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;">
-              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: #eff6ff; color: #1d4ed8; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; font-weight: 800;">
-                  ⚡
+              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 11px 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  </svg>
                 </div>
-                <div style="font-size: 12.5px; color: #1e293b; line-height: 1.3;">
+                <div style="font-size: 12.5px; color: #1e293b; line-height: 1.35;">
                   <strong>5-Sec Emergency Scan:</strong> Instant allergy, blood group & trauma alerts.
                 </div>
               </div>
 
-              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: #ecfdf5; color: #059669; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; font-weight: 800;">
-                  📝
+              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 11px 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: #ecfdf5; color: #059669; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                    <path d="M9 14l2 2 4-4"/>
+                  </svg>
                 </div>
-                <div style="font-size: 12.5px; color: #1e293b; line-height: 1.3;">
+                <div style="font-size: 12.5px; color: #1e293b; line-height: 1.35;">
                   <strong>1-Click Digital OPD:</strong> Write prescriptions, order labs & dispense.
                 </div>
               </div>
 
-              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; font-weight: 800;">
-                  🛡️
+              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 11px 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <polyline points="9 12 11 14 15 10"/>
+                  </svg>
                 </div>
-                <div style="font-size: 12.5px; color: #1e293b; line-height: 1.3;">
+                <div style="font-size: 12.5px; color: #1e293b; line-height: 1.35;">
                   <strong>ABDM & NDHM Certified:</strong> 100% consent-driven, 256-bit encrypted vaults.
                 </div>
               </div>
 
-              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: #fdf2f8; color: #be185d; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; font-weight: 800;">
-                  🏥
+              <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 11px 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: #fdf2f8; color: #be185d; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/>
+                    <path d="M12 7v8M8 11h8"/>
+                  </svg>
                 </div>
-                <div style="font-size: 12.5px; color: #1e293b; line-height: 1.3;">
+                <div style="font-size: 12.5px; color: #1e293b; line-height: 1.35;">
                   <strong>10,000+ Empanelled Network:</strong> AIIMS, Apollo, Fortis, Max & more.
                 </div>
               </div>
@@ -201,26 +217,31 @@ export class HospitalAuthView {
           </button>
         </form>
 
-        <!-- 1-Click Multi-Hospital Badges -->
+        <!-- 1-Click Multi-Hospital Badges (Pure SVG Icons, Zero Emojis) -->
         <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid #e2e8f0;">
           <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 8px;">
             1-Click Empanelled Hospital Switcher:
           </div>
           <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-            <button type="button" class="btn btn-sm btn-outline btn-quick-chip" data-user="admin@aiims.gov.in" data-pass="admin123" style="font-size: 11px; padding: 4px 8px; background: #ffffff;">
-              🏥 AIIMS Delhi
+            <button type="button" class="btn btn-sm btn-outline btn-quick-chip" data-user="admin@aiims.gov.in" data-pass="admin123" style="font-size: 11px; padding: 4px 8px; background: #ffffff; display: inline-flex; align-items: center; gap: 5px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2.2"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/><path d="M12 7v8M8 11h8"/></svg>
+              <span>AIIMS Delhi</span>
             </button>
-            <button type="button" class="btn btn-sm btn-outline btn-quick-chip" data-user="admin@apollo.health" data-pass="apollo123" style="font-size: 11px; padding: 4px 8px; background: #ffffff;">
-              🏥 Apollo
+            <button type="button" class="btn btn-sm btn-outline btn-quick-chip" data-user="admin@apollo.health" data-pass="apollo123" style="font-size: 11px; padding: 4px 8px; background: #ffffff; display: inline-flex; align-items: center; gap: 5px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              <span>Apollo</span>
             </button>
-            <button type="button" class="btn btn-sm btn-outline btn-quick-chip" data-user="admin@fortis.in" data-pass="fortis123" style="font-size: 11px; padding: 4px 8px; background: #ffffff;">
-              🏥 Fortis
+            <button type="button" class="btn btn-sm btn-outline btn-quick-chip" data-user="admin@fortis.in" data-pass="fortis123" style="font-size: 11px; padding: 4px 8px; background: #ffffff; display: inline-flex; align-items: center; gap: 5px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.2"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>
+              <span>Fortis</span>
             </button>
-            <button type="button" class="btn btn-sm btn-outline btn-quick-chip" data-user="admin@maxhealthcare.in" data-pass="maxpass" style="font-size: 11px; padding: 4px 8px; background: #ffffff;">
-              🏥 Max Health
+            <button type="button" class="btn btn-sm btn-outline btn-quick-chip" data-user="admin@maxhealthcare.in" data-pass="maxpass" style="font-size: 11px; padding: 4px 8px; background: #ffffff; display: inline-flex; align-items: center; gap: 5px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2.2"><path d="M12 2v20M2 12h20"/></svg>
+              <span>Max Health</span>
             </button>
-            <button type="button" class="btn btn-sm btn-outline btn-quick-chip" data-user="doc.vikram" data-pass="1982" style="font-size: 11px; padding: 4px 8px; background: #ffffff;">
-              👨‍⚕️ Dr. Vikram
+            <button type="button" class="btn btn-sm btn-outline btn-quick-chip" data-user="doc.vikram" data-pass="1982" style="font-size: 11px; padding: 4px 8px; background: #ffffff; display: inline-flex; align-items: center; gap: 5px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>
+              <span>Dr. Vikram</span>
             </button>
           </div>
         </div>
@@ -296,26 +317,28 @@ export class HospitalAuthView {
             </div>
           </div>
 
-          <!-- Step 2: INDIAN GOVT REGULATORY DOCUMENT UPLOADS -->
+          <!-- Step 2: MANDATORY INDIAN GOVT REGULATORY DOCUMENT UPLOADS -->
           <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-              <span style="font-size: 11.5px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 5px;">
+              <span style="font-size: 11.5px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 6px;">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 Mandatory Indian Govt Licenses & Regulatory Docs:
               </span>
               <span style="font-size: 10px; color: #1d4ed8; font-weight: 700;">${this.attachedDocs.length} Attached</span>
             </div>
 
-            <!-- Attached Doc Chips -->
+            <!-- Attached Doc Chips with Pure SVG Check & Remove Icons -->
             <div id="attached-docs-list" style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px;">
               ${this.attachedDocs.map((doc, idx) => `
                 <div style="display: flex; justify-content: space-between; align-items: center; background: #ffffff; border: 1px solid #e2e8f0; padding: 5px 8px; border-radius: 6px; font-size: 11px;">
                   <div style="display: flex; align-items: center; gap: 6px; overflow: hidden;">
-                    <span style="color: #059669; font-weight: 800;">✓</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.6"><polyline points="20 6 9 17 4 12"/></svg>
                     <strong style="color: #1e293b;">${doc.type}:</strong>
                     <span style="color: #64748b; font-family: monospace;">${doc.name} (${doc.size})</span>
                   </div>
-                  <button type="button" class="btn-remove-doc" data-idx="${idx}" style="border: none; background: none; color: #dc2626; cursor: pointer; font-size: 11px; padding: 0 4px;" title="Remove Document">&times;</button>
+                  <button type="button" class="btn-remove-doc" data-idx="${idx}" style="border: none; background: none; color: #dc2626; cursor: pointer; padding: 2px 4px; display: flex; align-items: center;" title="Remove Document">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
                 </div>
               `).join('')}
             </div>
@@ -323,14 +346,17 @@ export class HospitalAuthView {
             <!-- Document Upload Trigger Buttons -->
             <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
               <input type="file" id="input-license-file" accept=".pdf,.png,.jpg,.jpeg" style="display: none;" />
-              <button type="button" class="btn btn-sm btn-outline" id="btn-browse-doc" style="font-size: 10.5px; padding: 4px 8px;">
-                + Upload PDF / Image
+              <button type="button" class="btn btn-sm btn-outline" id="btn-browse-doc" style="font-size: 10.5px; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>Upload PDF / Image</span>
               </button>
-              <button type="button" class="btn btn-sm btn-outline btn-add-preset-doc" data-type="NABH Accreditation Certificate" data-name="NABH_National_Accreditation_Cert.pdf" style="font-size: 10.5px; padding: 4px 8px;">
-                + Add NABH Cert
+              <button type="button" class="btn btn-sm btn-outline btn-add-preset-doc" data-type="NABH Accreditation Certificate" data-name="NABH_National_Accreditation_Cert.pdf" style="font-size: 10.5px; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                <span>Add NABH Cert</span>
               </button>
-              <button type="button" class="btn btn-sm btn-outline btn-add-preset-doc" data-type="Fire Safety NOC" data-name="State_Fire_Safety_NOC_2026.pdf" style="font-size: 10.5px; padding: 4px 8px;">
-                + Add Fire NOC
+              <button type="button" class="btn btn-sm btn-outline btn-add-preset-doc" data-type="Fire Safety NOC" data-name="State_Fire_Safety_NOC_2026.pdf" style="font-size: 10.5px; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                <span>Add Fire NOC</span>
               </button>
             </div>
           </div>
@@ -351,8 +377,9 @@ export class HospitalAuthView {
               <div style="flex: 1;">
                 <div style="display: flex; gap: 6px; margin-bottom: 4px;">
                   <input type="file" id="input-logo-file" accept="image/*" style="display: none;" />
-                  <button type="button" class="btn btn-sm btn-outline" id="btn-browse-logo" style="font-size: 10.5px; padding: 4px 8px;">
-                    Upload Custom Logo
+                  <button type="button" class="btn btn-sm btn-outline" id="btn-browse-logo" style="font-size: 10.5px; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <span>Upload Custom Logo</span>
                   </button>
                   <button type="button" class="btn btn-sm btn-outline btn-preset-logo" data-url="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=120&auto=format&fit=crop&q=80" style="font-size: 10.5px; padding: 4px 8px;">
                     Preset 1
@@ -401,8 +428,9 @@ export class HospitalAuthView {
                 <div style="font-size: 10.5px; color: #64748b;">${app.regNumber} • ${app.city}, ${app.state}</div>
               </div>
             </div>
-            <button type="button" class="btn btn-sm btn-outline" id="btn-edit-receipt" style="font-size: 11px; padding: 3px 8px;">
-              ✏️ Edit Details
+            <button type="button" class="btn btn-sm btn-outline" id="btn-edit-receipt" style="font-size: 11px; padding: 3px 8px; display: inline-flex; align-items: center; gap: 4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+              <span>Edit Details</span>
             </button>
           </div>
 

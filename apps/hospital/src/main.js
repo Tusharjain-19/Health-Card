@@ -38,39 +38,39 @@ export class HospitalApp {
   }
 
   renderShell() {
+    const rawHash = (window.location.hash || '').toLowerCase();
     const session = hospitalStore.getHospitalSession();
-    const activeStaff = hospitalStore.getCurrentStaff();
-    const settings = hospitalStore.getHospitalSettings();
-    const isLoginRoute = (window.location.hash || '').toLowerCase().startsWith('#login');
+    const isLoginRoute = rawHash.startsWith('#login') || !session;
 
-    if (!session && isLoginRoute) {
-      // Clean login shell without clinical navigation bar
+    if (isLoginRoute) {
+      // Standalone login screen without top navigation bar per user requirement
       this.appContainer.innerHTML = `
-        <div class="hospital-app">
-          <header class="hospital-header" style="justify-content: center; padding: 14px 24px;">
-            <div class="brand-wrapper">
-              <div class="brand-emblem">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M2 12h20"/></svg>
-              </div>
-              <div>
-                <div class="brand-title">National HealthCard Institutional Gateway</div>
-                <div class="brand-subtitle">Empanelled Hospitals & Healthcare Providers Network</div>
-              </div>
-            </div>
-          </header>
-          <main class="hospital-main" id="view-container"></main>
+        <div class="hospital-app hospital-auth-screen" style="min-height: 100vh;">
+          <main class="hospital-main" id="view-container" style="padding: 0; min-height: 100vh;"></main>
         </div>
       `;
       return;
     }
 
+    const activeStaff = hospitalStore.getCurrentStaff();
+    const settings = hospitalStore.getHospitalSettings();
+
     this.appContainer.innerHTML = `
       <div class="hospital-app">
-        <!-- Institutional Clinical Header (Uncluttered, No AI, Clean Rectangular Buttons) -->
+        <!-- Institutional Clinical Header (Uncluttered, Clean Rectangular Controls) -->
         <header class="hospital-header">
           <a href="#dashboard" class="brand-wrapper">
-            <div class="brand-emblem" style="overflow: hidden;">
-              ${settings.logoUrl ? `<img src="${settings.logoUrl}" style="width: 100%; height: 100%; object-fit: contain; border-radius: var(--radius-md);" alt="${settings.shortName}" />` : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M2 12h20"/></svg>`}
+            <div class="brand-emblem" style="overflow: hidden; width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); box-shadow: 0 2px 6px rgba(29, 78, 216, 0.25);">
+              ${settings.logoUrl ? `<img src="${settings.logoUrl}" style="width: 100%; height: 100%; object-fit: contain;" alt="${settings.shortName}" />` : `
+                <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
+                  <path d="M16 2.5L27 6.8V15.5C27 22.8 22.3 28.1 16 30C9.7 28.1 5 22.8 5 15.5V6.8L16 2.5Z" fill="#1d4ed8"/>
+                  <path d="M16 4.3L25.2 7.9V15.5C25.2 21.6 21.2 26.2 16 28C10.8 26.2 6.8 21.6 6.8 15.5V7.9L16 4.3Z" stroke="#93c5fd" stroke-width="0.9" stroke-opacity="0.7"/>
+                  <path d="M16 9V23M9 16H23" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
+                  <path d="M7 16H11.5L13.5 12.5L16 20.5L18.5 13.5L20.5 16H25" stroke="#a7f3d0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="16" cy="16" r="2.2" fill="#10b981"/>
+                  <circle cx="16" cy="16" r="1.1" fill="#ffffff"/>
+                </svg>
+              `}
             </div>
             <div>
               <div class="brand-title">${settings.shortName || 'HealthCard Hospital'}</div>
@@ -298,11 +298,16 @@ export class HospitalApp {
       return;
     }
 
-    const viewContainer = document.getElementById('view-container');
-    if (!viewContainer) {
+    const isLogin = route === '#login';
+    const hasHeader = !!this.appContainer.querySelector('.hospital-header');
+
+    // Ensure the shell matches the view state: no navbar on #login, navbar on authenticated pages
+    if ((isLogin && hasHeader) || (!isLogin && !hasHeader) || !document.getElementById('view-container')) {
       this.renderShell();
-      return this.handleRoute();
     }
+
+    const viewContainer = document.getElementById('view-container');
+    if (!viewContainer) return;
 
     // Update active nav styling
     const navLinks = this.appContainer.querySelectorAll('.nav-link');
