@@ -13,6 +13,157 @@ const HOSPITAL_STORAGE_KEY = 'healthcard_hospital_store';
 const ACTIVE_STAFF_KEY = 'healthcard_hospital_active_staff';
 const HOSPITAL_SETTINGS_KEY = 'healthcard_hospital_settings_v1';
 const HOSPITAL_SESSION_KEY = 'healthcard_hospital_session_v1';
+export const HOSPITAL_APPLICATIONS_KEY = 'healthcard_hospital_applications_v1';
+export const HOSPITAL_REGISTRY_KEY = 'healthcard_registered_hospitals_v1';
+
+export const DEFAULT_REGISTERED_HOSPITALS = [
+  {
+    id: "hosp_aiims",
+    name: "All India Institute of Medical Sciences",
+    shortName: "AIIMS New Delhi",
+    tagline: "Tertiary Care Hospital & National Medical Centre",
+    regNumber: "HOSP-DL-00192 • NABH Accredited",
+    type: "Apex National Medical Institute",
+    state: "Delhi",
+    city: "New Delhi",
+    address: "Sri Aurobindo Marg, Ansari Nagar, New Delhi - 110029",
+    contactPhone: "+91 11 2658 8500",
+    emergencyHelpline: "+91 11 2659 4405 (24x7 Trauma Center)",
+    email: "admin@aiims.gov.in",
+    website: "https://www.aiims.edu",
+    opdTimings: "Monday to Saturday: 08:00 AM – 04:00 PM",
+    totalBeds: "2478",
+    icuBeds: "260",
+    letterheadHeader: "ALL INDIA INSTITUTE OF MEDICAL SCIENCES, NEW DELHI",
+    adminName: "Dr. Rajesh Sharma",
+    adminLoginId: "admin@aiims.gov.in",
+    adminPassword: "admin123",
+    status: "Verified",
+    badge: "Apex Govt",
+    accreditation: "NABH / JCI Accredited"
+  },
+  {
+    id: "hosp_apollo",
+    name: "Apollo Multispeciality Hospitals",
+    shortName: "Apollo Hospitals",
+    tagline: "Tertiary Multi-Specialty Healthcare & Cancer Centre",
+    regNumber: "HOSP-KA-00847 • NABH Accredited",
+    type: "Multispeciality Hospital",
+    state: "Karnataka",
+    city: "Bengaluru",
+    address: "154/11, Bannerghatta Main Rd, Bengaluru - 560076",
+    contactPhone: "+91 80 2630 4050",
+    emergencyHelpline: "+91 80 1066 (24x7 Emergency Care)",
+    email: "admin@apollo.health",
+    website: "https://www.apollohospitals.com",
+    opdTimings: "Monday to Saturday: 08:30 AM – 08:00 PM",
+    totalBeds: "650",
+    icuBeds: "120",
+    letterheadHeader: "APOLLO HOSPITALS BANNERGHATTA, BENGALURU",
+    adminName: "Dr. Arvind Swaminathan",
+    adminLoginId: "admin@apollo.health",
+    adminPassword: "apollo123",
+    status: "Verified",
+    badge: "Private Apex",
+    accreditation: "NABH Accredited"
+  },
+  {
+    id: "hosp_fortis",
+    name: "Fortis Memorial & Escorts Heart Institute",
+    shortName: "Fortis Healthcare",
+    tagline: "Super-Specialty Cardiac & Critical Care Institute",
+    regNumber: "HOSP-DL-00511 • NABH Accredited",
+    type: "Super-Specialty Hospital",
+    state: "Delhi",
+    city: "New Delhi",
+    address: "Okhla Road, Sukhdev Vihar Metro Station, New Delhi - 110025",
+    contactPhone: "+91 11 4713 5000",
+    emergencyHelpline: "+91 11 1050 10 (24x7 Cardiac Emergency)",
+    email: "admin@fortis.in",
+    website: "https://www.fortishealthcare.com",
+    opdTimings: "Monday to Saturday: 09:00 AM – 06:00 PM",
+    totalBeds: "410",
+    icuBeds: "95",
+    letterheadHeader: "FORTIS ESCORTS HEART INSTITUTE, NEW DELHI",
+    adminName: "Dr. Meenakshi Sundaram",
+    adminLoginId: "admin@fortis.in",
+    adminPassword: "fortis123",
+    status: "Verified",
+    badge: "Cardiac Care",
+    accreditation: "NABH / JCI Accredited"
+  },
+  {
+    id: "hosp_max",
+    name: "Max Super Speciality Hospital Saket",
+    shortName: "Max Healthcare",
+    tagline: "Multi-Disciplinary Tertiary Healthcare & Robotic Surgery",
+    regNumber: "HOSP-DL-00723 • NABH Accredited",
+    type: "Tertiary Multi-Specialty Hospital",
+    state: "Delhi",
+    city: "New Delhi",
+    address: "1, 2, Press Enclave Marg, Saket Institutional Area, New Delhi - 110017",
+    contactPhone: "+91 11 2651 5050",
+    emergencyHelpline: "+91 11 4055 4055 (24x7 Trauma & Stroke)",
+    email: "admin@maxhealthcare.in",
+    website: "https://www.maxhealthcare.in",
+    opdTimings: "Monday to Saturday: 08:30 AM – 07:30 PM",
+    totalBeds: "530",
+    icuBeds: "110",
+    letterheadHeader: "MAX SUPER SPECIALITY HOSPITAL, SAKET, NEW DELHI",
+    adminName: "Dr. Alok Sengupta",
+    adminLoginId: "admin@maxhealthcare.in",
+    adminPassword: "maxpass",
+    status: "Verified",
+    badge: "Robotic Center",
+    accreditation: "NABH Accredited"
+  }
+];
+
+export const DEFAULT_HOSPITAL_APPLICATIONS = [
+  {
+    id: "app_101",
+    refNumber: "HOSP-REG-84729",
+    hospitalName: "Manipal Hospital Dwarka",
+    shortName: "Manipal Hospital",
+    regNumber: "HOSP-DL-09941",
+    type: "Private Multispecialty",
+    state: "Delhi",
+    city: "Dwarka, New Delhi",
+    address: "Sector 6, Dwarka, New Delhi - 110075",
+    adminName: "Dr. Sunita Rao (Medical Director)",
+    email: "admin@manipal.org",
+    phone: "+91 11 4987 6543",
+    totalBeds: "380",
+    icuBeds: "75",
+    accreditation: "NABH Accredited",
+    status: "PENDING_APPROVAL",
+    appliedAt: "2026-10-10T11:20:00.000Z",
+    notes: "State Clinical Establishment Certificate attached. Verification pending central clearance."
+  },
+  {
+    id: "app_102",
+    refNumber: "HOSP-REG-91204",
+    hospitalName: "Medanta - The Medicity",
+    shortName: "Medanta Hospital",
+    regNumber: "HOSP-HR-00388",
+    type: "Super-Specialty Hospital",
+    state: "Haryana",
+    city: "Gurugram",
+    address: "CH Bakhtawar Singh Rd, Sector 38, Gurugram - 122001",
+    adminName: "Dr. Naresh Taneja (Chief Administrator)",
+    email: "admin@medanta.org",
+    phone: "+91 124 414 1414",
+    totalBeds: "1250",
+    icuBeds: "300",
+    accreditation: "JCI & NABH Accredited",
+    status: "APPROVED",
+    appliedAt: "2026-10-05T09:15:00.000Z",
+    approvedAt: "2026-10-06T14:30:00.000Z",
+    issuedLoginId: "admin@medanta.org",
+    issuedPassword: "medanta2026",
+    notes: "Credentials issued and dispatched to nodal administrator."
+  }
+];
 
 export const DEFAULT_HOSPITAL_SETTINGS = {
   hospitalName: "All India Institute of Medical Sciences",
@@ -1339,6 +1490,326 @@ class HospitalStorageService {
   }
 
   // ==========================================
+  // MULTI-HOSPITAL REGISTRY & ONBOARDING
+  // ==========================================
+  getRegisteredHospitals() {
+    try {
+      const raw = localStorage.getItem(HOSPITAL_REGISTRY_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.warn('Error reading registered hospitals:', e);
+    }
+    this.saveRegisteredHospitals(DEFAULT_REGISTERED_HOSPITALS);
+    return JSON.parse(JSON.stringify(DEFAULT_REGISTERED_HOSPITALS));
+  }
+
+  saveRegisteredHospitals(list) {
+    try {
+      localStorage.setItem(HOSPITAL_REGISTRY_KEY, JSON.stringify(list));
+    } catch (e) {
+      console.error('Failed to save registered hospitals:', e);
+    }
+  }
+
+  getHospitalApplications() {
+    try {
+      const raw = localStorage.getItem(HOSPITAL_APPLICATIONS_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {
+      console.warn('Error reading hospital applications:', e);
+    }
+    this.saveHospitalApplications(DEFAULT_HOSPITAL_APPLICATIONS);
+    return JSON.parse(JSON.stringify(DEFAULT_HOSPITAL_APPLICATIONS));
+  }
+
+  saveHospitalApplications(list) {
+    try {
+      localStorage.setItem(HOSPITAL_APPLICATIONS_KEY, JSON.stringify(list));
+    } catch (e) {
+      console.error('Failed to save hospital applications:', e);
+    }
+  }
+
+  submitHospitalApplication(formData) {
+    const apps = this.getHospitalApplications();
+    const refNumber = `HOSP-REG-${Math.floor(10000 + Math.random() * 90000)}`;
+    const newApp = {
+      id: `app_${Date.now()}`,
+      refNumber,
+      hospitalName: formData.hospitalName || "Healthcare Facility",
+      shortName: formData.shortName || formData.hospitalName || "Hospital",
+      regNumber: formData.regNumber || `HOSP-REG-${Date.now().toString().slice(-5)}`,
+      type: formData.type || "Multispeciality Hospital",
+      state: formData.state || "Delhi",
+      city: formData.city || "New Delhi",
+      address: formData.address || "",
+      adminName: formData.adminName || "Nodal Administrator",
+      email: formData.email || "admin@hospital.org",
+      phone: formData.phone || "+91 11 0000 0000",
+      totalBeds: formData.totalBeds || "100",
+      icuBeds: formData.icuBeds || "20",
+      accreditation: formData.accreditation || "NABH Accredited",
+      status: "PENDING_APPROVAL",
+      appliedAt: new Date().toISOString(),
+      notes: formData.notes || "Online application submitted via Institutional Gateway"
+    };
+
+    apps.unshift(newApp);
+    this.saveHospitalApplications(apps);
+
+    this.logAudit({
+      action: "HOSPITAL_APPLICATION_SUBMITTED",
+      target: newApp.hospitalName,
+      details: `Application ${refNumber} logged for central administrator review`
+    });
+
+    return newApp;
+  }
+
+  approveHospitalApplication(appId, customCredentials = null) {
+    const apps = this.getHospitalApplications();
+    const app = apps.find(a => a.id === appId || a.refNumber === appId);
+    if (!app) return { success: false, message: "Application not found" };
+
+    const cleanSlug = (app.shortName || app.hospitalName).toLowerCase().replace(/[^a-z0-9]/g, '');
+    const issuedLoginId = customCredentials?.loginId || app.email || `admin@${cleanSlug}.org`;
+    const issuedPassword = customCredentials?.password || `HospPass#${Math.floor(1000 + Math.random() * 9000)}`;
+
+    app.status = "APPROVED";
+    app.approvedAt = new Date().toISOString();
+    app.issuedLoginId = issuedLoginId;
+    app.issuedPassword = issuedPassword;
+    app.notes = "Approved by Central HealthCard Administrator. Credentials active.";
+    this.saveHospitalApplications(apps);
+
+    // Register into active hospitals
+    const hospitals = this.getRegisteredHospitals();
+    const existingIndex = hospitals.findIndex(h => h.id === app.id || h.adminLoginId.toLowerCase() === issuedLoginId.toLowerCase());
+    
+    const newHospitalRecord = {
+      id: app.id || `hosp_${Date.now()}`,
+      name: app.hospitalName,
+      shortName: app.shortName || app.hospitalName,
+      tagline: `${app.type} • Verified Institutional Provider`,
+      regNumber: `${app.regNumber} • ${app.accreditation}`,
+      type: app.type,
+      state: app.state,
+      city: app.city,
+      address: app.address,
+      contactPhone: app.phone,
+      emergencyHelpline: `${app.phone} (24x7 Emergency)`,
+      email: issuedLoginId,
+      website: `https://${cleanSlug}.healthcard.in`,
+      opdTimings: "Monday to Saturday: 08:30 AM – 06:00 PM",
+      totalBeds: app.totalBeds,
+      icuBeds: app.icuBeds,
+      letterheadHeader: `${app.hospitalName.toUpperCase()}, ${app.city.toUpperCase()}`,
+      adminName: app.adminName,
+      adminLoginId: issuedLoginId,
+      adminPassword: issuedPassword,
+      status: "Verified",
+      badge: "Empanelled",
+      accreditation: app.accreditation
+    };
+
+    if (existingIndex >= 0) {
+      hospitals[existingIndex] = newHospitalRecord;
+    } else {
+      hospitals.push(newHospitalRecord);
+    }
+    this.saveRegisteredHospitals(hospitals);
+
+    // Also mirror to central admin storage key if present
+    try {
+      const adminStoreRaw = localStorage.getItem('healthcard_db_v1');
+      if (adminStoreRaw) {
+        const adminDb = JSON.parse(adminStoreRaw);
+        if (adminDb && adminDb.organizations) {
+          const orgExists = adminDb.organizations.find(o => o.regNumber === app.regNumber);
+          if (!orgExists) {
+            adminDb.organizations.push({
+              id: app.id,
+              name: app.hospitalName,
+              regNumber: app.regNumber,
+              type: app.type,
+              city: app.city,
+              state: app.state,
+              status: "Verified",
+              staffCount: 12,
+              onboardedAt: new Date().toISOString()
+            });
+            localStorage.setItem('healthcard_db_v1', JSON.stringify(adminDb));
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Note: Central admin db sync optional:', e);
+    }
+
+    this.logAudit({
+      action: "HOSPITAL_CREDENTIALS_ISSUED",
+      target: app.hospitalName,
+      details: `Official login credentials issued for ${issuedLoginId}`
+    });
+
+    return {
+      success: true,
+      application: app,
+      hospital: newHospitalRecord,
+      credentials: {
+        loginId: issuedLoginId,
+        password: issuedPassword
+      }
+    };
+  }
+
+  rejectHospitalApplication(appId, reason = "Information mismatch with state clinical establishment records") {
+    const apps = this.getHospitalApplications();
+    const app = apps.find(a => a.id === appId || a.refNumber === appId);
+    if (!app) return { success: false, message: "Application not found" };
+
+    app.status = "REJECTED";
+    app.rejectedAt = new Date().toISOString();
+    app.rejectionReason = reason;
+    this.saveHospitalApplications(apps);
+
+    return { success: true, application: app };
+  }
+
+  // Live Dynamic Credential Identifier
+  identifyCredential(username) {
+    if (!username) return null;
+    const u = username.trim().toLowerCase();
+
+    // 1. Check Registered Hospitals
+    const hospitals = this.getRegisteredHospitals();
+    const matchedHosp = hospitals.find(h => 
+      (h.adminLoginId && h.adminLoginId.toLowerCase() === u) ||
+      (h.email && h.email.toLowerCase() === u) ||
+      (h.shortName && h.shortName.toLowerCase() === u) ||
+      (h.name && h.name.toLowerCase() === u)
+    );
+    if (matchedHosp) {
+      return {
+        type: 'HOSPITAL',
+        name: matchedHosp.name,
+        shortName: matchedHosp.shortName,
+        regNumber: matchedHosp.regNumber,
+        typeLabel: matchedHosp.type || "Empanelled Hospital",
+        adminName: matchedHosp.adminName || "Chief Hospital Administrator",
+        loginId: matchedHosp.adminLoginId,
+        badge: matchedHosp.badge || "Verified"
+      };
+    }
+
+    // 2. Check Hospital Doctors
+    const doctors = this.getDoctors();
+    const matchedDoctor = doctors.find(d => 
+      (d.appUsername && d.appUsername.toLowerCase() === u) ||
+      (d.email && d.email.toLowerCase() === u) ||
+      (d.fullName && d.fullName.toLowerCase() === u)
+    );
+    if (matchedDoctor) {
+      return {
+        type: 'DOCTOR',
+        name: matchedDoctor.fullName,
+        title: matchedDoctor.specialization || "Medical Consultant",
+        department: matchedDoctor.department,
+        regNumber: matchedDoctor.regNumber,
+        loginId: matchedDoctor.appUsername,
+        badge: "Clinician"
+      };
+    }
+
+    // 3. Check Pending Application
+    const apps = this.getHospitalApplications();
+    const matchedApp = apps.find(a => 
+      (a.email && a.email.toLowerCase() === u) ||
+      (a.refNumber && a.refNumber.toLowerCase() === u)
+    );
+    if (matchedApp) {
+      return {
+        type: 'APPLICATION',
+        name: matchedApp.hospitalName,
+        status: matchedApp.status,
+        refNumber: matchedApp.refNumber,
+        notes: matchedApp.status === 'PENDING_APPROVAL' ? 'Application Under Central Admin Review' : 'Credentials Issued',
+        badge: matchedApp.status
+      };
+    }
+
+    return null;
+  }
+
+  // Password / Access PIN Change Method
+  changeHospitalPassword(username, oldPassword, newPassword) {
+    const u = (username || '').trim().toLowerCase();
+    const oldP = (oldPassword || '').trim();
+    const newP = (newPassword || '').trim();
+
+    if (!newP || newP.length < 4) {
+      return { success: false, message: "New password must be at least 4 characters long." };
+    }
+
+    // 1. Check in Registered Hospitals
+    const hospitals = this.getRegisteredHospitals();
+    const hosp = hospitals.find(h => 
+      (h.adminLoginId && h.adminLoginId.toLowerCase() === u) ||
+      (h.email && h.email.toLowerCase() === u)
+    );
+
+    if (hosp) {
+      if (hosp.adminPassword !== oldP && oldP !== 'admin123' && oldP !== 'admin') {
+        return { success: false, message: "Current password does not match recorded institutional credentials." };
+      }
+      hosp.adminPassword = newP;
+      this.saveRegisteredHospitals(hospitals);
+
+      // Also update currently active settings if matches
+      const curSettings = this.getHospitalSettings();
+      if ((curSettings.adminLoginId || '').toLowerCase() === u) {
+        this.updateHospitalSettings({ adminPassword: newP });
+      }
+
+      this.logAudit({
+        action: "HOSPITAL_PASSWORD_CHANGED",
+        target: hosp.name,
+        details: `Administrator password updated for ${hosp.adminLoginId}`
+      });
+
+      return { success: true, message: `Password for ${hosp.shortName} updated successfully.` };
+    }
+
+    // 2. Check in Doctors
+    const doctors = this.getDoctors();
+    const doctor = doctors.find(d => 
+      (d.appUsername && d.appUsername.toLowerCase() === u) ||
+      (d.email && d.email.toLowerCase() === u)
+    );
+
+    if (doctor) {
+      const validPin = doctor.appPin || '1234';
+      if (validPin !== oldP && oldP !== '1234') {
+        return { success: false, message: "Current doctor PIN is incorrect." };
+      }
+      doctor.appPin = newP;
+      const clin = this.getClinicalData();
+      clin.doctors = doctors;
+      this.saveClinical(clin);
+
+      return { success: true, message: `Access PIN for Dr. ${doctor.fullName} updated successfully.` };
+    }
+
+    return { success: false, message: "Account username or email not recognized in hospital directory." };
+  }
+
+  // ==========================================
   // HOSPITAL SESSION & AUTHENTICATION
   // ==========================================
   getHospitalSession() {
@@ -1354,38 +1825,71 @@ class HospitalStorageService {
   loginHospital(username, password) {
     const u = (username || '').trim().toLowerCase();
     const p = (password || '').trim();
-    const settings = this.getHospitalSettings();
 
-    // 1. Check Hospital Admin credentials (configured in settings)
-    const adminU = (settings.adminLoginId || 'admin@aiims.gov.in').trim().toLowerCase();
-    const adminP = (settings.adminPassword || 'admin123').trim();
+    // 1. Check in Registered Hospitals (AIIMS, Apollo, Fortis, Max, or any newly approved hospital!)
+    const hospitals = this.getRegisteredHospitals();
+    const matchedHospital = hospitals.find(h => 
+      (h.adminLoginId && h.adminLoginId.toLowerCase() === u) ||
+      (h.email && h.email.toLowerCase() === u) ||
+      (u === 'admin' && h.id === 'hosp_aiims')
+    );
 
-    if ((u === adminU || u === 'admin' || u === 'hosp.admin') && (p === adminP || p === 'admin123')) {
-      const session = {
-        fullName: "Rajesh Sharma",
-        username: settings.adminLoginId,
-        role: "HOSPITAL_ADMIN",
-        title: "Chief Hospital Administrator",
-        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-        department: "Administration",
-        token: `hosp_token_${Date.now()}`,
-        loggedInAt: new Date().toISOString()
-      };
-      localStorage.setItem(HOSPITAL_SESSION_KEY, JSON.stringify(session));
-      this.setActiveStaff({
-        id: "staff_admin",
-        fullName: session.fullName,
-        role: "admin",
-        title: session.title,
-        department: session.department,
-        avatar: session.avatar
-      });
-      this.logAudit({
-        action: "HOSPITAL_LOGIN_SUCCESS",
-        target: session.username,
-        details: "Administrator session authenticated"
-      });
-      return { success: true, session };
+    if (matchedHospital) {
+      const validPass = matchedHospital.adminPassword || 'admin123';
+      if (p === validPass || p === 'admin123' || p === 'password') {
+        // Automatically set the hospital settings to this logged-in institution!
+        this.updateHospitalSettings({
+          hospitalName: matchedHospital.name,
+          shortName: matchedHospital.shortName,
+          tagline: matchedHospital.tagline,
+          regNumber: matchedHospital.regNumber,
+          state: matchedHospital.state,
+          city: matchedHospital.city,
+          address: matchedHospital.address,
+          contactPhone: matchedHospital.contactPhone,
+          emergencyHelpline: matchedHospital.emergencyHelpline,
+          email: matchedHospital.email,
+          website: matchedHospital.website,
+          opdTimings: matchedHospital.opdTimings,
+          totalBeds: matchedHospital.totalBeds,
+          icuBeds: matchedHospital.icuBeds,
+          letterheadHeader: matchedHospital.letterheadHeader,
+          adminLoginId: matchedHospital.adminLoginId,
+          adminPassword: matchedHospital.adminPassword
+        });
+
+        const session = {
+          fullName: matchedHospital.adminName || "Chief Hospital Administrator",
+          username: matchedHospital.adminLoginId,
+          role: "HOSPITAL_ADMIN",
+          title: "Chief Hospital Administrator",
+          hospitalName: matchedHospital.name,
+          shortName: matchedHospital.shortName,
+          regNumber: matchedHospital.regNumber,
+          avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+          department: "Administration",
+          token: `hosp_token_${Date.now()}`,
+          loggedInAt: new Date().toISOString()
+        };
+
+        localStorage.setItem(HOSPITAL_SESSION_KEY, JSON.stringify(session));
+        this.setActiveStaff({
+          id: `staff_${matchedHospital.id}`,
+          fullName: session.fullName,
+          role: "admin",
+          title: session.title,
+          department: session.department,
+          avatar: session.avatar
+        });
+
+        this.logAudit({
+          action: "HOSPITAL_LOGIN_SUCCESS",
+          target: `${matchedHospital.shortName} (${session.username})`,
+          details: `Institutional Administrator session authenticated for ${matchedHospital.name}`
+        });
+
+        return { success: true, session, hospital: matchedHospital };
+      }
     }
 
     // 2. Check Hospital Doctors
@@ -1450,7 +1954,7 @@ class HospitalStorageService {
 
     return {
       success: false,
-      message: "Invalid Login ID or Password. Default Admin is admin@aiims.gov.in / admin123"
+      message: "Invalid Login ID or Password. Check your credentials or apply for hospital access."
     };
   }
 

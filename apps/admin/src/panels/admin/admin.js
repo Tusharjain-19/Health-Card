@@ -1392,21 +1392,137 @@ function renderFulfillmentView(target, container) {
 
 /**
  * ==========================================================================
- * VIEW 6: VERIFIED ORGANIZATIONS & STAFF (PRD §7.6)
+ * VIEW 6: VERIFIED ORGANIZATIONS & HOSPITAL CREDENTIAL ISSUANCE (PRD §7.6)
  * ==========================================================================
  */
 function renderOrganizationsView(target, container) {
   const orgs = store.getOrganizations();
 
+  // Read Hospital Applications submitted from Hospital Portal
+  let hospitalApps = [];
+  try {
+    const rawApps = localStorage.getItem('healthcard_hospital_applications_v1');
+    if (rawApps) {
+      hospitalApps = JSON.parse(rawApps);
+    }
+  } catch (e) {
+    console.warn('Error reading hospital applications in admin:', e);
+  }
+
+  const pendingApps = hospitalApps.filter(a => a.status === 'PENDING_APPROVAL');
+
   target.innerHTML = `
     <div class="page-title-bar">
       <div>
-        <h2 class="page-title">Verified Healthcare Organizations</h2>
-        <p class="page-description">Hospitals, Clinics, and Pathology Labs with verified credentials (ORG-01 to ORG-05).</p>
+        <h2 class="page-title">Verified Healthcare Organizations & Hospital Onboarding</h2>
+        <p class="page-description">Manage institutional credentialing, review hospital establishment licenses, and verify facilities (ORG-01 to ORG-05).</p>
       </div>
     </div>
 
+    <!-- SECTION 1: Hospital Registration & Credential Issuance Queue (Live Sync with Hospital Portal) -->
+    <div class="card" style="margin-bottom: 24px; border: 1.5px solid ${pendingApps.length > 0 ? '#bfdbfe' : 'var(--border-color)'};">
+      <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; background: ${pendingApps.length > 0 ? '#eff6ff' : 'transparent'};">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--color-primary); color: #ffffff; display: flex; align-items: center; justify-content: center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v8M8 12h8"/></svg>
+          </div>
+          <div>
+            <h3 class="card-title" style="margin: 0; font-size: 15px; color: var(--text-main);">Hospital Registration & Credentialing Queue</h3>
+            <span style="font-size: 11.5px; color: var(--text-muted);">Incoming applications from National Hospital Gateway portal</span>
+          </div>
+        </div>
+        <div>
+          ${pendingApps.length > 0 ? `
+            <span class="badge badge-active" style="font-size: 11px; padding: 4px 10px;">
+              ${pendingApps.length} Application${pendingApps.length > 1 ? 's' : ''} Pending Review
+            </span>
+          ` : `
+            <span class="badge badge-blue" style="font-size: 11px; padding: 4px 10px;">Queue Up to Date</span>
+          `}
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>App. Ref</th>
+              <th>Hospital Name</th>
+              <th>Facility Category</th>
+              <th>Reg. Number</th>
+              <th>Location</th>
+              <th>Nodal Administrator</th>
+              <th>Official Contact</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${hospitalApps.length > 0 ? hospitalApps.map(app => `
+              <tr style="${app.status === 'PENDING_APPROVAL' ? 'background: #f0fdf4;' : ''}">
+                <td class="font-mono font-semibold" style="color: var(--color-primary);">${app.refNumber || app.id}</td>
+                <td>
+                  <div class="font-semibold">${app.hospitalName}</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">${app.accreditation || 'State Licensed'} • ${app.totalBeds || 100} Beds</div>
+                </td>
+                <td><span style="font-size: 12px; color: var(--text-secondary);">${app.type}</span></td>
+                <td class="font-mono" style="font-size: 12px;">${app.regNumber}</td>
+                <td>${app.city}, ${app.state}</td>
+                <td>
+                  <div style="font-weight: 600;">${app.adminName}</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">${app.phone}</div>
+                </td>
+                <td>
+                  <div style="font-size: 12px; font-weight: 600; color: #1e40af;">${app.email}</div>
+                  <div style="font-size: 10.5px; color: var(--text-muted);">Applied: ${new Date(app.appliedAt).toLocaleDateString()}</div>
+                </td>
+                <td>
+                  <span class="status-indicator status-${app.status === 'APPROVED' ? 'active' : app.status === 'PENDING_APPROVAL' ? 'pending' : 'blocked'}">
+                    <span class="status-dot"></span>
+                    <span>${app.status === 'APPROVED' ? 'Approved & Issued' : app.status === 'PENDING_APPROVAL' ? 'Pending Review' : 'Rejected'}</span>
+                  </span>
+                  ${app.issuedLoginId ? `
+                    <div style="font-size: 10px; font-family: monospace; color: #047857; margin-top: 2px;">
+                      User: ${app.issuedLoginId}
+                    </div>
+                  ` : ''}
+                </td>
+                <td>
+                  <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    ${app.status === 'PENDING_APPROVAL' ? `
+                      <button class="btn btn-primary btn-sm btn-approve-hosp-app" data-id="${app.id}" data-name="${app.hospitalName}" data-email="${app.email}" style="font-size: 11.5px; font-weight: 700;">
+                        Approve & Issue Credentials
+                      </button>
+                      <button class="btn btn-secondary btn-sm btn-reject-hosp-app" data-id="${app.id}" style="font-size: 11.5px;">
+                        Reject
+                      </button>
+                    ` : app.status === 'APPROVED' ? `
+                      <button class="btn btn-outline btn-sm btn-view-hosp-creds" data-id="${app.id}" data-user="${app.issuedLoginId}" data-pass="${app.issuedPassword || 'HospPass#2026'}" style="font-size: 11px;">
+                        View Credentials
+                      </button>
+                    ` : `
+                      <span style="font-size: 11px; color: var(--text-muted);">Archived</span>
+                    `}
+                  </div>
+                </td>
+              </tr>
+            `).join('') : `
+              <tr>
+                <td colspan="9" style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 13px;">
+                  No hospital applications submitted yet. Visiting hospitals can apply at the Hospital Portal gateway.
+                </td>
+              </tr>
+            `}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 2: Verified Healthcare Organizations Directory -->
     <div class="card">
+      <div class="card-header">
+        <h3 class="card-title" style="margin: 0; font-size: 15px;">Active Verified Organizations (Hospitals & Pathology Labs)</h3>
+      </div>
       <div class="table-responsive">
         <table class="data-table">
           <thead>
@@ -1450,6 +1566,135 @@ function renderOrganizationsView(target, container) {
       </div>
     </div>
   `;
+
+  // Attach Hospital Applications Event Handlers
+  target.querySelectorAll('.btn-approve-hosp-app').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const appId = btn.dataset.id;
+      const hospName = btn.dataset.name;
+      const hospEmail = btn.dataset.email;
+
+      const issuedLoginId = hospEmail || `admin@${hospName.toLowerCase().replace(/[^a-z0-9]/g, '')}.org`;
+      const issuedPassword = `HospPass#${Math.floor(1000 + Math.random() * 9000)}`;
+
+      // 1. Update in healthcard_hospital_applications_v1
+      try {
+        const rawApps = localStorage.getItem('healthcard_hospital_applications_v1');
+        if (rawApps) {
+          const list = JSON.parse(rawApps);
+          const matched = list.find(a => a.id === appId);
+          if (matched) {
+            matched.status = 'APPROVED';
+            matched.approvedAt = new Date().toISOString();
+            matched.issuedLoginId = issuedLoginId;
+            matched.issuedPassword = issuedPassword;
+            localStorage.setItem('healthcard_hospital_applications_v1', JSON.stringify(list));
+
+            // 2. Also register into healthcard_registered_hospitals_v1 so hospital can sign in immediately
+            const rawReg = localStorage.getItem('healthcard_registered_hospitals_v1');
+            let regList = rawReg ? JSON.parse(rawReg) : [];
+            const cleanSlug = (matched.shortName || matched.hospitalName).toLowerCase().replace(/[^a-z0-9]/g, '');
+
+            const newHosp = {
+              id: matched.id,
+              name: matched.hospitalName,
+              shortName: matched.shortName || matched.hospitalName,
+              tagline: `${matched.type} • Verified Institutional Provider`,
+              regNumber: `${matched.regNumber} • ${matched.accreditation || 'NABH Accredited'}`,
+              type: matched.type,
+              state: matched.state,
+              city: matched.city,
+              address: matched.address || `${matched.city}, ${matched.state}`,
+              contactPhone: matched.phone,
+              emergencyHelpline: `${matched.phone} (24x7 Emergency)`,
+              email: issuedLoginId,
+              website: `https://${cleanSlug}.healthcard.in`,
+              opdTimings: "Monday to Saturday: 08:30 AM – 06:00 PM",
+              totalBeds: matched.totalBeds || "250",
+              icuBeds: matched.icuBeds || "50",
+              letterheadHeader: `${matched.hospitalName.toUpperCase()}, ${matched.city.toUpperCase()}`,
+              adminName: matched.adminName,
+              adminLoginId: issuedLoginId,
+              adminPassword: issuedPassword,
+              status: "Verified",
+              badge: "Empanelled",
+              accreditation: matched.accreditation
+            };
+
+            const existingIdx = regList.findIndex(h => h.id === matched.id || h.adminLoginId === issuedLoginId);
+            if (existingIdx >= 0) {
+              regList[existingIdx] = newHosp;
+            } else {
+              regList.push(newHosp);
+            }
+            localStorage.setItem('healthcard_registered_hospitals_v1', JSON.stringify(regList));
+          }
+        }
+      } catch (e) {
+        console.error('Error approving hospital app in admin:', e);
+      }
+
+      // 3. Add to store organizations
+      const existingOrg = store.data.organizations.find(o => o.name === hospName);
+      if (!existingOrg) {
+        store.data.organizations.push({
+          id: appId,
+          name: hospName,
+          regNumber: `HOSP-${Math.floor(10000 + Math.random() * 90000)}`,
+          type: "Hospital",
+          city: "New Delhi",
+          state: "Delhi",
+          status: "Verified",
+          staffCount: 15,
+          onboardedAt: new Date().toISOString()
+        });
+        store.save();
+      }
+
+      store.logAudit({
+        actor: currentAdminUser.email,
+        role: currentAdminUser.role,
+        action: 'HOSPITAL_CREDENTIALS_ISSUED',
+        target: `${hospName} (${issuedLoginId})`,
+        status: 'Success'
+      });
+
+      showToast(`Credentials issued for ${hospName}! ID: ${issuedLoginId} | Pass: ${issuedPassword}`, 'success');
+      renderOrganizationsView(target, container);
+    });
+  });
+
+  target.querySelectorAll('.btn-reject-hosp-app').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const appId = btn.dataset.id;
+      if (confirm('Are you sure you want to reject this hospital application?')) {
+        try {
+          const rawApps = localStorage.getItem('healthcard_hospital_applications_v1');
+          if (rawApps) {
+            const list = JSON.parse(rawApps);
+            const matched = list.find(a => a.id === appId);
+            if (matched) {
+              matched.status = 'REJECTED';
+              matched.rejectedAt = new Date().toISOString();
+              localStorage.setItem('healthcard_hospital_applications_v1', JSON.stringify(list));
+            }
+          }
+        } catch (e) {
+          console.error('Error rejecting hospital app:', e);
+        }
+        showToast('Hospital application rejected.', 'error');
+        renderOrganizationsView(target, container);
+      }
+    });
+  });
+
+  target.querySelectorAll('.btn-view-hosp-creds').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const u = btn.dataset.user;
+      const p = btn.dataset.pass;
+      alert(`Institutional Login Credentials:\n\nLogin ID / Username: ${u}\nTemporary Password / Access PIN: ${p}\n\nHospital Administrator can sign in and change password anytime.`);
+    });
+  });
 
   target.querySelectorAll('.btn-verify-org').forEach(btn => {
     btn.addEventListener('click', () => {

@@ -53,8 +53,8 @@ export class HospitalApp {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M2 12h20"/></svg>
               </div>
               <div>
-                <div class="brand-title">${settings.shortName || 'HealthCard Hospital'}</div>
-                <div class="brand-subtitle">${settings.regNumber || 'NABH Accredited • Verified Healthcare Portal'}</div>
+                <div class="brand-title">National HealthCard Institutional Gateway</div>
+                <div class="brand-subtitle">Empanelled Hospitals & Healthcare Providers Network</div>
               </div>
             </div>
           </header>
@@ -74,7 +74,7 @@ export class HospitalApp {
             </div>
             <div>
               <div class="brand-title">${settings.shortName || 'HealthCard Hospital'}</div>
-              <div class="brand-subtitle">${settings.regNumber || 'AIIMS New Delhi • NABH Verified'}</div>
+              <div class="brand-subtitle">${settings.regNumber || 'NABH Accredited • Verified Healthcare Network'}</div>
             </div>
           </a>
 
