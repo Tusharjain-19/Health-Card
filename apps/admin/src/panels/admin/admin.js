@@ -10,6 +10,7 @@ import { DEMO_ADMIN_ACCOUNTS } from '../../shared/data/demoData.js';
 import { generateHealthId, formatHealthId, validateHealthId } from '../../shared/utils/healthId.js';
 import { formatDate, calculateAge, maskMobile, formatMobile, timeAgo } from '../../shared/utils/formatters.js';
 import { showToast } from '../../shared/components/toast.js';
+import { HealthCardRenderer } from '../../shared/utils/healthCardRenderer.js';
 
 const primaryDemoUser = DEMO_ADMIN_ACCOUNTS[0] || {
   fullName: "Chief Medical Officer",
@@ -176,20 +177,11 @@ function renderAppShell(container) {
     <div class="admin-layout">
       <!-- Sidebar -->
       <aside class="admin-sidebar" id="admin-sidebar">
-        <div class="sidebar-brand">
-          <div class="brand-icon" style="overflow: hidden; width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); box-shadow: 0 2px 6px rgba(29, 78, 216, 0.25);">
-            <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
-              <path d="M16 2.5L27 6.8V15.5C27 22.8 22.3 28.1 16 30C9.7 28.1 5 22.8 5 15.5V6.8L16 2.5Z" fill="#1d4ed8"/>
-              <path d="M16 4.3L25.2 7.9V15.5C25.2 21.6 21.2 26.2 16 28C10.8 26.2 6.8 21.6 6.8 15.5V7.9L16 4.3Z" stroke="#93c5fd" stroke-width="0.9" stroke-opacity="0.7"/>
-              <path d="M16 9V23M9 16H23" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
-              <path d="M7 16H11.5L13.5 12.5L16 20.5L18.5 13.5L20.5 16H25" stroke="#a7f3d0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="16" cy="16" r="2.2" fill="#10b981"/>
-              <circle cx="16" cy="16" r="1.1" fill="#ffffff"/>
-            </svg>
-          </div>
+        <div class="sidebar-brand" style="display:flex; align-items:center; gap:10px; padding:14px 16px;">
+          <img src="/card-design/assets/healthcard-brand-mark.svg" alt="NHC Brand" style="height:32px; width:32px; flex-shrink:0;" />
           <div class="brand-text">
-            <span class="brand-title">HealthCard</span>
-            <span class="brand-subtitle">Issuer Admin</span>
+            <span class="brand-title" style="font-weight:900; font-size:14.5px; letter-spacing:0.3px; color:#0f172a;">HealthCard</span>
+            <span class="brand-subtitle" style="font-size:10px; color:#047857; font-weight:700;">National Issuer Admin</span>
           </div>
         </div>
 
@@ -1097,76 +1089,174 @@ function renderMemberDetailView(target, container, member) {
 function renderCardIssueWizard(target, container, params = {}) {
   const members = store.data.members;
   let selectedMemberId = params.memberId || (members[0] ? members[0].id : '');
-  let selectedTemplate = 'teal'; // teal, slate, blue
+  let currentMember = store.getMemberById(selectedMemberId) || members[0] || {
+    id: 'MEM-CUSTOM',
+    fullName: 'RAHUL KUMAR',
+    nameHindi: 'राहुल कुमार',
+    healthId: '0000 1111 2222',
+    dob: '15-08-1994',
+    gender: 'MALE / पुरुष',
+    bloodGroup: 'O+ POS',
+    photoUrl: ''
+  };
+
+  let wizardData = {
+    healthId: currentMember.healthId || '0000 1111 2222',
+    fullName: (currentMember.fullName || 'RAHUL KUMAR').toUpperCase(),
+    nameHindi: currentMember.nameHindi || 'राहुल कुमार',
+    bloodGroup: currentMember.bloodGroup || 'O+ POS',
+    dob: currentMember.dob || '15-08-1994',
+    gender: currentMember.gender ? `${currentMember.gender.toUpperCase()} / ${currentMember.gender.toUpperCase().includes('FEM') ? 'महिला' : 'पुरुष'}` : 'MALE / पुरुष',
+    photoUrl: currentMember.photoUrl || '',
+    addressHindi: 'मकान नं. 142, गली नं. 4, विकास नगर, नई दिल्ली - 110059',
+    addressEnglish: 'H.No. 142, Street 4, Vikas Nagar, New Delhi - 110059',
+    isEmpty: false
+  };
 
   target.innerHTML = `
     <div class="page-title-bar">
       <div>
-        <h2 class="page-title">Physical Card Issuing Wizard</h2>
-        <p class="page-description">Generate CR80 PVC Card, 128-bit opaque token, QR code, and verify before dispatch (CARD-01, CARD-03).</p>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <h2 class="page-title">Physical HealthCard Generator &amp; Issuing Workspace</h2>
+          <span class="badge" style="background:#047857; color:#ffffff; font-weight:800; font-size:11px;">SOVEREIGN NATIONAL HEALTHCARD • CR80 PVC (ABDM)</span>
+        </div>
+        <p class="page-description">Design, personalize, issue, and verify official Government of India CR80 PVC Physical HealthCards with dynamic 2D QR matrix.</p>
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <button type="button" class="btn btn-primary" id="btn-wizard-download-pdf" title="Download Official Government A4 Print Slip PDF">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>Download Card PDF</span>
+        </button>
+        <button type="button" class="btn btn-secondary" id="btn-wizard-download-png" title="Download High-Res Front &amp; Back PNG Images">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Download Card PNG</span>
+        </button>
+        <button type="button" class="btn btn-outline" id="btn-wizard-print">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          <span>Print 1:1 Scale</span>
+        </button>
       </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 360px 1fr; gap: 24px; align-items: flex-start;">
+    <div style="display: grid; grid-template-columns: 410px 1fr; gap: 24px; align-items: flex-start;">
       
-      <!-- Wizard Configuration Form -->
+      <!-- Wizard Configuration & Live Data Input Form -->
       <div class="card" style="margin-bottom: 0;">
-        <div class="card-header">
-          <h3 class="card-title">1. Card Configuration</h3>
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 class="card-title">1. Citizen Credentials &amp; Issuance</h3>
+          <span style="font-size: 11px; font-weight: 700; color: #047857;">Live Sync</span>
         </div>
         <div class="card-body">
-          <form id="card-wizard-form">
+          <form id="card-wizard-form" onsubmit="return false;">
             
-            <div class="form-group" style="margin-bottom: 16px;">
-              <label for="wizard-member-select">Select Registered Member *</label>
-              <select id="wizard-member-select" class="form-control" required>
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label for="wizard-member-select">Select Registered Member</label>
+              <select id="wizard-member-select" class="form-control">
                 ${members.map(m => `
                   <option value="${m.id}" ${m.id === selectedMemberId ? 'selected' : ''}>
                     ${m.fullName} (${m.healthId})
                   </option>
                 `).join('')}
+                <option value="CUSTOM">+ Create Custom / Unregistered Card</option>
               </select>
             </div>
 
-            <div class="form-group" style="margin-bottom: 16px;">
-              <label>Select Card Theme Template (CARD-10)</label>
-              <div style="display: flex; gap: 8px; margin-top: 4px;">
-                <button type="button" class="btn btn-sm btn-template-select ${selectedTemplate === 'teal' ? 'btn-primary' : 'btn-secondary'}" data-tmpl="teal">Clinical Teal</button>
-                <button type="button" class="btn btn-sm btn-template-select ${selectedTemplate === 'slate' ? 'btn-primary' : 'btn-secondary'}" data-tmpl="slate">Slate Dark</button>
-                <button type="button" class="btn btn-sm btn-template-select ${selectedTemplate === 'blue' ? 'btn-primary' : 'btn-secondary'}" data-tmpl="blue">National Blue</button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="wiz-inp-name-en">Name (English) *</label>
+                <input type="text" id="wiz-inp-name-en" class="form-control" value="${wizardData.fullName}" required />
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="wiz-inp-name-hi">Name (Hindi) *</label>
+                <input type="text" id="wiz-inp-name-hi" class="form-control" value="${wizardData.nameHindi}" required />
               </div>
             </div>
 
-            <!-- Mandatory Pre-Activation Checklist (CARD-03) -->
-            <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; margin-bottom: 20px;">
-              <div style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; text-transform: uppercase;">
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label for="wiz-inp-health-id">10-Digit / Aadhaar-Style Health ID *</label>
+              <input type="text" id="wiz-inp-health-id" class="form-control font-mono" value="${wizardData.healthId}" required />
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="wiz-inp-blood">Blood Group *</label>
+                <select id="wiz-inp-blood" class="form-control">
+                  <option value="O+ POS" ${wizardData.bloodGroup.includes('O+') ? 'selected' : ''}>O+ POS</option>
+                  <option value="O- NEG" ${wizardData.bloodGroup.includes('O-') ? 'selected' : ''}>O- NEG</option>
+                  <option value="A+ POS" ${wizardData.bloodGroup.includes('A+') ? 'selected' : ''}>A+ POS</option>
+                  <option value="A- NEG" ${wizardData.bloodGroup.includes('A-') ? 'selected' : ''}>A- NEG</option>
+                  <option value="B+ POS" ${wizardData.bloodGroup.includes('B+') ? 'selected' : ''}>B+ POS</option>
+                  <option value="B- NEG" ${wizardData.bloodGroup.includes('B-') ? 'selected' : ''}>B- NEG</option>
+                  <option value="AB+ POS" ${wizardData.bloodGroup.includes('AB+') ? 'selected' : ''}>AB+ POS</option>
+                  <option value="AB- NEG" ${wizardData.bloodGroup.includes('AB-') ? 'selected' : ''}>AB- NEG</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="wiz-inp-dob">DOB (जन्म तिथि) *</label>
+                <input type="text" id="wiz-inp-dob" class="form-control" value="${wizardData.dob}" placeholder="DD-MM-YYYY" required />
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="wiz-inp-gender">Gender (लिंग) *</label>
+                <input type="text" id="wiz-inp-gender" class="form-control" value="${wizardData.gender}" placeholder="MALE / पुरुष" required />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="wiz-inp-photo-mode">Citizen Photo</label>
+                <select id="wiz-inp-photo-mode" class="form-control">
+                  <option value="member" ${wizardData.photoUrl ? 'selected' : ''}>Member Photo</option>
+                  <option value="silhouette" ${!wizardData.photoUrl ? 'selected' : ''}>Placeholder Silhouette</option>
+                  <option value="upload">Upload Custom Photo...</option>
+                </select>
+                <input type="file" id="wiz-file-photo" accept="image/*" style="display: none;" />
+              </div>
+            </div>
+
+            <!-- Empty Template Toggle (Blank Card Mode) -->
+            <div style="background-color: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;">
+              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12.5px; font-weight: 700; color: #0f172a; margin: 0;">
+                <input type="checkbox" id="wiz-toggle-empty" />
+                <span>Blank PVC Template Mode (Empty Fields)</span>
+              </label>
+              <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
+                Renders a pristine blank card with official security guilloche, watermark, and empty field slots for manual engraving.
+              </div>
+            </div>
+
+            <!-- Mandatory Pre-Activation Checklist -->
+            <div style="background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 16px;">
+              <div style="font-size: 11.5px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; text-transform: uppercase;">
                 Pre-Issuance Verification Checklist
               </div>
-              <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12.5px;">
+              <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px;">
                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                   <input type="checkbox" id="check-name-match" checked />
-                  <span>Member identity matches Legal ID</span>
+                  <span>Member identity matches Legal KYC Document</span>
                 </label>
                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                   <input type="checkbox" id="check-qr-resolve" checked />
-                  <span>Opaque Token Hash generated</span>
+                  <span>Opaque SHA-256 Token &amp; 2D QR Code Validated</span>
                 </label>
                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                   <input type="checkbox" id="check-nfc-linked" checked />
-                  <span>NTAG 424 DNA NFC capability ready</span>
+                  <span>Contactless Smart Wave (ISO 14443 NFC) Ready</span>
                 </label>
               </div>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <button type="button" class="btn btn-primary" id="btn-wizard-issue" style="width: 100%; height: 40px; font-weight: 600;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <button type="button" class="btn btn-primary" id="btn-wizard-issue" style="width: 100%; height: 40px; font-weight: 700;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-                <span>Issue & Register Card</span>
+                <span>Issue &amp; Register Physical Card</span>
               </button>
               
-              <button type="button" class="btn btn-secondary" id="btn-wizard-print" style="width: 100%;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                <span>Print PDF / Direct Print</span>
+              <button type="button" class="btn btn-outline" id="btn-wizard-verify-action" style="width: 100%; color: #0284c7; border-color: #0284c7; font-weight: 700;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <span>Simulate Camera Scan / Verify Credential</span>
               </button>
             </div>
 
@@ -1174,145 +1264,187 @@ function renderCardIssueWizard(target, container, params = {}) {
         </div>
       </div>
 
-      <!-- Live Interactive Card Preview (CR80 Standard) -->
+      <!-- Live Interactive Card Preview (CR80 Standard in Light Mode Only) -->
       <div class="card" style="margin-bottom: 0;">
-        <div class="card-header">
-          <h3 class="card-title">2. Live Physical Card Preview (Front & Back)</h3>
-          <span class="font-mono" style="font-size: 11px; color: var(--text-muted); font-weight: 600;">CR80 SPEC (85.6mm × 54mm)</span>
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 class="card-title">2. Live Physical Card Inspection (Front &amp; Back)</h3>
+          <span class="font-mono" style="font-size: 11px; color: #047857; font-weight: 700;">CR80 PVC (85.6mm × 54mm) • LIGHT MODE ONLY</span>
         </div>
-        <div class="card-body">
-          <div class="card-preview-container" id="print-card-target">
-            <div class="card-sides-wrapper">
-              
-              <!-- Front Side -->
-              <div class="healthcard-physical template-${selectedTemplate}" id="card-front-view">
-                <div class="card-top">
-                  <div class="card-emblem">
-                    <div class="emblem-icon">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    </div>
-                    <span class="card-org-title">NATIONAL HEALTH RECORD</span>
-                  </div>
-                  <div class="nfc-symbol">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M6 8.5a6.5 6.5 0 0 1 12 0M8.5 12a3.5 3.5 0 0 1 7 0M11 15.5a1 1 0 0 1 2 0"/></svg>
-                  </div>
-                </div>
-
-                <div class="card-middle" style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
-                  <div style="flex: 1; min-width: 0;">
-                    <div class="card-patient-name" id="preview-patient-name">RAHUL SHARMA</div>
-                    <div class="card-id-label">National Health ID</div>
-                    <div class="card-health-id" id="preview-health-id">74839 16251</div>
-                    <div style="margin-top: 4px;">
-                      <span id="preview-blood-group" style="color: #ef4444; font-weight: 800; font-size: 11px; background: rgba(0,0,0,0.35); padding: 1px 6px; border-radius: 3px; letter-spacing: 0.03em;">
-                        BLOOD: O+
-                      </span>
-                    </div>
-                  </div>
-                  <div id="preview-photo-wrap" style="width: 48px; height: 58px; border-radius: 4px; border: 1.5px solid rgba(255,255,255,0.7); overflow: hidden; background: rgba(255,255,255,0.2); flex-shrink: 0; display: none;">
-                    <img id="preview-patient-photo" src="" style="width: 100%; height: 100%; object-fit: cover;" alt="Citizen Photo" />
-                  </div>
-                </div>
-
-                <div class="card-bottom">
-                  <span style="font-family: var(--font-family-mono); font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em;">CARD NO: <span id="preview-card-bottom-id">74839 16251</span></span>
-                  <span style="font-size: 9px; opacity: 0.85; font-weight: 600;">STATUS: ACTIVE</span>
-                </div>
+        <div class="card-body" style="background-color: #f1f5f9; padding: 24px; border-radius: 0 0 var(--radius-md) var(--radius-md);">
+          
+          <div style="display: flex; flex-direction: column; gap: 24px; align-items: center;" id="print-card-target">
+            
+            <!-- Front Face Mount -->
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+              <div style="font-size: 11px; font-weight: 800; color: #64748b; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;">
+                CARD FRONT FACE (CR80 PHYSICAL)
               </div>
-
-              <!-- Back Side -->
-              <div class="healthcard-physical card-back" id="card-back-view">
-                <div class="card-back-qr">
-                  <canvas id="wizard-qr-canvas"></canvas>
-                  <span style="font-size: 8px; color: #64748b; margin-top: 3px; font-weight: 600;">SCAN FOR ACCESS</span>
-                </div>
-                <div class="card-back-info">
-                  <div class="card-back-disclaimer">
-                    <strong>SECURITY NOTICE:</strong> This card carries only a revocable digital token. Medical records remain encrypted in cloud vaults. Access requires patient OTP / App consent.
-                  </div>
-                  <div class="card-back-meta">
-                    <div>24x7 Helpline: <strong class="card-helpline">1800-890-4325</strong></div>
-                    <div>Portal: <strong>healthcard.gov.in</strong></div>
-                    <div style="font-size: 8px; color: #94a3b8; margin-top: 2px;">Template: TC-V1.0 • Opaque Token Protected</div>
-                  </div>
-                </div>
-              </div>
-
+              <div id="admin-card-front-mount"></div>
             </div>
+
+            <!-- Back Face Mount -->
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+              <div style="font-size: 11px; font-weight: 800; color: #64748b; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;">
+                CARD BACK FACE (STATUTORY &amp; ADDRESS)
+              </div>
+              <div id="admin-card-back-mount"></div>
+            </div>
+
           </div>
+
         </div>
       </div>
 
     </div>
   `;
 
-  // Function to update preview from selected member
-  function updateLiveCardPreview() {
-    const memId = target.querySelector('#wizard-member-select').value;
-    const mem = store.getMemberById(memId);
-    if (!mem) return;
+  // Function to update preview from live inputs
+  function updateLiveAadhaarPreview() {
+    const frontMount = target.querySelector('#admin-card-front-mount');
+    const backMount = target.querySelector('#admin-card-back-mount');
 
-    const nameEl = target.querySelector('#preview-patient-name');
-    const idEl = target.querySelector('#preview-health-id');
-    const serialEl = target.querySelector('#preview-card-serial');
-    const frontEl = target.querySelector('#card-front-view');
-    const bloodEl = target.querySelector('#preview-blood-group');
-    const photoWrap = target.querySelector('#preview-photo-wrap');
-    const photoEl = target.querySelector('#preview-patient-photo');
+    if (frontMount) {
+      frontMount.innerHTML = HealthCardRenderer.renderAadhaarFront(wizardData, {
+        assetsBasePath: '/card-design/assets',
+        idPrefix: 'admin-wiz-'
+      });
 
-    if (nameEl) nameEl.textContent = mem.fullName.toUpperCase();
-    if (idEl) idEl.textContent = mem.healthId;
-    const bottomIdEl = target.querySelector('#preview-card-bottom-id');
-    if (bottomIdEl) bottomIdEl.textContent = mem.healthId;
-    if (bloodEl) bloodEl.textContent = `BLOOD: ${mem.bloodGroup || '—'}`;
-
-    if (photoWrap && photoEl) {
-      if (mem.photoUrl) {
-        photoWrap.style.display = 'block';
-        photoEl.src = mem.photoUrl;
-      } else {
-        photoWrap.style.display = 'none';
+      // Generate live working 2D QR Code
+      const qrCanvas = frontMount.querySelector('#admin-wiz-qr-canvas');
+      if (qrCanvas) {
+        const payload = HealthCardRenderer.getVerificationPayload(wizardData);
+        QRCode.toCanvas(qrCanvas, payload, {
+          width: 84,
+          margin: 1,
+          color: { dark: '#0f172a', light: '#ffffff' }
+        }).catch(err => {
+          HealthCardRenderer.renderFallbackQR(qrCanvas, payload);
+        });
       }
     }
-    
-    if (frontEl) {
-      frontEl.className = `healthcard-physical template-${selectedTemplate}`;
-    }
 
-    // Render QR Code on back
-    const canvas = target.querySelector('#wizard-qr-canvas');
-    if (canvas) {
-      const opaqueToken = `tok_${Math.random().toString(36).slice(2, 10)}`;
-      const url = `https://hc.example.in/c/${opaqueToken}`;
-      QRCode.toCanvas(canvas, url, {
-        width: 100,
-        margin: 1,
-        color: {
-          dark: '#0f172a',
-          light: '#ffffff'
-        }
-      }).catch(err => console.error('QR Error:', err));
+    if (backMount) {
+      backMount.innerHTML = HealthCardRenderer.renderAadhaarBack(wizardData, {
+        assetsBasePath: '/card-design/assets',
+        idPrefix: 'admin-wiz-back-'
+      });
+
+      HealthCardRenderer.renderQRCode('admin-wiz-back-hospital-qr-canvas', wizardData, true);
     }
   }
 
   // Member select change
   const memberSelect = target.querySelector('#wizard-member-select');
-  memberSelect.addEventListener('change', updateLiveCardPreview);
+  memberSelect.addEventListener('change', () => {
+    const memId = memberSelect.value;
+    if (memId === 'CUSTOM') {
+      const freshId = generateHealthId();
+      wizardData = {
+        healthId: freshId,
+        fullName: 'NEW CITIZEN',
+        nameHindi: 'नया नागरिक',
+        bloodGroup: 'O+ POS',
+        dob: '01-01-2000',
+        gender: 'MALE / पुरुष',
+        photoUrl: '',
+        addressHindi: 'मकान नं. 12-बी, सरकारी कॉलोनी, नई दिल्ली - 110001',
+        addressEnglish: 'H.No. 12-B, Govt Colony, New Delhi - 110001',
+        isEmpty: false
+      };
+    } else {
+      const mem = store.getMemberById(memId);
+      if (mem) {
+        wizardData.healthId = mem.healthId || generateHealthId();
+        wizardData.fullName = (mem.fullName || 'CITIZEN').toUpperCase();
+        wizardData.nameHindi = mem.nameHindi || 'राहुल कुमार';
+        wizardData.bloodGroup = mem.bloodGroup || 'O+ POS';
+        wizardData.dob = mem.dob || '15-08-1994';
+        wizardData.gender = mem.gender ? `${mem.gender.toUpperCase()} / पुरुष` : 'MALE / पुरुष';
+        wizardData.photoUrl = mem.photoUrl || '';
+        wizardData.isEmpty = false;
+      }
+    }
 
-  // Template select buttons
-  target.querySelectorAll('.btn-template-select').forEach(btn => {
-    btn.addEventListener('click', () => {
-      selectedTemplate = btn.dataset.tmpl;
-      target.querySelectorAll('.btn-template-select').forEach(b => {
-        b.className = `btn btn-sm btn-template-select ${b.dataset.tmpl === selectedTemplate ? 'btn-primary' : 'btn-secondary'}`;
-      });
-      updateLiveCardPreview();
-    });
+    // Sync input fields
+    target.querySelector('#wiz-inp-name-en').value = wizardData.fullName;
+    target.querySelector('#wiz-inp-name-hi').value = wizardData.nameHindi;
+    target.querySelector('#wiz-inp-health-id').value = wizardData.healthId;
+    target.querySelector('#wiz-inp-blood').value = wizardData.bloodGroup;
+    target.querySelector('#wiz-inp-dob').value = wizardData.dob;
+    target.querySelector('#wiz-inp-gender').value = wizardData.gender;
+    target.querySelector('#wiz-toggle-empty').checked = false;
+
+    updateLiveAadhaarPreview();
+  });
+
+  // Wire input live change listeners
+  target.querySelector('#wiz-inp-name-en').addEventListener('input', (e) => {
+    wizardData.fullName = e.target.value.toUpperCase();
+    updateLiveAadhaarPreview();
+  });
+  target.querySelector('#wiz-inp-name-hi').addEventListener('input', (e) => {
+    wizardData.nameHindi = e.target.value;
+    updateLiveAadhaarPreview();
+  });
+  target.querySelector('#wiz-inp-health-id').addEventListener('input', (e) => {
+    wizardData.healthId = e.target.value;
+    updateLiveAadhaarPreview();
+  });
+  target.querySelector('#wiz-inp-blood').addEventListener('change', (e) => {
+    wizardData.bloodGroup = e.target.value;
+    updateLiveAadhaarPreview();
+  });
+  target.querySelector('#wiz-inp-dob').addEventListener('input', (e) => {
+    wizardData.dob = e.target.value;
+    updateLiveAadhaarPreview();
+  });
+  target.querySelector('#wiz-inp-gender').addEventListener('input', (e) => {
+    wizardData.gender = e.target.value;
+    updateLiveAadhaarPreview();
+  });
+
+  // Empty template toggle
+  target.querySelector('#wiz-toggle-empty').addEventListener('change', (e) => {
+    wizardData.isEmpty = e.target.checked;
+    updateLiveAadhaarPreview();
+  });
+
+  // Photo mode selector
+  const photoMode = target.querySelector('#wiz-inp-photo-mode');
+  const photoFile = target.querySelector('#wiz-file-photo');
+  photoMode.addEventListener('change', () => {
+    if (photoMode.value === 'silhouette') {
+      wizardData.photoUrl = '';
+      updateLiveAadhaarPreview();
+    } else if (photoMode.value === 'upload') {
+      photoFile.click();
+    } else if (photoMode.value === 'member') {
+      const mem = store.getMemberById(memberSelect.value);
+      wizardData.photoUrl = mem?.photoUrl || '';
+      updateLiveAadhaarPreview();
+    }
+  });
+
+  photoFile.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (re) => {
+        wizardData.photoUrl = re.target.result;
+        updateLiveAadhaarPreview();
+        showToast('Citizen portrait uploaded successfully', 'success');
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Verify Simulator button
+  target.querySelector('#btn-wizard-verify-action')?.addEventListener('click', () => {
+    HealthCardRenderer.showVerificationModal(wizardData);
   });
 
   // Issue button
   target.querySelector('#btn-wizard-issue')?.addEventListener('click', () => {
-    const memId = memberSelect.value;
     const nameMatch = target.querySelector('#check-name-match').checked;
     if (!nameMatch) {
       showToast('Please complete identity verification check before issuing', 'warning');
@@ -1320,11 +1452,76 @@ function renderCardIssueWizard(target, container, params = {}) {
     }
 
     try {
-      const result = store.issueCard(memId, `${selectedTemplate}_standard`);
-      showToast(`Card for member ${result.card.healthId} issued! Fulfillment order created.`, 'success');
+      const memId = memberSelect.value;
+      if (memId && memId !== 'CUSTOM') {
+        store.updateMember(memId, {
+          fullName: wizardData.fullName,
+          bloodGroup: wizardData.bloodGroup,
+          dob: wizardData.dob,
+          photoUrl: wizardData.photoUrl
+        });
+        const result = store.issueCard(memId, 'aadhaar_landscape_light');
+        showToast(`Official Aadhaar-Style HealthCard for member ${result.card.healthId} issued! Fulfillment order created.`, 'success');
+      } else {
+        const cleanName = wizardData.fullName || 'NEW CITIZEN';
+        const cleanHealthId = wizardData.healthId || generateHealthId();
+        const newMember = store.addMember({
+          healthId: cleanHealthId,
+          fullName: cleanName,
+          nameHindi: wizardData.nameHindi || '',
+          dob: wizardData.dob || '01-01-2000',
+          gender: wizardData.gender?.toUpperCase().includes('FEM') ? 'Female' : 'Male',
+          mobile: '9876543210',
+          email: `${cleanName.toLowerCase().replace(/[^a-z0-9]/g, '') || 'citizen'}@national.in`,
+          bloodGroup: wizardData.bloodGroup || 'O+ POS',
+          photoUrl: wizardData.photoUrl || '',
+          kyc: {
+            documentType: 'Aadhaar',
+            documentNumber: 'XXXX-XXXX-9999',
+            status: 'Verified',
+            source: 'Admin Direct Issuance',
+            verifiedAt: new Date().toISOString()
+          },
+          address: {
+            street: wizardData.addressEnglish || '12-B Govt Colony',
+            city: 'New Delhi',
+            state: 'Delhi',
+            pinCode: '110001'
+          }
+        });
+        const result = store.issueCard(newMember.id, 'aadhaar_landscape_light');
+        showToast(`Official HealthCard issued for new member ${newMember.fullName} (${result.card.healthId})! Fulfillment order created.`, 'success');
+      }
       switchView('fulfillment', container);
     } catch (e) {
       showToast(e.message, 'error');
+    }
+  });
+
+  // Direct Download PDF button
+  target.querySelector('#btn-wizard-download-pdf')?.addEventListener('click', async () => {
+    try {
+      showToast('Generating official Government HealthCard print sheet PDF...', 'info');
+      await HealthCardRenderer.exportCardPdf(wizardData, { format: 'a4' });
+      showToast('Official HealthCard PDF downloaded successfully!', 'success');
+    } catch (err) {
+      console.error('PDF generation error:', err);
+      showToast('PDF generation failed: ' + err.message, 'error');
+    }
+  });
+
+  // Direct Download PNG button
+  target.querySelector('#btn-wizard-download-png')?.addEventListener('click', async () => {
+    try {
+      showToast('Exporting high-resolution card PNGs...', 'info');
+      HealthCardRenderer.downloadCardPng(wizardData, 'front');
+      setTimeout(() => {
+        HealthCardRenderer.downloadCardPng(wizardData, 'back');
+      }, 500);
+      showToast('Front & Back PNG images downloaded successfully!', 'success');
+    } catch (err) {
+      console.error('PNG export error:', err);
+      showToast('PNG export failed: ' + err.message, 'error');
     }
   });
 
@@ -1333,8 +1530,8 @@ function renderCardIssueWizard(target, container, params = {}) {
     window.print();
   });
 
-  // Trigger initial QR render
-  updateLiveCardPreview();
+  // Initial render
+  updateLiveAadhaarPreview();
 }
 
 /**
@@ -3436,93 +3633,74 @@ function openCardPreviewModal(card, member, container, onUpdate) {
 
   const actualMember = member || store.getMemberById(card.memberId) || { fullName: 'MEMBER', healthId: card.healthId };
 
+  const memberCardData = {
+    healthId: card.healthId,
+    fullName: (actualMember.fullName || 'CITIZEN').toUpperCase(),
+    nameHindi: actualMember.nameHindi || 'राहुल कुमार',
+    dob: actualMember.dob || '15-08-1994',
+    gender: actualMember.gender ? `${actualMember.gender.toUpperCase()} / पुरुष` : 'MALE / पुरुष',
+    bloodGroup: actualMember.bloodGroup || 'O+ POS',
+    photoUrl: actualMember.photoUrl || '',
+    addressHindi: 'मकान नं. 142, गली नं. 4, विकास नगर, नई दिल्ली - 110059',
+    addressEnglish: 'H.No. 142, Street 4, Vikas Nagar, New Delhi - 110059',
+    isEmpty: false
+  };
+
   // Lock background website scrolling
   document.body.classList.add('modal-open');
 
   modalContainer.innerHTML = `
     <div class="modal-backdrop" id="preview-modal-backdrop">
-      <div class="modal modal-lg">
+      <div class="modal modal-lg" style="max-width: 620px;">
         <div class="modal-header">
           <h3 class="modal-title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-            <span>Physical Card Inspection: ${card.healthId}</span>
+            <span>Physical HealthCard Inspection: ${card.healthId}</span>
           </h3>
           <button class="modal-close" id="btn-close-card-modal" title="Close Preview">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
 
-        <div class="modal-body" style="background-color: #f8fafc;">
-          <div class="card-preview-container">
-            <div class="card-sides-wrapper">
-              
-              <!-- Front -->
-              <div class="healthcard-physical template-${card.templateId.includes('slate') ? 'slate' : card.templateId.includes('blue') ? 'blue' : 'teal'}">
-                <div class="card-top">
-                  <div class="card-emblem">
-                    <div class="emblem-icon">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    </div>
-                    <span class="card-org-title">NATIONAL HEALTH RECORD</span>
-                  </div>
-                  <div class="nfc-symbol">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M6 8.5a6.5 6.5 0 0 1 12 0M8.5 12a3.5 3.5 0 0 1 7 0M11 15.5a1 1 0 0 1 2 0"/></svg>
-                  </div>
-                </div>
-
-                <div class="card-middle" style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
-                  <div style="flex: 1; min-width: 0;">
-                    <div class="card-patient-name">${actualMember.fullName.toUpperCase()}</div>
-                    <div class="card-id-label">National Health ID</div>
-                    <div class="card-health-id">${card.healthId}</div>
-                    ${actualMember.bloodGroup ? `
-                      <div style="margin-top: 4px;">
-                        <span style="color: #ef4444; font-weight: 800; font-size: 11px; background: rgba(0,0,0,0.35); padding: 1px 6px; border-radius: 3px; letter-spacing: 0.03em;">
-                          BLOOD: ${actualMember.bloodGroup}
-                        </span>
-                      </div>
-                    ` : ''}
-                  </div>
-                  ${actualMember.photoUrl ? `
-                    <div style="width: 48px; height: 58px; border-radius: 4px; border: 1.5px solid rgba(255,255,255,0.7); overflow: hidden; background: rgba(255,255,255,0.2); flex-shrink: 0;">
-                      <img src="${actualMember.photoUrl}" style="width: 100%; height: 100%; object-fit: cover;" alt="Citizen Photo" />
-                    </div>
-                  ` : ''}
-                </div>
-
-                <div class="card-bottom">
-                  <span style="font-family: var(--font-family-mono); font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em;">CARD NO: ${card.healthId}</span>
-                  <span style="font-size: 9px; opacity: 0.85; font-weight: 600;">STATUS: ${card.status.toUpperCase()}</span>
-                </div>
+        <div class="modal-body" style="background-color: #f1f5f9; padding: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 20px; align-items: center;" id="modal-card-print-target">
+            
+            <!-- Front Face Mount -->
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+              <div style="font-size: 11px; font-weight: 800; color: #64748b; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;">
+                CARD FRONT FACE (CR80 PHYSICAL)
               </div>
-
-              <!-- Back -->
-              <div class="healthcard-physical card-back">
-                <div class="card-back-qr">
-                  <canvas id="modal-qr-canvas"></canvas>
-                  <span style="font-size: 8px; color: #64748b; margin-top: 3px; font-weight: 600;">SCAN FOR ACCESS</span>
-                </div>
-                <div class="card-back-info">
-                  <div class="card-back-disclaimer">
-                    <strong>SECURITY NOTICE:</strong> This card carries only a revocable digital token. Medical records remain encrypted in cloud vaults. Access requires patient OTP / App consent.
-                  </div>
-                  <div class="card-back-meta">
-                    <div>24x7 Helpline: <strong class="card-helpline">1800-890-4325</strong></div>
-                    <div>Portal: <strong>healthcard.gov.in</strong></div>
-                    <div style="font-size: 8px; color: #94a3b8; margin-top: 2px;">Card ID: ${card.healthId}</div>
-                  </div>
-                </div>
-              </div>
-
+              <div id="modal-card-front-mount"></div>
             </div>
+
+            <!-- Back Face Mount -->
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+              <div style="font-size: 11px; font-weight: 800; color: #64748b; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px;">
+                CARD BACK FACE (STATUTORY &amp; ADDRESS)
+              </div>
+              <div id="modal-card-back-mount"></div>
+            </div>
+
           </div>
         </div>
 
-        <div class="modal-footer" style="justify-content: space-between;">
-          <div style="display: flex; gap: 8px;">
+        <div class="modal-footer" style="justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-outline btn-sm" id="btn-modal-verify-qr" style="color: #0284c7; border-color: #0284c7; font-weight: 700;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span>Simulate QR Scan</span>
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" id="btn-modal-download-pdf" style="background:#047857; border-color:#047857; font-weight: 700;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <span>Download PDF</span>
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-modal-download-png">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Download PNG</span>
+            </button>
             <button type="button" class="btn btn-secondary btn-sm" id="btn-modal-edit-card">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-              <span>Edit Card Details</span>
+              <span>Edit Details</span>
             </button>
             <button type="button" class="btn btn-danger btn-sm" id="btn-modal-delete-card">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
@@ -3530,7 +3708,7 @@ function openCardPreviewModal(card, member, container, onUpdate) {
             </button>
           </div>
           <div style="display: flex; gap: 8px;">
-            <button type="button" class="btn btn-secondary" id="btn-modal-print">Print PDF Spec</button>
+            <button type="button" class="btn btn-secondary" id="btn-modal-print">Print 1:1 Scale</button>
             <button type="button" class="btn btn-primary" id="btn-close-preview-ok">Done</button>
           </div>
         </div>
@@ -3538,14 +3716,69 @@ function openCardPreviewModal(card, member, container, onUpdate) {
     </div>
   `;
 
-  const canvas = modalContainer.querySelector('#modal-qr-canvas');
-  if (canvas) {
-    QRCode.toCanvas(canvas, `https://hc.example.in/c/${card.token}`, {
-      width: 100,
-      margin: 1,
-      color: { dark: '#0f172a', light: '#ffffff' }
+  // Mount card front & back using HealthCardRenderer
+  const frontMount = modalContainer.querySelector('#modal-card-front-mount');
+  const backMount = modalContainer.querySelector('#modal-card-back-mount');
+
+  if (frontMount) {
+    frontMount.innerHTML = HealthCardRenderer.renderAadhaarFront(memberCardData, {
+      assetsBasePath: '/card-design/assets',
+      idPrefix: 'modal-view-'
     });
+
+    const qrCanvas = frontMount.querySelector('#modal-view-qr-canvas');
+    if (qrCanvas) {
+      const payload = HealthCardRenderer.getVerificationPayload(memberCardData);
+      QRCode.toCanvas(qrCanvas, payload, {
+        width: 84,
+        margin: 1,
+        color: { dark: '#0f172a', light: '#ffffff' }
+      }).catch(err => {
+        HealthCardRenderer.renderFallbackQR(qrCanvas, payload);
+      });
+    }
   }
+
+  if (backMount) {
+    backMount.innerHTML = HealthCardRenderer.renderAadhaarBack(memberCardData, {
+      assetsBasePath: '/card-design/assets',
+      idPrefix: 'modal-view-back-'
+    });
+
+    HealthCardRenderer.renderQRCode('modal-view-back-hospital-qr-canvas', memberCardData, true);
+  }
+
+  // QR Verification simulator trigger
+  modalContainer.querySelector('#btn-modal-verify-qr')?.addEventListener('click', () => {
+    HealthCardRenderer.showVerificationModal(memberCardData);
+  });
+
+  // Download PDF handler
+  modalContainer.querySelector('#btn-modal-download-pdf')?.addEventListener('click', async () => {
+    try {
+      showToast('Generating official HealthCard print sheet PDF...', 'info');
+      await HealthCardRenderer.exportCardPdf(memberCardData, { format: 'a4' });
+      showToast('Official HealthCard PDF downloaded successfully!', 'success');
+    } catch (err) {
+      console.error('PDF error:', err);
+      showToast('PDF download failed: ' + err.message, 'error');
+    }
+  });
+
+  // Download PNG handler
+  modalContainer.querySelector('#btn-modal-download-png')?.addEventListener('click', async () => {
+    try {
+      showToast('Exporting high-resolution card PNGs...', 'info');
+      HealthCardRenderer.downloadCardPng(memberCardData, 'front');
+      setTimeout(() => {
+        HealthCardRenderer.downloadCardPng(memberCardData, 'back');
+      }, 500);
+      showToast('Front & Back card PNGs downloaded successfully!', 'success');
+    } catch (err) {
+      console.error('PNG error:', err);
+      showToast('PNG download failed: ' + err.message, 'error');
+    }
+  });
 
   const backdrop = modalContainer.querySelector('#preview-modal-backdrop');
   const closeBtn = modalContainer.querySelector('#btn-close-card-modal');
@@ -3692,9 +3925,17 @@ function openEditOrderModal(order, container) {
             <input type="text" id="order-awb" class="form-control" value="${order.trackingNumber || ''}" placeholder="e.g. BLD-894210948" />
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="btn-cancel-order">Cancel</button>
-          <button type="button" class="btn btn-primary" id="btn-save-order">Save Changes</button>
+        <div class="modal-footer" style="justify-content: space-between;">
+          <div>
+            <button type="button" class="btn btn-outline btn-sm" id="btn-order-download-pdf" style="font-weight: 700; color: #047857; border-color: #047857;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <span>Download Card PDF</span>
+            </button>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn btn-secondary" id="btn-cancel-order">Cancel</button>
+            <button type="button" class="btn btn-primary" id="btn-save-order">Save Changes</button>
+          </div>
         </div>
       </div>
     </div>
@@ -3709,6 +3950,28 @@ function openEditOrderModal(order, container) {
   cancelBtn.addEventListener('click', closeModal);
   backdrop.addEventListener('click', (e) => {
     if (e.target === backdrop) closeModal();
+  });
+
+  modalContainer.querySelector('#btn-order-download-pdf')?.addEventListener('click', async () => {
+    try {
+      const member = store.getMemberById(order.memberId);
+      const card = store.getCardById(order.cardId);
+      const printData = {
+        fullName: member?.fullName || order.recipientName,
+        healthId: member?.healthId || card?.healthId,
+        dob: member?.dob || '01-01-2000',
+        bloodGroup: member?.bloodGroup || 'O+ POS',
+        gender: member?.gender ? `${member.gender.toUpperCase()} / पुरुष` : 'MALE / पुरुष',
+        photoUrl: member?.photoUrl || '',
+        addressEnglish: order.address
+      };
+      showToast('Generating official HealthCard print sheet PDF...', 'info');
+      await HealthCardRenderer.exportCardPdf(printData, { format: 'a4' });
+      showToast('Official HealthCard PDF downloaded successfully!', 'success');
+    } catch (err) {
+      console.error('PDF error:', err);
+      showToast('PDF download failed: ' + err.message, 'error');
+    }
   });
 
   modalContainer.querySelector('#btn-save-order').addEventListener('click', () => {

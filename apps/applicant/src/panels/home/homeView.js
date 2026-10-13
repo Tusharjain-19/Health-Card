@@ -5,24 +5,33 @@
  */
 
 import { applicantStore } from '../../shared/storage.js';
+import { HealthCardRenderer } from '../../shared/healthCardRenderer.js';
 
 export class HomeView {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
     this.isCardFlipped = false;
 
-    // Single Official Showcase Citizen (Authentic Indian Citizen)
+    // Showcase Demo Card Citizen
     this.citizen = {
-      name: 'ANANYA DESHMUKH',
+      name: 'TUSHAR JAIN',
+      fullName: 'TUSHAR JAIN',
+      nameHindi: 'तुषार जैन',
       photo: '/citizen_portrait.jpg',
-      dob: '28/11/1994',
-      sex: 'F',
-      blood: 'B+',
-      healthId: '81920 34719',
-      address: '12B, Bandra West, Mumbai - 400050',
-      emergency: 'Sanjay Deshmukh (Father) +91 98123 45679',
-      frontGradient: 'linear-gradient(135deg, #0a1e48 0%, #1e40af 60%, #3b82f6 100%)',
-      backGradient: 'linear-gradient(135deg, #091326 0%, #0f1e3d 100%)'
+      photoUrl: '/citizen_portrait.jpg',
+      dob: '15 / 08 / 1995',
+      sex: 'MALE / पुरुष',
+      gender: 'MALE / पुरुष',
+      blood: 'O+ POS',
+      bloodGroup: 'O+ POS',
+      healthId: '95037 09684',
+      address: 'H.No. 142, Vikas Nagar, New Delhi - 110059',
+      addressHindi: 'मकान नं. 142, विकास नगर, नई दिल्ली - 110059',
+      addressEnglish: 'H.No. 142, Vikas Nagar, New Delhi - 110059',
+      emergency: '+91 98765-43210 (Self/Family)',
+      emergencyContact: '+91 98765-43210 (Self/Family)',
+      allergies: 'No Known Drug Allergies',
+      organDonor: 'YES / हाँ (Pledged)'
     };
 
     this.init();
@@ -93,78 +102,39 @@ export class HomeView {
           </div>
 
           <!-- 3D Parallax Interactive Card Showcase -->
+          <!-- 3D Parallax Interactive Card Showcase -->
           <div class="hero-card-viewport" id="hero-card-viewport">
             <div class="hero-card-3d-wrapper" id="hero-card-3d">
               
-              <!-- Front Face of Card -->
-              <div class="hero-physical-card card-front" id="hero-card-front" style="display:${this.isCardFlipped ? 'none' : 'flex'}; background: ${p.frontGradient};">
-                <div class="hcard-top">
-                  <div class="hcard-emblem">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><path d="M12 2v20M2 12h20"/></svg>
-                  </div>
-                  <div>
-                    <div class="hcard-govt-title">NATIONAL HEALTH REGISTRY</div>
-                    <div class="hcard-govt-sub">GOVERNMENT OF INDIA</div>
-                  </div>
-                  <div class="hcard-chip-slot">
-                    <div class="gold-chip"></div>
-                  </div>
-                </div>
-
-                <div class="hcard-middle">
-                  <div class="hcard-photo-box">
-                    <img src="${p.photo}" alt="${p.name}" class="hcard-photo" id="hcard-photo-el" />
-                  </div>
-                  <div class="hcard-details">
-                    <div class="hcard-name" id="hcard-name-el">${p.name}</div>
-                    <div class="hcard-meta">
-                      DOB: <span id="hcard-dob-el">${p.dob}</span> | Sex: <span id="hcard-sex-el">${p.sex}</span>
-                    </div>
-                    <div class="hcard-blood-box">
-                      <span>BLOOD:</span>
-                      <strong class="hcard-blood-val" id="hcard-blood-el">${p.blood}</strong>
-                    </div>
-                    <div class="hcard-id-block">
-                      <div class="hcard-id-label">NATIONAL HEALTH ID</div>
-                      <div class="hcard-id-number" id="hcard-id-el">${p.healthId}</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="hcard-bottom">
-                  <span>CR80 PVC • NTAG 424 DNA NFC</span>
-                  <span class="hcard-seal">GOVT VERIFIED</span>
-                </div>
+              <!-- Front Face of Card (Official Sovereign HealthCard) -->
+              <div class="hero-card-face-mount" id="hero-card-front-mount" style="display:${this.isCardFlipped ? 'none' : 'flex'};">
+                ${HealthCardRenderer.renderAadhaarFront(p, {
+                  cardsBasePath: '/card-design/cards',
+                  idPrefix: 'hero-front-'
+                })}
               </div>
 
-              <!-- Back Face of Card -->
-              <div class="hero-physical-card card-back" id="hero-card-back" style="display:${this.isCardFlipped ? 'flex' : 'none'}; background: ${p.backGradient};">
-                <div class="hcard-magstripe"></div>
-                <div class="hcard-back-body">
-                  <div class="hcard-qr-box">
-                    <canvas id="hero-card-qr-canvas" width="60" height="60"></canvas>
-                  </div>
-                  <div class="hcard-back-text">
-                    <div id="hcard-back-addr"><strong>Address:</strong> ${p.address}</div>
-                    <div style="margin-top:3px;" id="hcard-back-emg"><strong>Emergency:</strong> ${p.emergency}</div>
-                    <div style="font-size:7.5px; opacity:0.8; margin-top:3px;">24x7 Helpline: 1800-11-4477 • Lost Card: healthcard.gov.in</div>
-                  </div>
-                </div>
-                <div class="hcard-back-footer">
-                  <span>MINISTRY OF HEALTH & FAMILY WELFARE</span>
-                  <span id="hcard-back-sn">SN: ${p.healthId.replace(/\s/g, '')}</span>
-                </div>
+              <!-- Back Face of Card (Hospital Emergency Scanner & Critical Medical Info) -->
+              <div class="hero-card-face-mount" id="hero-card-back-mount" style="display:${this.isCardFlipped ? 'flex' : 'none'};">
+                ${HealthCardRenderer.renderAadhaarBack(p, {
+                  cardsBasePath: '/card-design/cards',
+                  idPrefix: 'hero-back-'
+                })}
               </div>
 
             </div>
 
-            <!-- 3D Card Control Buttons -->
+            <!-- 3D Card Control Buttons & Demo Badge -->
             <div class="hero-card-controls">
+              <span class="badge" style="background:#e0f2fe; color:#0369a1; font-weight:700; font-size:11px; padding:3px 8px; border-radius:12px; display:inline-flex; align-items:center; gap:4px;">
+                <span style="width:6px; height:6px; background:#0284c7; border-radius:50%; display:inline-block;"></span>
+                Demo Card • Tushar Jain
+              </span>
               <button type="button" class="btn btn-xs btn-outline" id="btn-hero-flip-card">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
                 <span id="lbl-hero-flip">${this.isCardFlipped ? 'Flip to Card Front' : 'Flip to Card Back'}</span>
               </button>
-              <span class="parallax-hint">Interactive 3D Tilt Enabled</span>
+              <span class="parallax-hint">Interactive 3D Tilt</span>
             </div>
 
           </div>
@@ -385,19 +355,19 @@ export class HomeView {
     // Card Flip Action
     const btnFlip = document.getElementById('btn-hero-flip-card');
     const lblFlip = document.getElementById('lbl-hero-flip');
-    const frontCard = document.getElementById('hero-card-front');
-    const backCard = document.getElementById('hero-card-back');
+    const frontMount = document.getElementById('hero-card-front-mount');
+    const backMount = document.getElementById('hero-card-back-mount');
 
-    if (btnFlip && frontCard && backCard) {
+    if (btnFlip && frontMount && backMount) {
       btnFlip.onclick = () => {
         this.isCardFlipped = !this.isCardFlipped;
         if (this.isCardFlipped) {
-          frontCard.style.display = 'none';
-          backCard.style.display = 'flex';
+          frontMount.style.display = 'none';
+          backMount.style.display = 'flex';
           lblFlip.textContent = 'Flip to Card Front';
         } else {
-          frontCard.style.display = 'flex';
-          backCard.style.display = 'none';
+          frontMount.style.display = 'flex';
+          backMount.style.display = 'none';
           lblFlip.textContent = 'Flip to Card Back';
         }
       };
@@ -415,8 +385,8 @@ export class HomeView {
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
         
-        const rotateX = ((y - centerY) / centerY) * -12; // tilt angle
-        const rotateY = ((x - centerX) / centerX) * 14;
+        const rotateX = ((y - centerY) / centerY) * -10; // smooth tilt angle
+        const rotateY = ((x - centerX) / centerX) * 12;
 
         card3D.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
       });
@@ -426,18 +396,8 @@ export class HomeView {
       });
     }
 
-    // Dynamic QR Code Rendering for Citizen
-    const qrCanvas = document.getElementById('hero-card-qr-canvas');
-    if (qrCanvas) {
-      const cleanHid = this.citizen.healthId.replace(/\s/g, '');
-      import('qrcode').then(QRCodeModule => {
-        const QRCode = QRCodeModule.default || QRCodeModule;
-        QRCode.toCanvas(qrCanvas, `${window.location.origin}${window.location.pathname}#emergency?hid=${cleanHid}`, {
-          width: 60,
-          margin: 0,
-          color: { dark: '#0f172a', light: '#ffffff' }
-        }, (e) => { if (e) console.error(e); });
-      }).catch(err => console.warn('QR error:', err));
-    }
+    // Dynamic QR Code Rendering for Front & Back (Hospital Triage)
+    HealthCardRenderer.renderQRCode('hero-front-qr-canvas', this.citizen);
+    HealthCardRenderer.renderQRCode('hero-back-hospital-qr-canvas', this.citizen, true);
   }
 }

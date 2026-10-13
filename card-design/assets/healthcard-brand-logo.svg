@@ -1,0 +1,80 @@
+<svg width="240" height="64" viewBox="0 0 240 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Sovereign Brand Gradients -->
+    <linearGradient id="nhcShieldGrad" x1="6" y1="4" x2="38" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0a2540"/>
+      <stop offset="100%" stop-color="#051726"/>
+    </linearGradient>
+    <linearGradient id="nhcSaffronGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF9933"/>
+      <stop offset="100%" stop-color="#E65100"/>
+    </linearGradient>
+    <linearGradient id="nhcEmeraldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+    <linearGradient id="nhcPulseGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+    <filter id="nhcDropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- ================= EMBLEM MARK (48x48 centered at x:26, y:32) ================= -->
+  <g transform="translate(4, 8)" filter="url(#nhcDropShadow)">
+    <!-- Base Outer Shield -->
+    <path d="M22 2L40 9.2V23C40 34.2 32.5 42.4 22 45.5C11.5 42.4 4 34.2 4 23V9.2L22 2Z" 
+          fill="url(#nhcShieldGrad)" stroke="#1e3a5f" stroke-width="1.2"/>
+
+    <!-- Tricolor Saffron Top-Left Arc Accent -->
+    <path d="M22 4.2L37.8 10.6V15C31.5 12 25 11 18 13L22 4.2Z" 
+          fill="url(#nhcSaffronGrad)" opacity="0.95"/>
+
+    <!-- Tricolor Emerald Bottom Arc Accent -->
+    <path d="M22 43.5C29.5 40.8 35.8 34.5 37.8 25.5C33 28 27.5 29 22 28.5V43.5Z" 
+          fill="url(#nhcEmeraldGrad)" opacity="0.95"/>
+
+    <!-- Sovereign Medical Plus Cross Core -->
+    <g fill="#ffffff">
+      <!-- Vertical bar -->
+      <rect x="19.2" y="14" width="5.6" height="18" rx="1.8"/>
+      <!-- Horizontal bar -->
+      <rect x="13" y="20.2" width="18" height="5.6" rx="1.8"/>
+    </g>
+
+    <!-- Center Ashoka Navy Core Dot -->
+    <circle cx="22" cy="23" r="3.2" fill="#000080"/>
+    <circle cx="22" cy="23" r="1.4" fill="#ffffff"/>
+
+    <!-- Dynamic Vitality Health Pulse Line -->
+    <path d="M10 23H15.5L18 18L21 27.5L23.5 19.5L25.5 23H34" 
+          stroke="url(#nhcPulseGrad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- ================= TYPOGRAPHIC LOCKUP ================= -->
+  <g transform="translate(58, 12)">
+    <!-- Main Sovereign English Title -->
+    <text x="0" y="18" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-weight="900" font-size="15" fill="#0f172a" letter-spacing="0.6">
+      NATIONAL HEALTH CARD
+    </text>
+
+    <!-- Bilingual Devanagari Title -->
+    <text x="0" y="32" font-family="'Noto Sans Devanagari', 'Mangal', system-ui, sans-serif" font-weight="700" font-size="10.5" fill="#047857" letter-spacing="0.3">
+      राष्ट्रीय स्वास्थ्य कार्ड
+    </text>
+
+    <!-- Sovereign Authority Subtitle with Tricolor Indicator -->
+    <g transform="translate(0, 41)">
+      <!-- Micro Tricolor Pill -->
+      <rect x="0" y="0" width="3" height="7" rx="1" fill="#FF9933"/>
+      <rect x="4" y="0" width="3" height="7" rx="1" fill="#94A3B8"/>
+      <rect x="8" y="0" width="3" height="7" rx="1" fill="#10B981"/>
+
+      <text x="16" y="6.5" font-family="'Inter', system-ui, sans-serif" font-weight="700" font-size="7.5" fill="#64748b" letter-spacing="0.5">
+        GOVERNMENT OF INDIA • ABDM
+      </text>
+    </g>
+  </g>
+</svg>

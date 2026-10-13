@@ -173,12 +173,12 @@
 /* ---------- Master Split Layout (Sticky Card + Form Flow) ---------- */
 .apply-split-grid {
   display: grid;
-  grid-template-columns: 420px 1fr;
+  grid-template-columns: 550px 1fr;
   gap: 32px;
   align-items: start;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .apply-split-grid {
     grid-template-columns: 1fr;
   }
@@ -235,14 +235,10 @@
   transition: transform 0.2s ease;
 }
 
-.template-teal {
-  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #3b82f6 100%);
-}
-.template-slate {
-  background: linear-gradient(135deg, #020617 0%, #0f172a 60%, #1e293b 100%);
-}
-.template-blue {
-  background: linear-gradient(135deg, #0a1e48 0%, #1e40af 60%, #3b82f6 100%);
+/* Light Mode Standard */
+.template-light-aadhaar {
+  background: #ffffff;
+  color: #0f172a;
 }
 
 .card-top {
@@ -3061,6 +3057,7 @@
 }
 
 /* 3D Parallax Card Viewport */
+/* 3D Parallax Card Viewport */
 .hero-card-viewport {
   perspective: 1200px;
   display: flex;
@@ -3072,13 +3069,46 @@
   border: 1px solid var(--border-color);
   border-radius: 20px;
   box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
+  width: 100%;
+  max-width: 540px;
+  min-height: 340px;
+  box-sizing: border-box;
 }
 
 .hero-card-3d-wrapper {
+  width: 100%;
+  max-width: 480px;
   transform-style: preserve-3d;
   transition: transform 0.15s ease-out;
   cursor: pointer;
   will-change: transform;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-card-face-mount {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-card-face-mount .official-healthcard-face,
+.hero-card-face-mount .indian-healthcard-aadhaar,
+.hero-card-face-mount .indian-healthcard-national {
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 1050 / 600;
+  box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.28), 0 0 0 1px rgba(15, 23, 42, 0.08);
+}
+
+@media (max-width: 580px) {
+  .hero-card-face-mount .official-healthcard-face,
+  .hero-card-face-mount .indian-healthcard-aadhaar,
+  .hero-card-face-mount .indian-healthcard-national {
+    max-width: 320px;
+  }
 }
 
 .hero-physical-card {

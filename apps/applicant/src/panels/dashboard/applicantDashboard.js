@@ -7,6 +7,7 @@ import QRCode from 'qrcode';
 import { applicantStore } from '../../shared/storage.js';
 import { calculateAge } from '../../shared/formatters.js';
 import { showToast } from '../../shared/toast.js';
+import { HealthCardRenderer } from '../../shared/healthCardRenderer.js';
 
 export class ApplicantDashboard {
   constructor(containerId, options = {}) {
@@ -107,78 +108,41 @@ export class ApplicantDashboard {
             </button>
           </div>
 
-          <div style="display:flex; justify-content:center; margin-bottom:16px;">
-            <!-- Front Face -->
-            <div class="healthcard-physical ${templateClass}" id="dash-card-front" style="display:${this.isCardFlipped ? 'none' : 'flex'}; width:100%; max-width:370px; height:234px; text-align:left;">
-              <div class="card-top">
-                <div class="card-emblem">
-                  <div class="emblem-icon">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M2 12h20"/></svg>
-                  </div>
-                  <div>
-                    <div class="card-org-title">NATIONAL HEALTH REGISTRY</div>
-                    <div style="font-size:7px; opacity:0.8;">MINISTRY OF HEALTH & FAMILY WELFARE</div>
-                  </div>
-                </div>
-                <div style="font-size:9px; font-weight:800; background:rgba(255,255,255,0.2); padding:1px 6px; border-radius:3px;">
-                  CR80 PVC
-                </div>
-              </div>
-
-              <div class="card-middle">
-                <div class="card-photo-box" style="width:62px; height:76px;">
-                  <img src="${this.member.photoUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(this.member.fullName)}`}" alt="${this.member.fullName}" />
-                </div>
-                <div class="card-info">
-                  <div class="card-name" style="font-size:15px;">${this.member.fullName.toUpperCase()}</div>
-                  <div class="card-meta" style="font-size:11px;">
-                    DOB: ${this.member.dob} | ${this.member.gender} | 
-                    Blood: <strong style="color:#ffffff; background:#dc2626; padding:1px 5px; border-radius:3px; font-weight:800;">${this.member.bloodGroup || 'O+'}</strong>
-                  </div>
-                  <div class="card-id-block" style="padding:3px 8px;">
-                    <div class="card-id-label">NATIONAL HEALTH ID</div>
-                    <div class="card-id-number" style="font-size:14px;">${this.member.healthId}</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="card-bottom">
-                <div class="card-footer-text" style="font-size:8px;">
-                  Encrypted Dynamic Token • ISO/IEC 7810 Standard
-                </div>
-                <span style="font-size:7.5px; opacity:0.75;">OFFICIAL CITIZEN CARD</span>
-              </div>
-            </div>
-
-            <!-- Back Face -->
-            <div class="healthcard-physical card-back" id="dash-card-back" style="display:${this.isCardFlipped ? 'flex' : 'none'}; width:100%; max-width:370px; height:234px; text-align:left;">
-              <div class="card-magstripe" style="height:28px; margin:-18px -20px 8px;"></div>
-              <div class="card-back-content">
-                <div class="card-qr-box" style="width:64px; height:64px;">
-                  <canvas id="dash-card-qr-canvas" width="56" height="56"></canvas>
-                </div>
-                <div style="flex:1; font-size:9px; line-height:1.4; opacity:0.9;">
-                  <div><strong>Address:</strong> ${this.member.address?.street || ''}, ${this.member.address?.city || ''}, ${this.member.address?.state || ''} - ${this.member.address?.pinCode || ''}</div>
-                  <div style="margin-top:3px;"><strong>Emergency Contact:</strong> ${this.member.emergencyContact?.name || 'Contact'} (${this.member.emergencyContact?.relation || 'Family'}) +91 ${this.member.emergencyContact?.phone || ''}</div>
-                  <div style="margin-top:3px; font-size:7.5px; opacity:0.8;">
-                    Helpline: 1800-11-4477 • Lost Card: healthcard.gov.in
-                  </div>
-                </div>
-              </div>
-              <div style="font-size:7.5px; opacity:0.7; border-top:1px solid rgba(255,255,255,0.15); padding-top:4px; margin-top:6px; display:flex; justify-content:space-between;">
-                <span>GOVERNMENT OF INDIA</span>
-                <span>SN: ${(this.member.healthId || '').replace(/\s+/g, '')}</span>
-              </div>
-            </div>
+          <div style="display:flex; justify-content:center; margin-bottom:16px; width:100%;" id="dash-card-mount">
+            ${this.isCardFlipped ?
+              HealthCardRenderer.renderAadhaarBack({
+                healthId: this.member.healthId,
+                addressHindi: this.member.addressHindi || 'मकान नं. 142, विकास नगर, नई दिल्ली - 110059',
+                addressEnglish: `${this.member.address?.street || ''}, ${this.member.address?.city || ''}, ${this.member.address?.state || ''} - ${this.member.address?.pinCode || ''}`,
+                helpline: '104 / 14477',
+                emergencyContact: `${this.member.emergencyContact?.name || 'Emergency Contact'} (${this.member.emergencyContact?.relation || 'Family'}) +91 ${this.member.emergencyContact?.phone || '98765-43210'}`,
+                allergies: this.member.allergies || 'No Known Drug Allergies',
+                organDonor: this.member.organDonor || 'YES / हाँ (Pledged)'
+              }, { assetsBasePath: '/card-design/assets', idPrefix: 'dash-card-back-' }) :
+              HealthCardRenderer.renderAadhaarFront({
+                fullName: this.member.fullName,
+                nameHindi: this.member.nameHindi || 'नागरिक नाम',
+                healthId: this.member.healthId,
+                bloodGroup: this.member.bloodGroup || 'O+ POS',
+                dob: this.member.dob,
+                gender: this.member.gender ? `${this.member.gender.toUpperCase()} / पुरुष` : 'MALE / पुरुष',
+                photoUrl: this.member.photoUrl || ''
+              }, { assetsBasePath: '/card-design/assets', idPrefix: 'dash-card-' })
+            }
           </div>
 
-          <div style="display:flex; justify-content:center; gap:8px;">
-            <button type="button" class="btn btn-primary btn-sm" id="btn-download-card-png" style="flex:1; gap:6px;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Download Card (PNG)
+          <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="btn btn-primary btn-sm" id="btn-download-card-pdf" style="flex:1; min-width:125px; gap:6px; font-weight:700; background:#047857; border-color:#047857;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Download PDF
             </button>
-            <button type="button" class="btn btn-outline btn-sm" id="btn-show-qr-modal" style="flex:1;">
-              Enlarge QR Code
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-download-card-png" style="flex:1; min-width:125px; gap:6px; font-weight:700;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download PNG
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" id="btn-show-qr-modal" style="flex:1; min-width:110px; font-weight:600;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Enlarge QR
             </button>
           </div>
         </div>
@@ -615,21 +579,77 @@ export class ApplicantDashboard {
     `;
   }
 
+  renderMountedCard() {
+    const mount = document.getElementById('dash-card-mount');
+    if (!mount) return;
+
+    if (this.isCardFlipped) {
+      mount.innerHTML = HealthCardRenderer.renderAadhaarBack({
+        healthId: this.member.healthId,
+        addressHindi: this.member.addressHindi || 'मकान नं. 142, विकास नगर, नई दिल्ली - 110059',
+        addressEnglish: `${this.member.address?.street || ''}, ${this.member.address?.city || ''}, ${this.member.address?.state || ''} - ${this.member.address?.pinCode || ''}`,
+        helpline: '104 / 14477',
+        emergencyContact: `${this.member.emergencyContact?.name || 'Emergency Contact'} (${this.member.emergencyContact?.relation || 'Family'}) +91 ${this.member.emergencyContact?.phone || '98765-43210'}`,
+        allergies: this.member.allergies || 'No Known Drug Allergies',
+        organDonor: this.member.organDonor || 'YES / हाँ (Pledged)'
+      }, { assetsBasePath: '/card-design/assets', idPrefix: 'dash-card-back-' });
+
+      HealthCardRenderer.renderQRCode('dash-card-back-hospital-qr-canvas', {
+        healthId: this.member.healthId,
+        bloodGroup: this.member.bloodGroup,
+        allergies: this.member.allergies,
+        emergencyContact: `${this.member.emergencyContact?.name || ''} +91 ${this.member.emergencyContact?.phone || ''}`
+      }, true);
+    } else {
+      mount.innerHTML = HealthCardRenderer.renderAadhaarFront({
+        fullName: this.member.fullName,
+        nameHindi: this.member.nameHindi || 'नागरिक नाम',
+        healthId: this.member.healthId,
+        bloodGroup: this.member.bloodGroup || 'O+ POS',
+        dob: this.member.dob,
+        gender: this.member.gender ? `${this.member.gender.toUpperCase()} / पुरुष` : 'MALE / पुरुष',
+        photoUrl: this.member.photoUrl || ''
+      }, { assetsBasePath: '/card-design/assets', idPrefix: 'dash-card-' });
+
+      HealthCardRenderer.renderQRCode('dash-card-qr-canvas', {
+        healthId: this.member.healthId,
+        fullName: this.member.fullName,
+        bloodGroup: this.member.bloodGroup,
+        dob: this.member.dob,
+        gender: this.member.gender
+      });
+    }
+  }
+
   bindEvents() {
     const btnFlip = document.getElementById('btn-flip-card');
     const lblFlip = document.getElementById('lbl-flip-text');
-    const cardFront = document.getElementById('dash-card-front');
-    const cardBack = document.getElementById('dash-card-back');
 
-    if (btnFlip && cardFront && cardBack) {
+    if (btnFlip) {
       btnFlip.onclick = () => {
         this.isCardFlipped = !this.isCardFlipped;
-        cardFront.style.display = this.isCardFlipped ? 'none' : 'flex';
-        cardBack.style.display = this.isCardFlipped ? 'flex' : 'none';
         if (lblFlip) lblFlip.textContent = this.isCardFlipped ? 'Flip to Front' : 'Flip to Back';
-        if (this.isCardFlipped) this.renderCardQR();
+        this.renderMountedCard();
       };
     }
+
+    const btnVerifySim = document.getElementById('btn-dash-verify-sim');
+    if (btnVerifySim) {
+      btnVerifySim.onclick = () => {
+        HealthCardRenderer.showVerificationModal({
+          healthId: this.member.healthId,
+          fullName: this.member.fullName,
+          nameHindi: this.member.nameHindi || 'नागरिक नाम',
+          bloodGroup: this.member.bloodGroup || 'O+ POS',
+          dob: this.member.dob,
+          gender: this.member.gender || 'MALE',
+          photoUrl: this.member.photoUrl || ''
+        });
+      };
+    }
+
+    // Trigger initial front card QR render
+    this.renderMountedCard();
 
     const btnLogout = document.getElementById('btn-citizen-logout');
     if (btnLogout) {
@@ -642,6 +662,11 @@ export class ApplicantDashboard {
     }
 
     // Feature 2: High-Resolution Card Graphic Download
+    const btnDownloadPdf = document.getElementById('btn-download-card-pdf');
+    if (btnDownloadPdf) {
+      btnDownloadPdf.onclick = () => this.downloadCardPdf();
+    }
+
     const btnDownloadPng = document.getElementById('btn-download-card-png');
     if (btnDownloadPng) {
       btnDownloadPng.onclick = () => this.downloadCardGraphic();
@@ -794,17 +819,34 @@ export class ApplicantDashboard {
 
   renderCardQR() {
     if (!this.member) return;
-    const canvas = document.getElementById('dash-card-qr-canvas');
+    const canvas = document.getElementById(this.isCardFlipped ? 'dash-card-back-hospital-qr-canvas' : 'dash-card-qr-canvas');
     if (canvas) {
-      const cleanHid = (this.member.healthId || '').replace(/\s+/g, '');
-      const emergUrl = `${window.location.origin}${window.location.pathname}#emergency?hid=${cleanHid}`;
-      QRCode.toCanvas(canvas, emergUrl, {
-        width: 56,
-        margin: 0,
-        color: { dark: '#0f172a', light: '#ffffff' }
-      }, (e) => {
-        if (e) console.error('QR error:', e);
+      HealthCardRenderer.renderQRCode(canvas, {
+        healthId: this.member.healthId,
+        fullName: this.member.fullName,
+        bloodGroup: this.member.bloodGroup || 'O+ POS',
+        dob: this.member.dob,
+        gender: this.member.gender,
+        allergies: this.member.allergies,
+        emergencyContact: this.member.emergencyContact?.phone
+      }, this.isCardFlipped);
+    }
+  }
+
+  /**
+   * Official CR80 / A4 Printable HealthCard PDF Download
+   */
+  async downloadCardPdf() {
+    try {
+      showToast('Generating official Government HealthCard print sheet PDF...', 'info', 2000);
+      await HealthCardRenderer.exportCardPdf(this.member, {
+        format: 'a4',
+        cardsBasePath: '/card-design/cards'
       });
+      showToast('Official HealthCard PDF downloaded successfully!', 'success');
+    } catch (e) {
+      console.error('Card PDF export error:', e);
+      showToast('Could not export PDF: ' + e.message, 'error');
     }
   }
 
@@ -814,158 +856,19 @@ export class ApplicantDashboard {
    */
   async downloadCardGraphic() {
     try {
-      showToast('Rendering high-resolution HealthCard graphic...', 'info', 2000);
+      showToast('Rendering high-resolution official HealthCard graphic...', 'info', 2000);
 
-      const canvas = document.createElement('canvas');
-      canvas.width = 1000;
-      canvas.height = 360;
-      const ctx = canvas.getContext('2d');
+      const dualPngDataUrl = await HealthCardRenderer.exportDualCompositeCanvas(this.member, {
+        cardsBasePath: '/card-design/cards'
+      });
 
-      // Background
-      ctx.fillStyle = '#f8fafc';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Helper for rounded rectangle
-      const drawRoundRect = (x, y, w, h, r, fill) => {
-        ctx.beginPath();
-        ctx.moveTo(x + r, y);
-        ctx.lineTo(x + w - r, y);
-        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-        ctx.lineTo(x + w, y + h - r);
-        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-        ctx.lineTo(x + r, y + h);
-        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-        ctx.lineTo(x, y + r);
-        ctx.quadraticCurveTo(x, y, x + r, y);
-        ctx.closePath();
-        ctx.fillStyle = fill;
-        ctx.fill();
-      };
-
-      // 1. FRONT CARD (Left: x=30, y=30, w=450, h=300)
-      const grad = ctx.createLinearGradient(30, 30, 480, 330);
-      const template = this.card?.template || 'teal';
-      if (template === 'slate') {
-        grad.addColorStop(0, '#020617');
-        grad.addColorStop(0.6, '#0f172a');
-        grad.addColorStop(1, '#1e293b');
-      } else if (template === 'blue') {
-        grad.addColorStop(0, '#0a1e48');
-        grad.addColorStop(0.6, '#1e40af');
-        grad.addColorStop(1, '#3b82f6');
-      } else {
-        grad.addColorStop(0, '#1e3a8a');
-        grad.addColorStop(0.6, '#1d4ed8');
-        grad.addColorStop(1, '#2563eb');
-      }
-      drawRoundRect(30, 30, 450, 300, 16, grad);
-
-      // Front Header
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillText('NATIONAL HEALTH REGISTRY', 60, 65);
-      ctx.font = '9px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillStyle = 'rgba(255,255,255,0.8)';
-      ctx.fillText('MINISTRY OF HEALTH & FAMILY WELFARE', 60, 80);
-
-      // CR80 PVC badge
-      drawRoundRect(400, 50, 60, 20, 4, 'rgba(255,255,255,0.2)');
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 9px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillText('CR80 PVC', 408, 64);
-
-      // Photo Box (x=60, y=105, w=70, h=88)
-      drawRoundRect(60, 105, 70, 88, 6, '#ffffff');
-
-      // Citizen Details
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillText(this.member.fullName.toUpperCase(), 145, 125);
-
-      ctx.font = '11.5px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillStyle = 'rgba(255,255,255,0.9)';
-      ctx.fillText(`DOB: ${this.member.dob} | ${this.member.gender}`, 145, 145);
-
-      // Bold Red Blood Group Pill
-      ctx.fillText('Blood Group:', 145, 168);
-      drawRoundRect(225, 154, 46, 20, 4, '#dc2626');
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillText(this.member.bloodGroup || 'O+', 235, 169);
-
-      // 10-Digit National Health ID Block
-      drawRoundRect(145, 190, 200, 36, 6, 'rgba(0,0,0,0.3)');
-      ctx.fillStyle = 'rgba(255,255,255,0.8)';
-      ctx.font = '8px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillText('NATIONAL HEALTH ID', 155, 203);
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 16px ui-monospace, "SF Mono", Consolas, monospace';
-      ctx.fillText(this.member.healthId, 155, 220);
-
-      // Front Footer
-      ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-      ctx.beginPath();
-      ctx.moveTo(60, 290);
-      ctx.lineTo(450, 290);
-      ctx.stroke();
-
-      ctx.fillStyle = 'rgba(255,255,255,0.85)';
-      ctx.font = '9px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillText('Encrypted Dynamic Token • ISO/IEC 7810 Standard', 60, 310);
-      ctx.fillText('OFFICIAL CITIZEN CARD', 330, 310);
-
-      // 2. BACK CARD (Right: x=520, y=30, w=450, h=300)
-      drawRoundRect(520, 30, 450, 300, 16, '#0f172a');
-
-      // Magnetic Stripe
-      ctx.fillStyle = '#000000';
-      ctx.fillRect(520, 65, 450, 40);
-
-      // QR Code on Back
-      const cleanHid = (this.member.healthId || '').replace(/\s+/g, '');
-      const emergUrl = `${window.location.origin}${window.location.pathname}#emergency?hid=${cleanHid}`;
-      const qrDataUrl = await QRCode.toDataURL(emergUrl, { width: 100, margin: 0 });
-
-      const qrImg = new Image();
-      qrImg.src = qrDataUrl;
-      await new Promise(res => { qrImg.onload = res; qrImg.onerror = res; });
-      drawRoundRect(550, 130, 84, 84, 6, '#ffffff');
-      ctx.drawImage(qrImg, 554, 134, 76, 76);
-
-      // Address & Emergency Info
-      ctx.fillStyle = 'rgba(255,255,255,0.9)';
-      ctx.font = '10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillText(`Address: ${this.member.address?.street || ''}, ${this.member.address?.city || ''}`, 650, 145);
-      ctx.fillText(`${this.member.address?.state || ''} - ${this.member.address?.pinCode || ''}`, 650, 160);
-
-      ctx.fillText(`Emergency: ${this.member.emergencyContact?.name || ''} (${this.member.emergencyContact?.relation || 'Family'})`, 650, 185);
-      ctx.fillStyle = '#38bdf8';
-      ctx.font = 'bold 11px ui-monospace, "SF Mono", Consolas, monospace';
-      ctx.fillText(`+91 ${this.member.emergencyContact?.phone || ''}`, 650, 202);
-
-      ctx.fillStyle = 'rgba(255,255,255,0.7)';
-      ctx.font = '9px "Inter", sans-serif';
-      ctx.fillText('National Helpline: 1800-11-4477 • Lost Card: healthcard.gov.in', 650, 222);
-
-      // Back Footer
-      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-      ctx.beginPath();
-      ctx.moveTo(550, 280);
-      ctx.lineTo(940, 280);
-      ctx.stroke();
-
-      ctx.fillStyle = 'rgba(255,255,255,0.75)';
-      ctx.font = '9px "Inter", sans-serif';
-      ctx.fillText('GOVERNMENT OF INDIA', 550, 305);
-      ctx.fillText(`SN: ${(this.member.healthId || '').replace(/\s+/g, '')}`, 830, 305);
-
-      // Trigger file download
+      const cleanHid = (this.member.healthId || 'National').replace(/\s+/g, '');
       const link = document.createElement('a');
-      link.download = `HealthCard_${(this.member.healthId || 'National').replace(/\s+/g, '')}.png`;
-      link.href = canvas.toDataURL('image/png');
+      link.download = `HealthCard_${cleanHid}.png`;
+      link.href = dualPngDataUrl;
       link.click();
 
-      showToast('High-Resolution Physical HealthCard PNG saved!', 'success');
+      showToast('Official HealthCard PNG downloaded successfully!', 'success');
     } catch (e) {
       console.error('Card export error:', e);
       showToast('Could not export graphic. Opening print view instead.', 'info');

@@ -1,31 +1,49 @@
 # Dependencies
-node_modules
+node_modules/
 .pnp
 .pnp.js
 
-# Testing
-coverage
+# Testing & Coverage
+coverage/
+*.lcov
 
-# Next.js / Vite build output
+# Build Outputs & Bundlers
 .next/
 dist/
 out/
 build/
+.turbo/
 
-# Misc
-.DS_Store
-*.pem
-
-# Local env files
-.env*.local
+# Environment Variables & Secrets (CRITICAL SECURITY)
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
 
-# Logs
+# Logs & Debugging
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 turbo.log
 
-# Temporary storage
+# Operating System & IDE Artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Temporary Storage & Local Caches
 storage/generated-files/*
 !storage/generated-files/.gitkeep
+.cache/
+.temp/

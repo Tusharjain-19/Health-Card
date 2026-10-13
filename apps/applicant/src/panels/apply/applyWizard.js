@@ -15,6 +15,7 @@ import { applicantStore } from '../../shared/storage.js';
 import { generateHealthId } from '../../shared/healthId.js';
 import { calculateAge, formatDate } from '../../shared/formatters.js';
 import { showToast } from '../../shared/toast.js';
+import { HealthCardRenderer } from '../../shared/healthCardRenderer.js';
 
 export const INDIAN_STATES = [
   "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam",
@@ -201,81 +202,40 @@ export class ApplyWizard {
               </button>
             </div>
 
-            <!-- Card Visual Stage -->
-            <div style="display:flex; justify-content:center;">
-              
-              <!-- Front Face -->
-              <div class="healthcard-physical template-${this.formData.cardTemplate}" id="preview-card-front" style="display:${this.isCardFlipped ? 'none' : 'flex'};">
-                <div class="card-top">
-                  <div class="card-emblem">
-                    <div class="emblem-icon">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M2 12h20"/></svg>
-                    </div>
-                    <div>
-                      <div class="card-org-title">NATIONAL HEALTH RECORD</div>
-                      <div style="font-size:7px; opacity:0.8;">MINISTRY OF HEALTH & FAMILY WELFARE</div>
-                    </div>
-                  </div>
-                  <div style="font-size:8.5px; font-weight:800; background:rgba(255,255,255,0.2); padding:1px 6px; border-radius:3px;">
-                    CR80 PVC
-                  </div>
-                </div>
-
-                <div class="card-middle">
-                  <div class="card-photo-box">
-                    <img id="card-front-photo" src="${this.formData.photoUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(this.formData.fullName || 'Citizen')}`}" alt="Cardholder" />
-                  </div>
-                  <div class="card-info">
-                    <div class="card-name" id="card-front-name">${(this.formData.fullName || 'CITIZEN NAME').toUpperCase()}</div>
-                    <div class="card-meta">
-                      DOB: <span id="card-front-dob">${this.formData.dob}</span> | 
-                      Blood: <strong style="color:#ffffff; background:#dc2626; padding:1px 5px; border-radius:3px; font-weight:800;" id="card-front-blood">${this.formData.bloodGroup}</strong>
-                    </div>
-                    <div class="card-id-block">
-                      <div class="card-id-label">NATIONAL HEALTH ID</div>
-                      <div class="card-id-number" id="card-front-healthid">${this.formData.healthIdPreview}</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card-bottom">
-                  <div class="card-footer-text">
-                    NTAG 424 DNA NFC • ISO/IEC 7810
-                  </div>
-                  <span style="font-size:7.5px; opacity:0.8;">OFFICIAL CITIZEN CARD</span>
-                </div>
-              </div>
-
-              <!-- Back Face -->
-              <div class="healthcard-physical card-back" id="preview-card-back" style="display:${this.isCardFlipped ? 'flex' : 'none'};">
-                <div class="card-magstripe"></div>
-                <div class="card-back-content">
-                  <div class="card-qr-box">
-                    <canvas id="card-back-qr" width="56" height="56"></canvas>
-                  </div>
-                  <div style="flex:1; font-size:9px; line-height:1.35; opacity:0.9;">
-                    <div><strong>Address:</strong> <span id="card-back-address">${this.formData.street || 'Address'}, ${this.formData.city || 'City'}, ${this.formData.state || 'Delhi'} - ${this.formData.pinCode || '110016'}</span></div>
-                    <div style="margin-top:3px;"><strong>Emergency Contact:</strong> <span id="card-back-emergency">${this.formData.emergencyName || 'Designated Contact'} (${this.formData.emergencyRelation || 'Parent'}) +91 ${this.formData.emergencyPhone || '9876543210'}</span></div>
-                    <div style="margin-top:3px; font-size:7.5px; opacity:0.8;">
-                      Helpline: 1800-11-4477 • Lost Card: healthcard.gov.in
-                    </div>
-                  </div>
-                </div>
-                <div style="font-size:7.5px; opacity:0.7; border-top:1px solid rgba(255,255,255,0.15); padding-top:4px; margin-top:6px; display:flex; justify-content:space-between;">
-                  <span>GOVERNMENT OF INDIA</span>
-                  <span id="card-back-serial">SN: ${this.formData.healthIdPreview.replace(/\s+/g, '')}</span>
-                </div>
-              </div>
-
+            <!-- Card Visual Stage (Sovereign National HealthCard CR80 PVC Standard) -->
+            <div style="display:flex; justify-content:center; width:100%;" id="apply-card-mount">
+              ${this.isCardFlipped ? 
+                HealthCardRenderer.renderAadhaarBack({
+                  healthId: this.formData.healthIdPreview,
+                  addressHindi: 'मकान नं. 142, विकास नगर, नई दिल्ली - 110059',
+                  addressEnglish: `${this.formData.street || 'H.No. 142, Main Road'}, ${this.formData.city || 'New Delhi'}, ${this.formData.state || 'Delhi'} - ${this.formData.pinCode || '110059'}`,
+                  helpline: '104 / 14477',
+                  emergencyContact: `${this.formData.emergencyName || 'Emergency Contact'} +91 ${this.formData.emergencyPhone || '98765-43210'}`,
+                  allergies: this.formData.allergies || 'No Known Drug Allergies',
+                  organDonor: this.formData.organDonor ? 'YES / हाँ (Pledged)' : 'NO / नहीं'
+                }, { assetsBasePath: '/card-design/assets', idPrefix: 'apply-wiz-back-' }) :
+                HealthCardRenderer.renderAadhaarFront({
+                  fullName: this.formData.fullName || 'TUSHAR JAIN',
+                  nameHindi: 'तुषार जैन',
+                  healthId: this.formData.healthIdPreview,
+                  bloodGroup: this.formData.bloodGroup || 'O+ POS',
+                  dob: this.formData.dob || '15/08/1995',
+                  gender: this.formData.gender || 'Male',
+                  photoUrl: this.formData.photoUrl || ''
+                }, { cardsBasePath: '/card-design/cards', idPrefix: 'apply-wiz-' })
+              }
             </div>
 
-            <!-- Card Color Switcher -->
-            <div class="preview-controls-row">
-              <span style="font-size:11.5px; font-weight:600; color:var(--text-muted);">PVC Theme:</span>
-              <div class="theme-pill-group">
-                <div class="theme-pill theme-pill-teal ${this.formData.cardTemplate === 'teal' ? 'active' : ''}" data-theme="teal" title="Clinical Teal"></div>
-                <div class="theme-pill theme-pill-slate ${this.formData.cardTemplate === 'slate' ? 'active' : ''}" data-theme="slate" title="Executive Slate"></div>
-                <div class="theme-pill theme-pill-blue ${this.formData.cardTemplate === 'blue' ? 'active' : ''}" data-theme="blue" title="National Blue"></div>
+            <!-- Standard Specs Label, Demo Fill & Verification Simulator -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding:0 4px; gap:8px;">
+              <span style="font-size:11px; font-weight:700; color:#047857;">CR80 PVC SOVEREIGN SPEC</span>
+              <div style="display:flex; gap:6px;">
+                <button type="button" class="btn btn-sm btn-outline" id="btn-apply-fill-demo" style="font-size:11px; padding:3px 8px; color:#15803d; border-color:#86efac; background:#f0fdf4;">
+                  ⚡ Fill Demo (Tushar Jain)
+                </button>
+                <button type="button" class="btn btn-sm btn-outline" id="btn-apply-verify-qr" style="font-size:11px; padding:3px 8px; color:#0284c7; border-color:#0284c7;">
+                  Simulate QR Scan
+                </button>
               </div>
             </div>
           </div>
@@ -929,29 +889,71 @@ export class ApplyWizard {
     // 1. Flip Preview Button
     const flipBtn = document.getElementById('btn-flip-preview');
     const lblFlip = document.getElementById('lbl-flip-btn');
-    const frontCard = document.getElementById('preview-card-front');
-    const backCard = document.getElementById('preview-card-back');
 
-    if (flipBtn && frontCard && backCard) {
+    if (flipBtn) {
       flipBtn.onclick = () => {
         this.isCardFlipped = !this.isCardFlipped;
-        frontCard.style.display = this.isCardFlipped ? 'none' : 'flex';
-        backCard.style.display = this.isCardFlipped ? 'flex' : 'none';
         if (lblFlip) lblFlip.textContent = this.isCardFlipped ? 'View Front' : 'View Back';
-        if (this.isCardFlipped) this.updateCardPreview();
+        this.updateCardPreview();
       };
     }
 
-    // 2. Color Theme Switcher
-    this.container.querySelectorAll('.theme-pill').forEach(pill => {
-      pill.onclick = () => {
-        const theme = pill.dataset.theme;
-        this.formData.cardTemplate = theme;
-        this.container.querySelectorAll('.theme-pill').forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        if (frontCard) frontCard.className = `healthcard-physical template-${theme}`;
+    // QR Verification simulator
+    const btnVerifySim = document.getElementById('btn-apply-verify-qr');
+    if (btnVerifySim) {
+      btnVerifySim.onclick = () => {
+        HealthCardRenderer.showVerificationModal({
+          healthId: this.formData.healthIdPreview,
+          fullName: this.formData.fullName || 'TUSHAR JAIN',
+          nameHindi: 'तुषार जैन',
+          bloodGroup: this.formData.bloodGroup || 'O+ POS',
+          dob: this.formData.dob || '15/08/1995',
+          gender: this.formData.gender || 'MALE',
+          photoUrl: this.formData.photoUrl || ''
+        });
       };
-    });
+    }
+
+    // Demo Fill Simulator (Tushar Jain, A- NEG)
+    const btnFillDemo = document.getElementById('btn-apply-fill-demo');
+    if (btnFillDemo) {
+      btnFillDemo.onclick = () => {
+        this.formData.fullName = 'Tushar Jain';
+        this.formData.dob = '1995-08-15';
+        this.formData.dobDay = '15';
+        this.formData.dobMonth = '08';
+        this.formData.dobYear = '1995';
+        this.formData.gender = 'Male';
+        this.formData.bloodGroup = 'A-';
+        this.formData.street = '142, Vikas Nagar';
+        this.formData.city = 'New Delhi';
+        this.formData.state = 'Delhi';
+        this.formData.pinCode = '110059';
+        this.formData.emergencyName = 'Self / Family';
+        this.formData.emergencyPhone = '9876543210';
+
+        const inpName = document.getElementById('inp-fullname');
+        if (inpName) inpName.value = 'Tushar Jain';
+        const selD = document.getElementById('sel-dob-day');
+        if (selD) selD.value = '15';
+        const selM = document.getElementById('sel-dob-month');
+        if (selM) selM.value = '08';
+        const selY = document.getElementById('sel-dob-year');
+        if (selY) selY.value = '1995';
+
+        // Select A- pill
+        this.container.querySelectorAll('.blood-pill').forEach(pill => {
+          if (pill.dataset.blood === 'A-') {
+            pill.classList.add('selected');
+          } else {
+            pill.classList.remove('selected');
+          }
+        });
+
+        this.updateCardPreview();
+        showToast('Demo Citizen (Tushar Jain, A- NEG) loaded into card preview!', 'success');
+      };
+    }
 
     // 3. Name Real-time Update
     const inpName = document.getElementById('inp-fullname');
@@ -1418,44 +1420,43 @@ export class ApplyWizard {
   }
 
   updateCardPreview() {
-    const nameEl = document.getElementById('card-front-name');
-    if (nameEl) nameEl.textContent = (this.formData.fullName || 'CITIZEN NAME').toUpperCase();
+    const mount = document.getElementById('apply-card-mount');
+    if (!mount) return;
 
-    const dobEl = document.getElementById('card-front-dob');
-    if (dobEl) dobEl.textContent = this.formData.dob || '1995-08-15';
+    if (this.isCardFlipped) {
+      mount.innerHTML = HealthCardRenderer.renderAadhaarBack({
+        healthId: this.formData.healthIdPreview,
+        addressHindi: 'मकान नं. 142, विकास नगर, नई दिल्ली - 110059',
+        addressEnglish: `${this.formData.street || 'H.No. 142, Main Road'}, ${this.formData.city || 'New Delhi'}, ${this.formData.state || 'Delhi'} - ${this.formData.pinCode || '110059'}`,
+        helpline: '104 / 14477',
+        emergencyContact: `${this.formData.emergencyName || 'Emergency Contact'} +91 ${this.formData.emergencyPhone || '98765-43210'}`,
+        allergies: this.formData.allergies || 'No Known Drug Allergies',
+        organDonor: this.formData.organDonor ? 'YES / हाँ (Pledged)' : 'NO / नहीं'
+      }, { assetsBasePath: '/card-design/assets', idPrefix: 'apply-wiz-back-' });
 
-    const bloodEl = document.getElementById('card-front-blood');
-    if (bloodEl) bloodEl.textContent = this.formData.bloodGroup || 'O+';
+      HealthCardRenderer.renderQRCode('apply-wiz-back-hospital-qr-canvas', {
+        healthId: this.formData.healthIdPreview,
+        bloodGroup: this.formData.bloodGroup,
+        allergies: this.formData.allergies,
+        emergencyContact: `+91-${this.formData.emergencyPhone || '98765-43210'}`
+      }, true);
+    } else {
+      mount.innerHTML = HealthCardRenderer.renderAadhaarFront({
+        fullName: this.formData.fullName || 'TUSHAR JAIN',
+        nameHindi: 'तुषार जैन',
+        healthId: this.formData.healthIdPreview,
+        bloodGroup: this.formData.bloodGroup || 'O+ POS',
+        dob: this.formData.dob || '15/08/1995',
+        gender: this.formData.gender || 'Male',
+        photoUrl: this.formData.photoUrl || ''
+      }, { cardsBasePath: '/card-design/cards', idPrefix: 'apply-wiz-' });
 
-    const idEl = document.getElementById('card-front-healthid');
-    if (idEl) idEl.textContent = this.formData.healthIdPreview;
-
-    const photoEl = document.getElementById('card-front-photo');
-    if (photoEl) {
-      photoEl.src = this.formData.photoUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(this.formData.fullName || 'Citizen')}`;
-    }
-
-    const addrEl = document.getElementById('card-back-address');
-    if (addrEl) {
-      addrEl.textContent = `${this.formData.street || 'Address'}, ${this.formData.city || 'City'}, ${this.formData.state || 'Delhi'} - ${this.formData.pinCode || '110016'}`;
-    }
-
-    const emergEl = document.getElementById('card-back-emergency');
-    if (emergEl) {
-      emergEl.textContent = `${this.formData.emergencyName || 'Designated Contact'} (${this.formData.emergencyRelation || 'Parent'}) +91 ${this.formData.emergencyPhone || '9876543210'}`;
-    }
-
-    const serialEl = document.getElementById('card-back-serial');
-    if (serialEl) serialEl.textContent = `SN: ${this.formData.healthIdPreview.replace(/\s+/g, '')}`;
-
-    const canvas = document.getElementById('card-back-qr');
-    if (canvas) {
-      QRCode.toCanvas(canvas, JSON.stringify({
-        healthId: this.formData.healthIdPreview.replace(/\s+/g, ''),
-        name: this.formData.fullName || 'CITIZEN',
-        blood: this.formData.bloodGroup || 'O+'
-      }), { width: 56, margin: 0, color: { dark: '#0f172a', light: '#ffffff' } }, (e) => {
-        if (e) console.error('QR error:', e);
+      HealthCardRenderer.renderQRCode('apply-wiz-qr-canvas', {
+        healthId: this.formData.healthIdPreview,
+        fullName: this.formData.fullName,
+        bloodGroup: this.formData.bloodGroup,
+        dob: this.formData.dob,
+        gender: this.formData.gender
       });
     }
   }
